@@ -1,6 +1,6 @@
 # 0001. No separate video script document
 
-- Status: Proposed
+- Status: Accepted（2026-10-28、ユーザー決定）
 - Date: 2026-10-27
 
 ## Context

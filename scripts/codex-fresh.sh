@@ -19,16 +19,20 @@
 # and records the exact thread, and the launcher rebinds the bridge. `/clear`
 # does not refresh CODEX_THREAD_ID, so a new conversation needs a new process;
 # passing the actas line as Codex's initial prompt makes that one command.
-# Checked with agmsg 9cec2d4 and codex 0.154.0 on 2026-09-13.
+# Checked with agmsg 9cec2d4 and codex 0.154.0 on 2026-09-13; app-server record
+# format re-checked against agmsg #1254 and codex 0.164.0 on 2026-10-27.
 # Team name = directory name, as
 # registered by scripts/setup.sh (override with AGMSG_TEAM / AGMSG_AGENT).
 #
 # This script never writes or deletes the seat; seating is agmsg's job.
-# It only READS these agmsg internals under $AGMSG_DIR/run (agmsg 9cec2d4):
+# It only READS these agmsg internals under $AGMSG_DIR/run:
 #   role-session.<team>__<agent>                the seat: `session=<thread id>`
 #   codex-bridge.<team>.<agent>.thread          thread the live bridge is bound to
 #   codex-bridge.<team>.<agent>.pid             bridge pid
-#   codex-app-server.<sha1(project)>.pid/.port  app-server pid and ws:// port
+#   codex-app-server.<seat key>.record         app-server `project=<sha1>`, `pid=`,
+#                                               `port=` (agmsg #1254; before that
+#                                               codex-app-server.<sha1(project)>.pid/.port,
+#                                               still read as a fallback)
 # Process command lines matched by `stop` (project path included, so other
 # projects' bridges are left alone):
 #   codex-bridge-launcher.sh codex <project> ws://...
@@ -57,8 +61,8 @@ TEAM="${AGMSG_TEAM:-$(basename "$PROJECT")}"
 SEAT_FILE="$RUN_DIR/role-session.${TEAM}__${AGENT}"
 BRIDGE_THREAD_FILE="$RUN_DIR/codex-bridge.${TEAM}.${AGENT}.thread"
 BRIDGE_PID_FILE="$RUN_DIR/codex-bridge.${TEAM}.${AGENT}.pid"
-SERVER_PID_FILE="$RUN_DIR/codex-app-server.${PROJECT_HASH}.pid"
-SERVER_PORT_FILE="$RUN_DIR/codex-app-server.${PROJECT_HASH}.port"
+LEGACY_SERVER_PID_FILE="$RUN_DIR/codex-app-server.${PROJECT_HASH}.pid"
+LEGACY_SERVER_PORT_FILE="$RUN_DIR/codex-app-server.${PROJECT_HASH}.port"
 
 usage() { awk 'NR > 3 && /^#$/ { exit } NR >= 2 { sub(/^# ?/, ""); print }' "$0"; }
 
@@ -75,14 +79,31 @@ seat_thread() { [ -r "$SEAT_FILE" ] && sed -n 's/^session=//p' "$SEAT_FILE" | he
 
 launcher_pids() { pgrep -f "codex-bridge-launcher.sh codex $PROJECT ws://" || true; }
 bridge_pids() { pgrep -f "codex-bridge.js --project $PROJECT " || true; }
-server_pid() {
-  local pid; pid="$(file_value "$SERVER_PID_FILE")"
-  pid_alive "$pid" "codex app-server" && printf '%s' "$pid" || true
+# server_record: prints "<pid> <port>" of this project's live app-server, from the
+# first seat-keyed record whose project hash matches and whose pid is alive, else
+# from the legacy project-keyed pid/port pair; prints nothing when none is alive.
+server_record() {
+  local rec pid port
+  for rec in "$RUN_DIR"/codex-app-server.*.record; do
+    [ -f "$rec" ] || continue
+    [ "$(sed -n 's/^project=//p' "$rec" | head -n1)" = "$PROJECT_HASH" ] || continue
+    pid="$(sed -n 's/^pid=//p' "$rec" | head -n1)"
+    port="$(sed -n 's/^port=//p' "$rec" | head -n1)"
+    pid_alive "$pid" "codex app-server" || continue
+    printf '%s %s' "$pid" "$port"; return 0
+  done
+  pid="$(file_value "$LEGACY_SERVER_PID_FILE")"
+  if pid_alive "$pid" "codex app-server"; then
+    printf '%s %s' "$pid" "$(file_value "$LEGACY_SERVER_PORT_FILE")"
+  fi
+  return 0
 }
+server_pid() { server_record | awk '{print $1}'; }
+server_port() { server_record | awk '{print $2}'; }
 
 # Codex TUIs attached to this project's app-server (`codex ... --remote ws://127.0.0.1:<port>`).
 tui_pids() {
-  local port; port="$(file_value "$SERVER_PORT_FILE")"
+  local port; port="$(server_port)"
   [ -n "$port" ] || return 0
   pgrep -f -- "--remote ws://127.0.0.1:$port" || true
 }
@@ -131,8 +152,8 @@ do_stop() {
 
 
 loaded_threads() {  # prints loaded thread ids when the app-server answers
-  local port; port="$(file_value "$SERVER_PORT_FILE")"
-  [ -n "$port" ] && [ -n "$(server_pid)" ] || return 0
+  local port; port="$(server_port)"
+  [ -n "$port" ] || return 0
   command -v node >/dev/null 2>&1 || return 0
   timeout 10 node "$BRIDGE_JS" --app-server "ws://127.0.0.1:$port" --print-loaded-threads 2>/dev/null || true
 }
@@ -142,7 +163,7 @@ do_status() {
   seat="$(seat_thread)"
   echo "project:    $PROJECT"
   echo "seat:       ${seat:-none}"
-  sp="$(server_pid)"; port="$(file_value "$SERVER_PORT_FILE")"
+  sp="$(server_pid)"; port="$(server_port)"
   if [ -n "$sp" ]; then echo "app-server: alive pid=$sp port=${port:-?}"; else echo "app-server: not running"; fi
   bpid="$(file_value "$BRIDGE_PID_FILE")"
   bthread="$(file_value "$BRIDGE_THREAD_FILE")"

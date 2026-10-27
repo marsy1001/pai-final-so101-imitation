@@ -50,7 +50,7 @@ MUJOCO_GL=egl uv run python -m so101_demo.evidence.stage1_g1 --approve-fixed-fix
 
 ## 提出物
 - 動画（1〜3 分、YouTube）: 台本は `docs/video-script.md`
-- レポート: `docs/report.md`（PDF にして提出）
+- レポート: `docs/report.md`（PDF にして提出。`scripts/report-pdf.sh <omnicampus のアカウント名>` で `tmp/` に A4 の PDF を作る）
 - コード: このリポジトリ
 
 ## 開発の進め方

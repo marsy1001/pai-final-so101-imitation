@@ -36,6 +36,15 @@ applies to the current part's block and criteria. The other part's criteria
 are listed in the checklist as "未達（<part>）" for the record; they do not
 fail the current READY.
 
+A step that needs a display, a browser or the GPU (rendering, screen capture,
+headless Chromium/Edge, vLLM) cannot run inside the support's sandbox. The
+support verifies such a step through the lead's run evidence (command, exit
+code, log) plus its own inspection of the produced artifact (`pdfinfo`,
+`pdftotext`, `ffprobe`, page images) and of the tests that stub the external
+program; it states in the checklist that the step was verified this way.
+Every other step still has to run. (Added 2026-10-27, Issue #6: the snap
+Chromium and the Windows Edge both fail to start under the sandbox.)
+
 Report the result as a checklist with the exact commands run and their exit
 codes. Post that checklist as a comment on the Issue
 (`scripts/issue.sh comment <n> --body-file -`). A step that could not be

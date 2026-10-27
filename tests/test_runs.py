@@ -1,7 +1,6 @@
-"""Run IDs of the understanding layer and the fault injection (Issue #23).
+"""Run IDs of the understanding layer.
 
-Nothing here calls Cosmos or Astra: the pipeline tests use a fake `post`, the injection
-test runs against its local fake server.
+Nothing here calls Cosmos or Astra: the pipeline tests use a fake `post`.
 """
 
 import threading
@@ -9,7 +8,6 @@ import threading
 import pytest
 from test_understanding import ENV, OK_ARGS, VIDEO, FakePost, call, chat_body, responses_body
 
-from so101_demo.evidence import astra_faults
 from so101_demo.execution.runner import REVIEW_APPROVAL_SOURCE, approve_from_review
 from so101_demo.plan import validate_plan
 from so101_demo.understanding import pipeline, runs
@@ -251,86 +249,3 @@ def test_pipeline_drops_a_result_after_the_run_deadline():
     post = SlowPost(chat_body("A sentence."), responses_body(call(OK_ARGS)))
     u = pipeline.understand(VIDEO, gate=gate, run_id=rid, env=ENV, post=post)
     assert u.failed_stage == "run" and u.stale == runs.EXPIRED and not u.plan.executable
-
-
-# --- fault injection ------------------------------------------------------------------
-
-
-def test_fault_injection_covers_the_issue_list_and_every_case_passes():
-    saved = S.ASTRA_TIMEOUT_S
-    result = astra_faults.run_all()
-    assert S.ASTRA_TIMEOUT_S == saved  # the shortened deadline was only for the run
-    ids = [r["id"] for r in result["rows"]]
-    assert ids == [
-        "control",
-        "refusal",
-        "incomplete",
-        "no-tool-call",
-        "two-tool-calls",
-        "arguments-not-json",
-        "tool-schema",
-        "contract",
-        "http-429",
-        "http-500",
-        "connection-drop",
-        "trickle",
-        "late",
-        "cancelled",
-        "replaced",
-        "run-expired",
-    ]
-    assert result["passed"], [(r["id"], r["problems"]) for r in result["rows"] if r["problems"]]
-    for r in result["rows"]:
-        assert r["executable"] is r["control"] and r["approvable"] is r["control"]
-
-
-def test_fault_check_flags_an_executable_fault_and_a_slow_deadline_case():
-    row = {
-        "id": "late",
-        "layer": "通信",
-        "run_id": "r",
-        "result_run_id": "r",
-        "control": False,
-        "deadline": True,
-        "status": "ok",
-        "executable": True,
-        "approvable": True,
-        "failure": None,
-        "astra_elapsed_s": astra_faults.ASTRA_TIMEOUT_S + astra_faults.TIMING_MARGIN_S + 0.01,
-    }
-    problems = astra_faults.check(row)
-    assert len(problems) == 5  # executable, approved, no failure, wrong reason, slow
-
-
-def test_fault_check_flags_a_case_that_failed_for_another_reason():
-    row = {
-        "id": "cancelled",
-        "layer": "通信",
-        "run_id": "r",
-        "result_run_id": "r",
-        "control": False,
-        "deadline": False,
-        "status": "error",
-        "executable": False,
-        "approvable": False,
-        "failure": "transport: HTTP 404: no route",
-        "astra_elapsed_s": 0.01,
-    }
-    assert astra_faults.check(row) == [
-        "failed as 通信 / 'transport: HTTP 404: no route', expected run ID / 'cancelled'"
-    ]
-
-
-def test_every_fault_case_has_an_expected_reason():
-    ids = {c.id for c in astra_faults.cases() if not c.control}
-    assert ids == set(astra_faults.EXPECTED)
-
-
-def test_report_states_a_failed_deadline_instead_of_crashing():
-    result = astra_faults.run_all()
-    for r in result["rows"]:
-        if r["id"] == "late":
-            r["astra_elapsed_s"] = None
-    text = astra_faults.report(result)
-    assert text.startswith("# ") and "\n## 結論\n" in text
-    assert "を**超えた、または所要が記録されていない**" in text

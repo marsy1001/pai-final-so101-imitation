@@ -61,7 +61,7 @@ MUJOCO_GL=egl uv run python -m so101_demo.ui --videos contracts/fixtures/uc/vide
 - `view()` の追加項目: `videos`（`[{"id": ...}]`、`--ids` の順）、`selected`（選んだ id、無ければ null）、`big`（`{"kind": "video" | "sim", "video": id | null}`、上の表のとおり）。待機で `select` が `actions` に入る（`--videos` のとき）
 
 ## 証拠の取り方
-- 固定 JSON での 4 経路（承認・訂正・拒否・手動）を headless で通す: `uv run python -m so101_demo.ui.evidence_3b` → `docs/evidence/3b/operations.md` + `operations.json`（laptop では参考）
+- 固定 JSON での 4 経路（承認・訂正・拒否・手動）は `tests/test_ui.py` と `tests/test_ui_e2e.py` が headless で通す
 - 通し（本物の理解結果、録画あり、GPU 機）: 上の `--videos ... --record docs/evidence/e2e` で起動し、画面で操作する。記録の検査と文書化: `uv run python -m so101_demo.ui.evidence_e2e --check docs/evidence/e2e/runs.jsonl`（4 組合せの 承認 + `success`、対応外 1 本以上で指令 0、mp4 が 10 MiB 未満・1920×1080・25 fps）、`--report docs/evidence/e2e/runs.jsonl > docs/evidence/e2e/runs.md`（`runs.jsonl` だけから再現できる）
 - 画面キャプチャ（承認画面と表示画面の静止画・画面収録）は動画の Issue で撮る
 

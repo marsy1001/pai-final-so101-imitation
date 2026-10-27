@@ -1,5 +1,5 @@
-"""Approval screen logic and its HTTP layer (Issue #27). No browser, no sim: the executor
-is a fake that records what reached it (the real runner is in evidence_3b)."""
+"""Approval screen logic and its HTTP layer. No browser, no sim: the executor is a fake
+that records what reached it (the runner itself is tested in test_runner.py)."""
 
 import json
 import threading
@@ -10,7 +10,6 @@ from fastapi.testclient import TestClient
 
 from so101_demo.execution.runner import REVIEW_APPROVAL_SOURCE
 from so101_demo.plan import validate_plan
-from so101_demo.ui import evidence_3b
 from so101_demo.ui.screen import ActionRefused, ApprovalScreen, Phase
 from so101_demo.ui.server import STATIC, create_app
 from so101_demo.ui.sources import FixedSource, load_fixtures
@@ -448,17 +447,6 @@ def test_labels_and_colours_come_from_the_registry():
 def test_chips_draw_the_text_with_the_label():
     js = (STATIC / "app.js").read_text(encoding="utf-8")
     assert "document.createTextNode(item.text)" in js and "item.name" not in js
-
-
-# --- evidence -------------------------------------------------------------------------
-
-
-def test_evidence_run_passes_with_the_real_runner():
-    result = evidence_3b.run_all()
-    assert result["passed"], [r for r in result["paths"] + result["refusals"] if not r["ok"]]
-    assert [r["path"] for r in result["paths"]] == ["承認", "訂正", "拒否", "手動"]
-    text = evidence_3b.report(result)
-    assert text.startswith("# ") and "\n## 結論\n" in text and "参考" in text
 
 
 # --- runner thread --------------------------------------------------------------------

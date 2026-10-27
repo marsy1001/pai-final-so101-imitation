@@ -20,16 +20,16 @@ test -s docs/report.md
 git diff --check
 ```
 
-## 端末分担（ADR 0006。母艦分がなければこの節を削る）
+## 端末分担（AGENTS.md「Machine split」。GPU 機分がなければこの節を削る）
 <!-- 分割する Issue では、上の「受け入れ条件」「検証」を part ごとに分けて書く。verify-task は現在の part のブロックだけを実行し、もう一方は「未達（<part>）」と記録する。part ごとに /goal と Started がある。 -->
-### XPS 分（`task/<n>-<slug>`）
+### laptop 分（`task/<n>-<slug>`）
 受け入れ条件:
 - [ ]
 検証:
 ```
 git diff --check
 ```
-### 母艦分（`task/<n>-<slug>-gpu`。描画を伴う証拠、GPU 推論、本番構成の通し）
+### GPU 機分（`task/<n>-<slug>-gpu`。描画を伴う証拠、GPU 推論、提出構成の通し）
 受け入れ条件:
 - [ ]
 検証:
@@ -58,5 +58,5 @@ commit、設定 ID、実行手順、全試行ログ、既知の失敗
 <!-- この行を Claude Code のセッションに貼ることが承認になる。<n> を Issue 番号に置き換える。 -->
 このセッションで最初の Issue なら、貼る前に別ターミナルで `scripts/codex-fresh.sh start` を実行して補助の Codex を起動する（前の Codex 画面は先に閉じる）。
 ```
-/goal Issue #<n> の受け入れ条件（分割 Issue では <XPS 分|母艦分> の条件）がすべて満たされ、verify-task が通り、ブランチが（origin があれば）push され、agmsg で READY を送っている。制約: 受け入れ条件を緩めない（修正が要るときは理由を Issue に記録する）。20ターンまたは60分で満たせなければ、試したこと・詰まっている点・代案を Issue にコメントして止まる
+/goal Issue #<n> の受け入れ条件（分割 Issue では <laptop 分|GPU 機分> の条件）がすべて満たされ、verify-task が通り、ブランチが（origin があれば）push され、agmsg で READY を送っている。制約: 受け入れ条件を緩めない（修正が要るときは理由を Issue に記録する）。20ターンまたは60分で満たせなければ、試したこと・詰まっている点・代案を Issue にコメントして止まる
 ```

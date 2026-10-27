@@ -9,7 +9,7 @@ again from step 1. Never hand back partially verified work.
 
 1. Read the Issue (`scripts/issue.sh show <n>`). Copy its "検証" code block and run
    every command in it verbatim, in order. Record each command and its exit
-   code. For a split Issue (ADR 0006) the Issue has one "検証" block per part;
+   code. For a split Issue (AGENTS.md "Machine split") the Issue has one "検証" block per part;
    run the block of the part under test and only that one.
 2. `git diff --check` (whitespace errors) and `git status --porcelain` must be
    empty apart from intended changes; nothing untracked is left behind.
@@ -28,10 +28,10 @@ again from step 1. Never hand back partially verified work.
 Take exit codes from the command itself, not from a pipe's last stage: run
 with `set -o pipefail` (or check `${PIPESTATUS[0]}`) whenever the output goes
 through `tail`, `grep` or `tee`. A "passed" line in the output is not proof;
-the exit code is. (Added 2026-09-19 after Issue #4: `pytest | tail` hid a
+the exit code is. (Added 2026-09-19 in the previous project: `pytest | tail` hid a
 failure and the checklist reported it as passing.)
 
-For a split Issue (ADR 0006) "a step that could not be run is a failure"
+For a split Issue (AGENTS.md "Machine split") "a step that could not be run is a failure"
 applies to the current part's block and criteria. The other part's criteria
 are listed in the checklist as "未達（<part>）" for the record; they do not
 fail the current READY.

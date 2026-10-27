@@ -1,6 +1,6 @@
 """pick(object_id) / place(destination_id) on top of the two boundaries.
 
-Sequence (docs/handover/mujoco-so101-notes.md section 7):
+Sequence:
   pick : pre-grasp above -> descend -> close -> lift
   place: transfer at height -> descend -> open -> retreat
 Cartesian waypoints are solved one by one with the top-down IK and checked by the

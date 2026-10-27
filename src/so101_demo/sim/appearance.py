@@ -1,4 +1,4 @@
-"""Visual-only styling of the stage-1 scene for the venue screen (Issue #10, 2026-09-19).
+"""Visual-only styling of the stage-1 scene for the display screen (2026-09-19).
 
 Everything here touches `mjVisual`, materials, lights and textures: nothing that
 `mj_step` reads. `tests/test_appearance.py` checks that a styled and an unstyled
@@ -24,12 +24,12 @@ KEY_LIGHT_AMBIENT = (0.05, 0.05, 0.05)
 HEADLIGHT_AMBIENT = (0.38, 0.38, 0.38)
 HEADLIGHT_DIFFUSE = (0.42, 0.42, 0.42)
 HEADLIGHT_SPECULAR = (0.10, 0.10, 0.10)
-SKYBOX_TEXTURE = "venue_sky"
-KEY_LIGHT_NAME = "venue_key"
+SKYBOX_TEXTURE = "scene_sky"
+KEY_LIGHT_NAME = "scene_key"
 
 
 def style_spec(spec: mujoco.MjSpec) -> None:
-    """Apply the venue styling to a scene spec before it is compiled."""
+    """Apply the screen styling to a scene spec before it is compiled."""
     g = spec.visual.global_
     g.offwidth, g.offheight = OFFSCREEN_WIDTH, OFFSCREEN_HEIGHT
     spec.visual.quality.shadowsize = SHADOW_SIZE

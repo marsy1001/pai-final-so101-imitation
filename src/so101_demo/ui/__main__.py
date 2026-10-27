@@ -34,7 +34,7 @@ def main(argv: list[str] | None = None) -> int:
     from .sources import FixedSource
 
     frames = FrameStore() if args.render else None
-    # styled: the venue look, which also sizes the offscreen buffer for 1280x720 and up
+    # styled: the screen look, which also sizes the offscreen buffer for 1280x720 and up
     runner = RunnerThread(
         lambda: PlanRunner(
             observer=renderer_observer(frames) if frames else None, styled=frames is not None

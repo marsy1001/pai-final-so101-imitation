@@ -16,9 +16,9 @@ from so101_demo.sim.scene import SceneConfig, load_scene, set_object_pose
 
 REG = load_registry()
 
-# Trials expected to fail, by class. Empty since Issue #21 (2026-09-20) fixed the placing
-# margin: after ADR 0008 moved the trays, T2 (blue from (0.22, 0) to box_b) landed on the
-# +x wall tilted 12.7 deg (Issue #20, docs/evidence/0b/issue20/trials.md). An entry here
+# Trials expected to fail, by class. Empty since the placing-margin fix of 2026-09-20:
+# before it, with the trays at (0.22, +-0.09), T2 (blue from (0.22, 0) to box_b) landed on
+# the +x wall tilted 12.7 deg (measured 2026-09-20 on the old project). An entry here
 # asserts that class explicitly, so any other outcome fails the test and forces a change.
 EXPECTED_FAILURE: dict[str, str] = {}
 
@@ -29,9 +29,9 @@ def test_reference_trial_outcome_under_simplified_grasp(trial):
     expected = EXPECTED_FAILURE.get(trial.trial)
     if expected is None:
         assert r.verdict.success, (r.verdict.failure, r.verdict.details)
-        # Issue #21 acceptance on the same run: at least MARGIN_MIN_M between every bottom
-        # corner and the nearest inner wall, centred, edges parallel to the tray (the
-        # metrics of docs/evidence/0b/place-margin.md), using the measured grasp offset,
+        # Placing-margin acceptance on the same run: at least MARGIN_MIN_M between every
+        # bottom corner and the nearest inner wall, centred, edges parallel to the tray (the
+        # metrics of docs/place-margin.md), using the measured grasp offset,
         # which lies along the jaw axis.
         m = measure(r, REG)
         assert m["margin_mm"] >= MARGIN_MIN_M * 1000, m

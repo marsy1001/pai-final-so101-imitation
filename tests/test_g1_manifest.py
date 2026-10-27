@@ -2,7 +2,7 @@
 evidence runner's staging and record fields. The
 manifest rules are the XPS acceptance criteria (a)-(e) of the Issue; `check_manifest` is
 the single implementation and is exercised both on the real file and on deliberately
-broken copies. Since ADR 0008 (2026-09-21) both objects have a start position per trial,
+broken copies. Since 2026-09-21 both objects have a start position per trial,
 so the rules apply to both and no object has to stay at its home."""
 
 import dataclasses
@@ -35,10 +35,10 @@ from so101_demo.plan.paths import FIXTURES_4A_DIR, G1_MANIFEST_PATH
 REG = load_registry()
 M = load_g1_manifest()
 
-# The ten start patterns of ADR 0008 (the user picked them from the rendered layout on
+# The ten start patterns (the user picked them from the rendered layout on
 # 2026-09-20): trial -> target, destination, red start, blue start. The manifest copies
-# this table; the test fails if either drifts from the ADR.
-ADR0008 = {
+# this table; the test fails if either drifts from it.
+START_PATTERNS = {
     "T01": ("red_cube", "box_a", (0.16, -0.08), (0.22, 0.02)),
     "T02": ("blue_cube", "box_b", (0.16, 0.06), (0.16, -0.04)),
     "T03": ("red_cube", "box_b", (0.20, 0.02), (0.16, 0.08)),
@@ -104,14 +104,14 @@ def test_start_positions_inside_the_work_area_and_apart():  # (d)
 
 
 def test_start_patterns_are_the_adr_0008_table_and_break_no_rule():
-    assert {t.trial for t in M.trials} == set(ADR0008)
+    assert {t.trial for t in M.trials} == set(START_PATTERNS)
     for t in M.trials:
-        target, destination, red, blue = ADR0008[t.trial]
+        target, destination, red, blue = START_PATTERNS[t.trial]
         assert (t.target, t.destination) == (target, destination), t.trial
         assert t.start_xy_m == {"red_cube": red, "blue_cube": blue}, t.trial
         for oid, xy in t.start_xy_m.items():
             assert start_violations(REG, oid, xy, t.start_xy_m) == [], (t.trial, oid)
-    # both objects move over the ten trials: neither is pinned to its home (ADR 0008)
+    # both objects move over the ten trials: neither is pinned to its home (2026-09-21)
     for oid in REG.objects:
         starts = {t.start_xy_m[oid] for t in M.trials}
         assert len(starts) >= 5, oid

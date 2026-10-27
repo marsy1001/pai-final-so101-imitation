@@ -12,7 +12,7 @@ JSON through `PlanRunner.submit` -> judgement (execution.criteria, unchanged sin
 included), the start check passed and the reset after the run passed. Failed trials stay
 in the log. A laptop / headless run is labelled 参考; the acceptance run on the GPU
 machine passes `--label 受け入れ --video` and records `T{nn}-<fixture>-<config>.mp4` per
-trial with the venue recorder (Issue #10: 1920x1080, 25 fps, labels, NVENC when present).
+trial with the screen recorder (1920x1080, 25 fps, labels, NVENC when present).
 """
 
 from __future__ import annotations
@@ -45,7 +45,7 @@ from ..plan.manifest import MIN_CENTRE_DISTANCE_M, check_manifest  # noqa: E402
 from ..plan.paths import G1_MANIFEST_PATH  # noqa: E402
 from ..sim.scene import CONFIG_IDS  # noqa: E402
 from .overlay import LabelOverlay  # noqa: E402
-from .record import VENUE_FPS, VENUE_HEIGHT, VENUE_WIDTH, VideoRecorder  # noqa: E402
+from .record import VIDEO_FPS, VIDEO_HEIGHT, VIDEO_WIDTH, VideoRecorder  # noqa: E402
 
 OUT_DIR = Path("docs/evidence/g1")
 X264_PRESET = "veryfast"  # libx264 fallback only; NVENC is used when ffmpeg has it
@@ -165,7 +165,7 @@ def run_manifest(
 
     runner = PlanRunner(manifest.config_id, observer=observer if video else None, styled=video)
     reg = runner.registry
-    renderer = mujoco.Renderer(runner.sim.model, VENUE_HEIGHT, VENUE_WIDTH) if video else None
+    renderer = mujoco.Renderer(runner.sim.model, VIDEO_HEIGHT, VIDEO_WIDTH) if video else None
     if video:
         GL_INFO.setdefault("name", gl_renderer_name())  # read while the context is alive
     machine = _machine()
@@ -177,10 +177,10 @@ def run_manifest(
                 recorder = VideoRecorder(
                     runner.sim,
                     out / f"{t.trial}-{t.fixture}-{manifest.config_id}.mp4",
-                    width=VENUE_WIDTH,
-                    height=VENUE_HEIGHT,
-                    fps=VENUE_FPS,
-                    decorate=LabelOverlay(reg, VENUE_WIDTH, VENUE_HEIGHT),
+                    width=VIDEO_WIDTH,
+                    height=VIDEO_HEIGHT,
+                    fps=VIDEO_FPS,
+                    decorate=LabelOverlay(reg, VIDEO_WIDTH, VIDEO_HEIGHT),
                     brighten_headlight=False,
                     preset=X264_PRESET,
                     renderer=renderer,
@@ -262,10 +262,10 @@ def render(
     homes = ", ".join(f"{k} {tuple(v.home_xyz_m[:2])}" for k, v in reg.objects.items())
     trays = ", ".join(f"{k} {_xy(v.center_xy_m)}" for k, v in reg.destinations.items())
     if label == "参考":
-        position = "**参考実行**（受け入れ実行ではない。ADR 0006）。描画を使わない headless 実行。G1 の判定材料は母艦分の受け入れ実行（`--label 受け入れ --video`）"
+        position = "**参考実行**（受け入れ実行ではない）。描画を使わない headless 実行。判定材料は GPU 機の受け入れ実行（`--label 受け入れ --video`）"
     else:
-        position = f"**受け入れ実行**（母艦: {machine}。ADR 0006）。" + (
-            f"各試行を固定カメラから {VENUE_WIDTH}×{VENUE_HEIGHT}・{VENUE_FPS} fps・ラベル付きで録画し「動画」列に記す（Issue #10 の venue recorder、`MUJOCO_GL=egl`、GL `{GL_INFO.get('name', '?')}`、encoder `{GL_INFO.get('encoder', '?')}`）"
+        position = f"**受け入れ実行**（GPU 機: {machine}）。" + (
+            f"各試行を固定カメラから {VIDEO_WIDTH}×{VIDEO_HEIGHT}・{VIDEO_FPS} fps・ラベル付きで録画し「動画」列に記す（screen recorder、`MUJOCO_GL=egl`、GL `{GL_INFO.get('name', '?')}`、encoder `{GL_INFO.get('encoder', '?')}`）"
             if video
             else "動画なし"
         )
@@ -288,7 +288,7 @@ def render(
 - 記録日: {today}。生成: `{cmd}`（再現可能）
 - 結論: manifest `contracts/fixtures/g1/manifest.json`（commit {commit}）の 10 試行 —— `{manifest.config_id}` **{n_ok}/{n} 成功**。合否の宣言はしない（合格数字と合否はユーザーが #13 で決める）
 - 位置づけ: {position}
-- 試行の設計と開始位置の決め方（ADR 0008: ユーザーが配置を決め、規則と headless 実行で確認）: `docs/g1-manifest.md`。判定は 0b / 4a と同じ `execution/criteria.py`（変更なし）
+- 試行の設計と開始位置の決め方（ユーザーが配置を決め、規則と headless 実行で確認）: `docs/g1-manifest.md`。判定は 0b / 4a と同じ `execution/criteria.py`（変更なし）
 - 成功 = 判定器 success（搬送監査 A/B/C 含む）**かつ開始配置の判定 合 かつ実行後のリセット判定 合**。失敗した試行も消さない
 - 入口は `so101_demo.execution.runner.PlanRunner.submit` の 1 つ。承認マークは `--approve-fixed-fixture`（開発用）のみ。試行の前に `PlanRunner.stage` で両物体を manifest の開始位置へ置き、{C.RESET_SETTLE_S} s 静定してリセットと同じ許容値で配置を判定する（「開始配置」列）
 
@@ -296,8 +296,8 @@ def render(
 | 項目 | 値 |
 |---|---|
 | 機材 | {machine}、Python {platform.python_version()}、MuJoCo {mujoco.__version__} |
-| 構成 | `{manifest.config_id}`（簡略把持。ADR 0007。接触設定の変更 0/1） |
-| シーン | 登録物体 2 個を同時に配置。トレイ: {trays}（ADR 0008）。home: {homes}（リセット先。開始位置は試行ごとに両物体とも manifest が指定し、home とは限らない。両物体の中心間距離 ≥ {MIN_CENTRE_DISTANCE_M * 1000:.0f} mm） |
+| 構成 | `{manifest.config_id}`（簡略把持） |
+| シーン | 登録物体 2 個を同時に配置。トレイ: {trays}。home: {homes}（リセット先。開始位置は試行ごとに両物体とも manifest が指定し、home とは限らない。両物体の中心間距離 ≥ {MIN_CENTRE_DISTANCE_M * 1000:.0f} mm） |
 | リセット | 各試行の後（と最初）に `PlanRunner.reset`: `mj_resetData` → ホーム姿勢・開・weld 全解除 → 両物体を home へ → {C.RESET_SETTLE_S} s 静定 → 判定: 物体位置差 ≤ {C.RESET_OBJECT_POS_TOL_M * 1000:.0f} mm・傾き ≤ {C.RESET_OBJECT_TILT_MAX_DEG:.0f}°、関節 ≤ {C.RESET_JOINT_TOL_DEG:.0f}°、開 ≥ {C.GRIPPER_OPEN_MIN:.0f}、保持なし、有効拘束 0、1 mm 超の貫入なし |
 | 判定値 | 0b と同一: 持ち上げ 中心 z ≥ {C.LIFT_CENTER_Z_M} m を {C.LIFT_HOLD_S} s、着座 底面 4 隅が内寸内・中心 z {C.SEAT_CENTER_Z_M} ± {C.SEAT_Z_TOL_M} m・傾き ≤ {C.TILT_MAX_DEG}°、静止 v < {C.SETTLE_LIN_V_MAX_M_S * 1000:.0f} mm/s かつ ω < {C.SETTLE_ANG_V_MAX_RAD_S} rad/s を {C.SETTLE_HOLD_S} s、時間上限 {C.TIMEOUT_S:.0f} s、搬送監査 TCP 距離 ≤ {C.CARRY_TCP_DIST_MAX_M * 1000:.0f} mm・把持ゾーン内・解放後拘束 0 |
 | 正本 | manifest: `contracts/fixtures/g1/manifest.json`。plan: `contracts/fixtures/4a/`。物体・置き先・home: `contracts/registry.json`。判定値: `src/so101_demo/execution/criteria.py`。実行器: `src/so101_demo/execution/runner.py` |

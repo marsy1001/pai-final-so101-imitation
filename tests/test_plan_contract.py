@@ -127,7 +127,7 @@ def test_registry_fixture_matches_issue_4_and_adr_0008_decisions():
     reg = load_registry()
     assert reg.objects["red_cube"].size_m == 0.04 and reg.objects["red_cube"].mass_kg == 0.02
     assert reg.destinations["box_a"].inner_m == 0.06
-    # ADR 0008 (2026-09-20): trays at the far corners of the work area, mirrored in y
+    # 2026-09-20: trays at the far corners of the work area, mirrored in y
     assert reg.destinations["box_a"].center_xy_m == (0.22, 0.09)
     assert reg.destinations["box_b"].center_xy_m == (0.22, -0.09)
     assert [t.trial for t in reg.trials_0b] == ["T1", "T2", "T3", "T4", "T5"]

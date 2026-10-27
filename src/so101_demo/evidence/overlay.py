@@ -1,4 +1,4 @@
-"""Labels on the venue frames: object and tray names drawn where they are (Issue #10).
+"""Labels on the recorded frames: object and tray names drawn where they are.
 
 Each registered object and destination gets a text label anchored to its projected
 3D position (objects follow their body while carried, trays sit still). The label is

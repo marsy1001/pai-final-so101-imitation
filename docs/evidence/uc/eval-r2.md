@@ -1,6 +1,6 @@
 # Uc 評価（改訂 2）: 受け入れ動画 15 本で G2 の理解層を判定
 
-`uv run python -m so101_demo.evidence.uc_eval --report-only` が `docs/evidence/uc/eval-r2.json`・`docs/evidence/uc/config-r2.json`・`docs/evidence/uc/human-check-r2.json` から生成（Issue #25）。
+`uv run python -m so101_demo.evidence.uc_eval --report-only` が `docs/evidence/uc/eval-r2.json`・`docs/evidence/uc/config-r2.json`・`docs/evidence/uc/human-check-r2.json` から生成。
 
 ## 結論
 - **G2 理解層: 不合格**（精度 不合格、所要 合格）。構成リビジョン 2、manifest version 1、実行日 2026-09-29
@@ -148,7 +148,7 @@
 - `max_tokens` 1024、タイムアウト 30 秒、temperature 0.6、top_p 0.95、top_k 20、seed 1234
 - 前処理: S1 adopted version: the cut mp4 (1280x720, 24 fps, 240 frames) goes to the server as a file:// URL unchanged; the model's video processor samples and resizes it (serving/cosmos/probe_video.py)。sample fps 4、画素予算 {'min': 4096, 'total_max': 25165824}、実フレーム数: s1-01 40×1056×576、s1-02 40×1056×576、s1-03 40×1056×576、uc-01 40×1056×576、uc-02 40×1056×576、uc-03 40×1056×576、uc-04 40×1056×576、uc-05 40×1056×576、uc-06 40×1056×576、uc-07 40×1056×576、uc-08 40×1056×576、uc-09 40×1056×576、uc-10 40×1056×576、uc-11 40×1056×576、uc-12 40×1056×576、uc-13 40×1056×576、uc-14 40×1056×576、uc-15 40×1056×576
 - Astra: 待機上限 30 秒、instructions と tool は config の全文。API の報告したモデル: gpt-6-astra
-- 調整: 受け入れ用 15 本の前の版の結果を見て指示文を直した（Issue #25 の受け入れ条件の修正、2026-09-29）。この版の点数は受け入れ用に合わせ込んだ後の値で、初見の動画では下がりうる。合わせ込む前の点数は改訂 1（`eval.md`）
+- 調整: 受け入れ用 15 本の前の版の結果を見て指示文を直した（2026-09-29）。この版の点数は受け入れ用に合わせ込んだ後の値で、初見の動画では下がりうる。合わせ込む前の点数は改訂 1（`eval.md`）
 - ウォームアップ: s1-01（開発用）で 1 回、15.6 秒。計測から外した
 
 ## 条件
@@ -157,6 +157,6 @@
 - API へ送ったのは一文と登録 ID だけ（R7）。動画とフレームは送っていない
 
 ## 出典
-- `docs/demo-plan.md` G2 行、第 2 段の表「Uc 抽出」
+- `docs/brief.md`「問い・スコープ」問い 2（理解層の精度と失敗の型）
 - `contracts/fixtures/uc/videos.json`（動画、gold）
 - `docs/evidence/s1/diagnosis.md`（指示文の比較と運用値）、`docs/evidence/s1/serving.md`

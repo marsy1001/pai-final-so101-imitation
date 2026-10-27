@@ -1,6 +1,6 @@
 # S1: Astra 往復の実測（人が書いた文 → submit_plan → 契約 schema 検証）
 
-`uv run python -m so101_demo.evidence.s1_diagnosis --astra-roundtrip` が生成（Issue #22 XPS 分）。
+`uv run python -m so101_demo.evidence.s1_diagnosis --astra-roundtrip` が生成（laptop）。
 
 ## 結論
 - 実行日 2026-09-28、commit `60c8c2b`、モデル（API の報告値）: gpt-6-astra
@@ -93,5 +93,5 @@
 - 期待値は実行前に `src/so101_demo/evidence/s1_diagnosis.py` の `ROUNDTRIP_SENTENCES` に書いた。Astra を採点者にしない
 
 ## 出典
-- `docs/handover/understanding-layer-notes.md` §3（strict・tool_choice・parallel_tool_calls・refusal / incomplete の扱い）、§5（Astra 単体評価の文の種類）
-- `docs/demo-plan.md`「理解層の設計」
+- `src/so101_demo/understanding/astra.py`（strict・tool_choice・parallel_tool_calls・refusal / incomplete の扱い）
+- `src/so101_demo/understanding/__init__.py`（理解層の設計）

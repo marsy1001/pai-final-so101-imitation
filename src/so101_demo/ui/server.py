@@ -1,4 +1,4 @@
-"""HTTP / WebSocket layer of the approval screen (ADR 0011).
+"""HTTP / WebSocket layer of the approval screen.
 
     GET  /            approval screen (touch display)
     GET  /big         big screen (1080p): sim frame and phase

@@ -1,4 +1,4 @@
-"""Record a trial as an MP4 from a fixed camera (GPU-machine evidence, ADR 0006).
+"""Record a trial as an MP4 from a fixed camera (GPU-machine evidence).
 
 Frames come from `mujoco.Renderer` (offscreen; set `MUJOCO_GL=egl` on a machine
 without a display) and go straight into an `ffmpeg` process on stdin, so no video
@@ -23,8 +23,8 @@ import numpy as np
 from ..sim.model import So101Sim
 
 WIDTH, HEIGHT, FPS = 640, 480, 25
-# venue recording (Issue #10): 1080p, frames on every 2nd control tick (CONTROL_DT_S = 0.02 s)
-VENUE_WIDTH, VENUE_HEIGHT, VENUE_FPS = 1920, 1080, 25
+# screen recording (2026-09-19): 1080p, frames on every 2nd control tick (CONTROL_DT_S = 0.02 s)
+VIDEO_WIDTH, VIDEO_HEIGHT, VIDEO_FPS = 1920, 1080, 25
 # free camera on the work area (Issue #10, 2026-09-19): straight in front of the base,
 # low and close, so both cubes, both trays and the jaws stay visible in every phase of
 # all four fixtures (segmentation search over azimuth 110-230, elevation -20..-55,
@@ -82,8 +82,8 @@ Decorator = Callable[[np.ndarray, So101Sim, "VideoRecorder"], np.ndarray]
 class VideoRecorder:
     """Render `sim` into `path` at `fps`. Use as a context manager or call close().
 
-    Defaults are the 0b / 4a evidence format (640x480, 25 fps). The venue format
-    (Issue #10) passes 1920x1080, 30 fps and a `decorate` hook that draws labels on
+    Defaults are the small evidence format (640x480, 25 fps). The screen format
+    (2026-09-19) passes 1920x1080, 30 fps and a `decorate` hook that draws labels on
     each frame; the model must then have a large enough offscreen buffer
     (`sim.appearance.style_spec`). Wall-clock and sim time of every frame are kept
     for the frame-rate evidence (`fps_stats`).

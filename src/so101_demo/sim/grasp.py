@@ -1,6 +1,6 @@
 """Simplified grasp ("hold on close"), as an application rule on top of MuJoCo welds.
 
-Rules (docs/demo-plan.md 簡略把持, fixed on Issue #4 2026-09-19):
+Rules (fixed on 2026-09-19):
 - On a close command, hold only if exactly one registered object is inside the grasp
   zone between the jaws. Zero or several candidates: close without holding.
 - Holding freezes the current relative pose (no snap, no teleport); an unreached

@@ -1,6 +1,6 @@
 # S1 診断: 10 秒動画 3 本で Cosmos 一文 → Astra 契約 JSON が通るか
 
-`uv run python -m so101_demo.evidence.s1_diagnosis` が生成（Issue #22 母艦分）。生データは `diagnosis.json`、照合は `human-check.json`（手書き）。
+`uv run python -m so101_demo.evidence.s1_diagnosis` が生成（GPU 機）。生データは `diagnosis.json`、照合は `human-check.json`（手書き）。
 
 ## 結論
 - 実行日 2026-09-28、commit `8150f07`。動画 3 本 × 3 回 = 9 実行（ウォームアップ 1 回は別）
@@ -155,5 +155,5 @@ Astra の生 tool call arguments:
 
 ## 出典
 - `contracts/fixtures/s1/videos.json`（動画、gold）
-- `docs/handover/cosmos-measurements.md` §3、§4（所要、暴走、捏造の既知の癖）
-- `docs/demo-plan.md`「理解層の設計」「未決の値」
+- `src/so101_demo/understanding/settings.py`（所要、暴走、捏造の既知の癖と各値の根拠）
+- `src/so101_demo/understanding/__init__.py`（理解層の設計）

@@ -278,7 +278,7 @@ def test_cosmos_request_puts_the_video_first_and_uses_the_settings():
     assert "cannot tell" in content[1]["text"]  # the escape
     assert body["max_tokens"] == S.COSMOS_MAX_TOKENS
     assert body["mm_processor_kwargs"] == {"fps": S.COSMOS_SAMPLE_FPS, "do_sample_frames": True}
-    assert "response_format" not in body  # Cosmos never writes JSON (ADR 0003)
+    assert "response_format" not in body  # Cosmos never writes JSON (by design)
 
 
 def test_cosmos_stop_returns_the_sentence_and_keeps_the_trace():

@@ -1,6 +1,6 @@
 # S1: Cosmos Reason 2 2B を vLLM で起動する手順と実測（母艦）
 
-Issue #22（母艦分）、実測日 2026-09-28。構成は ADR 0009 のとおり、別 uv プロジェクト `serving/cosmos/` に置いた。
+GPU 機での実測、実測日 2026-09-28。構成は別 uv プロジェクト `serving/cosmos/` に置いた（本体の `uv.lock` と vLLM の依存を分けるため）。
 
 ## 結論
 - `serving/cosmos/serve.sh` 1 本で起動できる。引き継ぎと同じフラグで、vLLM 0.12.0 / torch 2.9.0+cu128 / transformers 4.57.1 を `serving/cosmos/uv.lock` で固定した
@@ -22,7 +22,7 @@ Issue #22（母艦分）、実測日 2026-09-28。構成は ADR 0009 のとお�
 4. ウォームアップ: 動画を 1 本推論する（約 19 秒）。`uv run python -m so101_demo.evidence.s1_diagnosis` は最初にこれを行い、計測から外す
 5. 停止: `serve.sh` のプロセスを終了（Ctrl-C または `kill <pid>`）。VRAM は数秒で起動前の値に戻る（481 MiB）
 
-`serve.sh` のフラグ（`docs/handover/cosmos-measurements.md` §1 と同一）:
+`serve.sh` のフラグ:
 
 ```
 vllm serve nvidia/Cosmos-Reason2-2B --allowed-local-media-path <repo> --max-model-len 16384 \
@@ -53,10 +53,10 @@ vllm serve nvidia/Cosmos-Reason2-2B --allowed-local-media-path <repo> --max-mode
 
 ## 環境（リポジトリの外に置くもの）
 - マシン: 母艦（Alienware、RTX 4090 Laptop 16,376 MiB）。WSL2（kernel 6.6.87.2-microsoft-standard-WSL2）、RAM 15 GiB。CUDA Toolkit と Docker は入れていない（wheel 同梱のランタイムで動く）
-- C コンパイラ: Zig の `cc` シム（`~/.local/zigcc/cc`、`c++`、`env.sh`、ziglang 0.16.0、`~/.local/zigenv`）。`serve.sh` は `~/.local/zigcc/env.sh` があれば source する。無い場合は、`docs/handover/cosmos-measurements.md` §2 の手順で作る。シムが無いと、Triton の JIT で `RuntimeError: Failed to find C compiler.` が出て起動に失敗する
+- C コンパイラ: Zig の `cc` シム（`~/.local/zigcc/cc`、`c++`、`env.sh`、ziglang 0.16.0、`~/.local/zigenv`）。`serve.sh` は `~/.local/zigcc/env.sh` があれば source する。無い場合は、Zig の `zig cc` を `cc` / `c++` 名で呼ぶシェルスクリプトを置き、`env.sh` で PATH の先頭に足す。シムが無いと、Triton の JIT で `RuntimeError: Failed to find C compiler.` が出て起動に失敗する
 - キャッシュ: `~/.cache/vllm`（今回 426 MB）。消えると torch.compile が 31 秒かかる初回の状態に戻る
 
 ## 出典
-- `docs/handover/cosmos-measurements.md` §1（起動コマンド、2026-09-15 の実測: 常駐 11,528 MiB、初回推論 17.9〜20.0 秒）、§2（C コンパイラ、キャッシュ）
-- `docs/adr/0009-serve-cosmos-from-a-separate-uv-project.md`
+- 2026-09-15 の旧プロジェクトでの実測（記録は持ち込んでいない）: 常駐 11,528 MiB、初回推論 17.9〜20.0 秒
+- `serving/cosmos/serve.sh`、`serving/cosmos/pyproject.toml`
 - 生ログはリポジトリの外（`tmp/s1-serving/`、git 管理外）

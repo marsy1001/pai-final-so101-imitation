@@ -528,7 +528,7 @@ def report(result: dict[str, Any]) -> str:
         "",
         "## 出典",
         "",
-        "- `docs/demo-plan.md` 第 2 段の表「Astra 構造化 / 異常系」、リスク R1（遅延応答は run ID で失効）",
+        "- `src/so101_demo/understanding/runs.py`（遅延応答は run ID で失効）",
         "- 実装: `src/so101_demo/understanding/runs.py`、`src/so101_demo/understanding/pipeline.py`、"
         "`src/so101_demo/evidence/astra_faults.py`",
         "- 行データ: `docs/evidence/astra-faults/faults.json`",

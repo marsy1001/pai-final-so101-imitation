@@ -1,6 +1,6 @@
 # Uc 評価: 受け入れ動画 15 本で G2 の理解層を判定
 
-`uv run python -m so101_demo.evidence.uc_eval --report-only` が `docs/evidence/uc/eval.json`・`docs/evidence/uc/config.json`・`docs/evidence/uc/human-check.json` から生成（Issue #25）。
+`uv run python -m so101_demo.evidence.uc_eval --report-only` が `docs/evidence/uc/eval.json`・`docs/evidence/uc/config.json`・`docs/evidence/uc/human-check.json` から生成。
 
 ## 結論
 - **G2 理解層: 不合格**（精度 不合格、所要 合格）。構成リビジョン 1、manifest version 1、実行日 2026-09-28
@@ -158,6 +158,6 @@
 - API へ送ったのは一文と登録 ID だけ（R7）。動画とフレームは送っていない
 
 ## 出典
-- `docs/demo-plan.md` G2 行、第 2 段の表「Uc 抽出」
+- `docs/brief.md`「問い・スコープ」問い 2（理解層の精度と失敗の型）
 - `contracts/fixtures/uc/videos.json`（動画、gold）
 - `docs/evidence/s1/diagnosis.md`（指示文の比較と運用値）、`docs/evidence/s1/serving.md`

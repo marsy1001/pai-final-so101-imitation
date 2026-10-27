@@ -2,7 +2,7 @@
 
 The first tests read the committed evidence and need nothing; the `gpu` ones talk to the
 running Cosmos server (serving/cosmos/serve.sh) and check the client and server agree on
-the request shape (`mm_processor_kwargs`, `reasoning_content`; ADR 0009 Consequences).
+the request shape (`mm_processor_kwargs`, `reasoning_content`).
 """
 
 from __future__ import annotations

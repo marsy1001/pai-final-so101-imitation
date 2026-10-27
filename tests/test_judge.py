@@ -49,7 +49,7 @@ def traj(spec, in_tip=IN_POCKET, constraints=None):
     return out
 
 
-# Tray poses come from the registry (ADR 0008 moved the trays; the judge does not care where).
+# Tray poses come from the registry (the trays moved on 2026-09-20; the judge does not care where).
 A = (*DEST.center_xy_m, 0.02)
 A_TCP_LOW = (A[0], A[1] - 0.02, 0.02)  # TCP 20 mm beside the seated cube, as at lift
 A_TCP_HIGH = (A[0], A[1] - 0.02, 0.07)

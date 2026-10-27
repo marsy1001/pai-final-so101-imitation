@@ -1,6 +1,6 @@
 """Approval screen logic (demo-plan stage 2 "3b 承認画面", Issue #27).
 
-One `ApprovalScreen` owns what the visitor and the staff see and the only way from an
+One `ApprovalScreen` owns what the audience and the operator see and the only way from an
 understanding result to the runner. It holds no HTTP and no rendering: the server
 (`ui.server`) calls these methods and shows `view()`.
 

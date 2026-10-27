@@ -4,7 +4,7 @@ Both files place the tip at the same local position under the gripper body, but 
 URDF fixed joint `gripper_frame_joint` uses rpy="0 pi 0" (Ry(180 deg)) while the MJCF
 site `gripperframe` uses quat=(0.707107, 0, 0.707107, 0) (Ry(90 deg)). Hence
     T_world_mjcf_site = T_world_urdf_tip @ T_URDF_TIP_TO_MJCF_SITE,   R = Ry(-90 deg).
-Source: docs/handover/mujoco-so101-notes.md section 3; verified numerically by
+Derived from the two model files (2026-09-19); verified numerically by
 tests/test_kinematics_fk_agreement.py.
 """
 

@@ -55,7 +55,7 @@ class SceneConfig:
 def build_scene(
     config: SceneConfig, registry: Registry | None = None, *, styled: bool = False
 ) -> mujoco.MjModel:
-    """`styled=True` adds the venue look (sim.appearance): visual elements only."""
+    """`styled=True` adds the screen look (sim.appearance): visual elements only."""
     reg = registry or load_registry()
     spec = mujoco.MjSpec.from_file(str(mjcf_path()))
     if styled:

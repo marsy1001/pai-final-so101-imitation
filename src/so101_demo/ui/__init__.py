@@ -1,4 +1,4 @@
-"""Approval screen and big screen (demo-plan 3b, ADR 0011).
+"""Approval screen and big screen (FastAPI + static HTML/JS).
 
 A browser UI: this package serves static HTML/JS and a small HTTP / WebSocket API from
 the one Python process that owns the runner, the `RunGate` and the sim, so robot commands

@@ -1,4 +1,4 @@
-"""Issue #10: the venue styling is visual only, and the label projection is exact."""
+"""The screen styling is visual only, and the label projection is exact."""
 
 import mujoco
 import numpy as np

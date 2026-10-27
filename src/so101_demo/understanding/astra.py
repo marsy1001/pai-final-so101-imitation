@@ -1,6 +1,6 @@
 """GPT-6 Astra client: one sentence in, one candidate plan out (Responses API, Azure OpenAI).
 
-Astra sees only Cosmos' sentence and the registered ids; no video, no image (ADR 0003).
+Astra sees only Cosmos' sentence and the registered ids; no video, no image (by design).
 It must answer by calling the `submit_plan` function tool exactly once. The tool call is
 the receipt of a *candidate* plan, never a permission to run it: the arguments are
 validated here against the full contract, then approved by a person, then checked by the

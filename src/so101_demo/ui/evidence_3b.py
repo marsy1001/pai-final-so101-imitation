@@ -10,7 +10,7 @@ nothing calls Cosmos or Astra. Paths:
 runner is tried and the runner's record count is compared before and after.
 
 Writes docs/evidence/3b/operations.md (conclusion first) and operations.json. A run on
-the laptop is 参考 (ADR 0006); the run with real understanding results is the GPU part.
+the laptop is 参考; the run with real understanding results is GPU-machine work.
 Exits 1 when a path does not end as expected or a refused operation reached the runner.
 """
 
@@ -385,9 +385,7 @@ def report(result: dict) -> str:
         "",
         "## 出典",
         "",
-        "- `docs/demo-plan.md` 第 2 段の表「3b 承認画面」、共通規約（救済分は成功率に数えない）、"
-        "リスク R1",
-        "- `docs/adr/0011-browser-ui-for-approval-and-big-screen.md`",
+        "- `docs/approval-screen.md`（操作と状態、救済分は成功率に数えない）",
         "- 実装: `src/so101_demo/ui/`",
         "",
     ]

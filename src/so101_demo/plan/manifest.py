@@ -13,7 +13,7 @@ lies in the work area, the two objects are at least MIN_CENTRE_DISTANCE_M apart,
 cube sits on a tray and the grasp TCP (along the object's yaw) is inside the work area
 (`start_violations`), (e) trial ids are unique.
 
-2026-09-21 (ADR 0008, Issue #19): both objects get a start position per trial, chosen by
+2026-09-21: both objects get a start position per trial, chosen by
 the user from the rendered layout, so the earlier rule "only the target leaves home" and
 the named positions P1 / P2 (`start_label`, `positions_m`) are gone. The geometric rules
 now apply to both objects.

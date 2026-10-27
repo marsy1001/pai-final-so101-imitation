@@ -1,11 +1,11 @@
 """Cosmos Reason 2 client: one video in, one sentence out (vLLM OpenAI-compatible server).
 
-The server is started as in docs/handover/cosmos-measurements.md §1 (`--reasoning-parser
-qwen3`, `--allowed-local-media-path`); the video goes in as a `file://` URL, before the
+The server is started by serving/cosmos/serve.sh (`--reasoning-parser qwen3`,
+`--allowed-local-media-path`); the video goes in as a `file://` URL, before the
 text (the official example puts media first). Reasoning is on and the answer is one plain
-sentence: Cosmos never writes JSON (ADR 0003). The prompt asks for what was moved, where
+sentence: Cosmos never writes JSON (by design). The prompt asks for what was moved, where
 it went and in which order, gives an escape ("cannot tell"), asks for no times and no
-coordinates, and does not mention containers (demo-plan 「Cosmos への指示」). It is the S1
+coordinates, and does not mention containers. It is the S1
 diagnosis prompt with the scene sentence of Uc revision 2 in front.
 
 `describe` never raises for a model or transport failure: it returns a `CosmosResult`

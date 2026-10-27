@@ -7,8 +7,8 @@ prompt on 004b276, prompt without containers on 8150f07): at most 268 completion
 Cosmos at most 6.6 s, Astra at most 7.7 s, about 115 tokens/s decoding (serving.md).
 Every client reads these names; nothing else in the code carries its own number.
 
-Why these values were chosen before the measurement (docs/handover/cosmos-measurements.md
-§3, §4, §6):
+Why these values were chosen before the measurement (measured 2026-09-15 on the old
+project; the numbers below are the record):
 
 - COSMOS_MAX_TOKENS = 1024. Normal 10 s runs answered in 1.3-7.0 s (stage1) and a median
   of 3.7 s (stage4); the 4 runaway runs of stage4 spent the whole 4096 tokens repeating

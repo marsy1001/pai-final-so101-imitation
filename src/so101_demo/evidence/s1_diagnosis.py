@@ -180,7 +180,7 @@ def write_roundtrip(data: dict) -> None:
     lines = [
         "# S1: Astra 往復の実測（人が書いた文 → submit_plan → 契約 schema 検証）",
         "",
-        "`uv run python -m so101_demo.evidence.s1_diagnosis --astra-roundtrip` が生成（Issue #22 XPS 分）。",
+        "`uv run python -m so101_demo.evidence.s1_diagnosis --astra-roundtrip` が生成（laptop）。",
         "",
         "## 結論",
         f"- 実行日 {data['date']}、commit `{data['commit']}`、モデル（API の報告値）: {', '.join(models) or '不明'}",
@@ -223,8 +223,8 @@ def write_roundtrip(data: dict) -> None:
         "- 期待値は実行前に `src/so101_demo/evidence/s1_diagnosis.py` の `ROUNDTRIP_SENTENCES` に書いた。Astra を採点者にしない",
         "",
         "## 出典",
-        "- `docs/handover/understanding-layer-notes.md` §3（strict・tool_choice・parallel_tool_calls・refusal / incomplete の扱い）、§5（Astra 単体評価の文の種類）",
-        "- `docs/demo-plan.md`「理解層の設計」",
+        "- `src/so101_demo/understanding/astra.py`（strict・tool_choice・parallel_tool_calls・refusal / incomplete の扱い）",
+        "- `src/so101_demo/understanding/__init__.py`（理解層の設計）",
     ]
     (OUT_DIR / "astra-roundtrip.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     (OUT_DIR / "astra-roundtrip.json").write_text(
@@ -497,7 +497,7 @@ def write_diagnosis() -> None:
     lines = [
         "# S1 診断: 10 秒動画 3 本で Cosmos 一文 → Astra 契約 JSON が通るか",
         "",
-        "`uv run python -m so101_demo.evidence.s1_diagnosis` が生成（Issue #22 母艦分）。"
+        "`uv run python -m so101_demo.evidence.s1_diagnosis` が生成（GPU 機）。"
         "生データは `diagnosis.json`、照合は `human-check.json`（手書き）。",
         "",
         "## 結論",
@@ -662,8 +662,8 @@ def write_diagnosis() -> None:
         "",
         "## 出典",
         "- `contracts/fixtures/s1/videos.json`（動画、gold）",
-        "- `docs/handover/cosmos-measurements.md` §3、§4（所要、暴走、捏造の既知の癖）",
-        "- `docs/demo-plan.md`「理解層の設計」「未決の値」",
+        "- `src/so101_demo/understanding/settings.py`（所要、暴走、捏造の既知の癖と各値の根拠）",
+        "- `src/so101_demo/understanding/__init__.py`（理解層の設計）",
     ]
     (OUT_DIR / "diagnosis.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 

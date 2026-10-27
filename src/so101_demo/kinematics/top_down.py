@@ -1,7 +1,7 @@
 """Top-down grasp targets, the stage-1 work area and the rejection checks.
 
-A solver returning angles is not a reached pose (docs/handover/mujoco-so101-notes.md
-section 2). `solve_top_down` therefore checks, in this order: target finite and inside
+A solver returning angles is not a reached pose (a lesson from the model notes of
+2026-09-19). `solve_top_down` therefore checks, in this order: target finite and inside
 the work area, solver output finite, joint ranges, position residual, approach
 direction, jaw yaw. Any failure raises `IkRejected`; nothing is clipped or silently
 accepted.
@@ -27,8 +27,8 @@ WORLD_DOWN = np.array([0.0, 0.0, -1.0])
 
 # Work area fixed for stage 1 (metres, base frame): a conservative box in front of the
 # base inside which every point of a 5x5x4 grid solved a top-down grasp within the
-# tolerances under the fixed solver conditions below (2026-09-19,
-# docs/evidence/0a/fk-ik-agreement.md). Outside it a target is refused, not clipped.
+# tolerances under the fixed solver conditions below (2026-09-19; the grid is
+# re-solved by tests/test_kinematics_top_down.py). Outside it a target is refused, not clipped.
 # The bounds say nothing about physical reachability beyond them: an exploratory scan
 # with these seeds found growing residuals farther out and higher up, and that is all.
 # 2026-09-19 (Issue #4): x lower bound 0.15 -> 0.13 because the grasp TCP sits half a

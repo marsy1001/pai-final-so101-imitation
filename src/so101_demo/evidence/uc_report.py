@@ -346,7 +346,7 @@ def render(rev: int = 1) -> str:
         f"# Uc 評価{title_rev}: 受け入れ動画 15 本で G2 の理解層を判定",
         "",
         "`uv run python -m so101_demo.evidence.uc_eval --report-only` が "
-        f"`{_rel(p['eval'])}`・`{_rel(p['config'])}`・`{_rel(p['human'])}` から生成（Issue #25）。",
+        f"`{_rel(p['eval'])}`・`{_rel(p['config'])}`・`{_rel(p['human'])}` から生成。",
         "",
         "## 結論",
         f"- **G2 理解層: {_mark(passed)}**（精度 {_mark(sc['g2_accuracy_pass'])}、"
@@ -481,8 +481,8 @@ def render(rev: int = 1) -> str:
             f"- 調整に使った動画: {', '.join(cfg['tuning']['development_set'])} のみ"
             "（受け入れ用 15 本は使っていない）"
             if rev == 1
-            else "- 調整: 受け入れ用 15 本の前の版の結果を見て指示文を直した（Issue #25 の受け入れ条件の"
-            "修正、2026-09-29）。この版の点数は受け入れ用に合わせ込んだ後の値で、初見の動画では"
+            else "- 調整: 受け入れ用 15 本の前の版の結果を見て指示文を直した（2026-09-29）。"
+            "この版の点数は受け入れ用に合わせ込んだ後の値で、初見の動画では"
             "下がりうる。合わせ込む前の点数は改訂 1（`eval.md`）"
         ),
         f"- ウォームアップ: {data['warmup']['video']}（開発用）で 1 回、{data['warmup']['elapsed_s']:.1f} 秒。計測から外した",
@@ -494,7 +494,7 @@ def render(rev: int = 1) -> str:
         "- API へ送ったのは一文と登録 ID だけ（R7）。動画とフレームは送っていない",
         "",
         "## 出典",
-        "- `docs/demo-plan.md` G2 行、第 2 段の表「Uc 抽出」",
+        "- `docs/brief.md`「問い・スコープ」問い 2（理解層の精度と失敗の型）",
         "- `contracts/fixtures/uc/videos.json`（動画、gold）",
         "- `docs/evidence/s1/diagnosis.md`（指示文の比較と運用値）、`docs/evidence/s1/serving.md`",
     ]

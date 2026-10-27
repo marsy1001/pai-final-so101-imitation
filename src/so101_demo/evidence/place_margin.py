@@ -1,4 +1,4 @@
-"""Placing margin of the fixed trials (Issue #21): docs/evidence/0b/place-margin.md + .json.
+"""Placing margin of the fixed trials: writes place-margin.md + .json under --out.
 
     uv run python -m so101_demo.evidence.place_margin                      # after the fix
     uv run python -m so101_demo.evidence.place_margin --baseline --commit <hash>   # before
@@ -302,7 +302,7 @@ def render(before: dict | None, after: dict, reg: Registry, today: str) -> str:
     lines += [
         f"- 修正前 = `main` {before['commit'] if before else '-'}（{before['date'] if before else '-'}、置きの向き = 基部から径方向、置き TCP = 設計値）。修正後 = `{after['commit']}`（pick / place の経路を最後に変えた commit。置きの yaw をトレイに合わせ、持ち上げ後に測った把持オフセットで置き TCP を補正。設計は `docs/place-margin.md`）",
         "- 判定は `execution.judge`（`criteria.py` の固定値。変更なし）。列の意味: 中心ずれ = 静止時の立方体中心 − トレイ中心 (dx, dy) とその大きさ (mm)。yaw 差 = 立方体の辺とトレイ軸の角度差（±45° に折り返し）。**着地余裕** = 底面 4 隅それぞれから最寄りの内壁までの距離の最小値（負 = 内寸の外）。傾き = 静止時。把持オフセット = 持ち上げ時の立方体中心の tip-site 座標 (X 接近, Y, Z 顎開き) mm、設計値 (0, 0, 23.5)",
-        "- 4a F1〜F4 は fixture JSON の対象・置き先を、対象 home から、非対象を home に置いて 0b と同じ試行実行器で回した（実行器 `PlanRunner` の承認・リセット判定は通さない。承認付きの 4a 記録は `docs/evidence/4a/runs.md`）",
+        "- 4a F1〜F4 は fixture JSON の対象・置き先を、対象 home から、非対象を home に置いて 0b と同じ試行実行器で回した（実行器 `PlanRunner` の承認・リセット判定は通さない）",
         "",
         "## 固定 9 試行: 修正前 → 修正後",
         "",
@@ -366,7 +366,6 @@ def render(before: dict | None, after: dict, reg: Registry, today: str) -> str:
         "## 出典",
         f"- 数値: `{AFTER_JSON}`（修正後、この生成）と `{BEFORE_JSON}`（修正前）。本文の数字はすべてそこから引いた",
         "- 判定値: `src/so101_demo/execution/criteria.py`。動作・補正: `src/so101_demo/execution/primitives.py`。向きの規約: `src/so101_demo/kinematics/top_down.py`。設計の説明: `docs/place-margin.md`",
-        "- 以前の記録: Issue #20 の参考実行（修正前の 0b、4/5）は `docs/evidence/0b/issue20/`、旧配置は `tray19/`",
     ]
     return "\n".join(lines) + "\n"
 

@@ -90,6 +90,7 @@ class LogEntry:
     final: dict | None  # the plan sent to the runner (None when nothing ran)
     result: str  # runner outcome, "not run", "refused: ...", "dropped: ..."
     rescued: bool  # 訂正 / 手動: never counted as automatic understanding
+    reading_run_id: str | None = None  # 手動 after a shown result: the reading's run id
 
     def as_dict(self) -> dict:
         return dict(self.__dict__)
@@ -103,6 +104,8 @@ class _Current:
     final: Plan | None = None  # the plan being run (RUNNING); differs after 訂正 / 手動
     reason: str | None = None  # why FAILED
     started_at: float | None = None
+    video: str | None = None  # what the source is reading (a video id); shown on screen
+    reading_run_id: str | None = None  # in 手動: the settled reading that was on screen
 
 
 @dataclass
@@ -111,6 +114,7 @@ class ApprovalScreen:
     gate: RunGate = field(default_factory=RunGate)
     registry: Registry = field(default_factory=load_registry)
     clock: Callable[[], float] = time.monotonic  # the wait limit; pass the gate's clock
+    on_log: Callable[[LogEntry], None] | None = None  # every log entry (the run log, #3)
 
     def __post_init__(self) -> None:
         self._lock = threading.RLock()
@@ -123,6 +127,7 @@ class ApprovalScreen:
         self._worker: threading.Thread | None = None
         self._idle = threading.Event()
         self._idle.set()
+        self.log_errors: list[str] = []  # `on_log` failures; never break an operation
 
     # --- helpers -------------------------------------------------------------------
     def _set(self, phase: Phase) -> None:
@@ -137,19 +142,25 @@ class ApprovalScreen:
         *,
         run_id: str | None = None,
         shown: Plan | None = None,
+        reading_run_id: str | None = None,
     ) -> None:
-        self.log.append(
-            LogEntry(
-                _now(),
-                run_id or self.cur.run_id,
-                path,
-                _plan_dict(shown or self.cur.plan),
-                _plan_dict(final),
-                result,
-                path in RESCUE_PATHS,
-            )
+        entry = LogEntry(
+            _now(),
+            run_id or self.cur.run_id,
+            path,
+            _plan_dict(shown or self.cur.plan),
+            _plan_dict(final),
+            result,
+            path in RESCUE_PATHS,
+            reading_run_id if reading_run_id is not None else self.cur.reading_run_id,
         )
+        self.log.append(entry)
         self.version += 1
+        if self.on_log is not None:
+            try:
+                self.on_log(entry)
+            except Exception as e:  # noqa: BLE001 - the log is outside the plan path
+                self.log_errors.append(f"{type(e).__name__}: {e}")
 
     def _refuse(self, action: str, why: str) -> None:
         self._log(action, None, f"refused: {why}")
@@ -188,6 +199,13 @@ class ApprovalScreen:
             self.cur = _Current(run_id=run_id, started_at=self.clock())
             self._set(Phase.READING)
             return run_id
+
+    def label_reading(self, run_id: str, label: str | None) -> None:
+        """What the source started reading for `run_id` (a video id), for the screens."""
+        with self._lock:
+            if label and run_id == self.cur.run_id:
+                self.cur.video = label
+                self.version += 1
 
     def abort_reading(self, run_id: str, why: str) -> None:
         """The source could not start: close the run and go back to 待機."""
@@ -264,7 +282,10 @@ class ApprovalScreen:
             if self.phase is Phase.RUNNING:
                 self._refuse(MANUAL, "phase is 実行中")
             self.gate.cancel()  # a result still on its way is dropped when it arrives
-            # a manual session of its own; the model's plan stays for the log only
+            # a manual session of its own; the model's plan stays for the log only, and
+            # the log keeps which reading it was (a result on screen: RESULT / FAILED)
+            if self.cur.plan is not None and self.cur.reading_run_id is None:
+                self.cur.reading_run_id = self.cur.run_id
             self.cur.run_id = f"manual-{uuid.uuid4().hex[:8]}"
             self._set(Phase.MANUAL)
 
@@ -299,7 +320,7 @@ class ApprovalScreen:
         self.cur.final = approved.plan  # what the screens show while it runs
         self._set(Phase.RUNNING)
         self._idle.clear()
-        run_id, shown = self.cur.run_id, self.cur.plan
+        run_id, shown, reading = self.cur.run_id, self.cur.plan, self.cur.reading_run_id
 
         def work() -> None:
             try:
@@ -309,7 +330,14 @@ class ApprovalScreen:
                 outcome = f"error: {type(e).__name__}: {e}"
             with self._lock:
                 try:
-                    self._log(path, approved.plan, outcome, run_id=run_id, shown=shown)
+                    self._log(
+                        path,
+                        approved.plan,
+                        outcome,
+                        run_id=run_id,
+                        shown=shown,
+                        reading_run_id=reading,
+                    )
                 finally:  # the screen returns to 待機 even if the log fails
                     self.last_outcome = outcome
                     self.cur = _Current()
@@ -392,6 +420,7 @@ class ApprovalScreen:
                 "target": self._object(plan.target) if plan else None,
                 "destination": self._destination(plan.destination) if plan else None,
                 "message": self.cur.reason,
+                "video": self.cur.video,  # the video being / last read, until 待機
                 "waiting_s": waiting,
                 "wait_limit_s": self.gate.timeout_s,
                 "candidates": self.candidates() if self.phase is Phase.MANUAL else [],

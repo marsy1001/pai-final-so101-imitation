@@ -113,6 +113,7 @@ function approvalScreen() {
     r.textContent = v.reading ? `読み取った内容: ${v.reading}` : "";
     const w = document.getElementById("waiting");
     w.textContent = v.waiting_s == null ? "" : `${Math.floor(v.waiting_s)} 秒 / 上限 ${Math.round(v.wait_limit_s)} 秒`;
+    document.getElementById("video").textContent = v.video ? `動画 ${v.video}` : "";
     document.getElementById("last").textContent = v.last_result ? `前回: ${v.last_result}` : "";
     for (const op of ops) document.getElementById(op).disabled = !v.actions.includes(op);
     if (v.phase_key === "manual" && mode !== "choose") openPicker("choose");

@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import asyncio
 from pathlib import Path
+from typing import Protocol
 
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.responses import FileResponse, Response
@@ -25,10 +26,17 @@ from pydantic import BaseModel
 
 from .frames import FrameStore
 from .screen import ActionRefused, ApprovalScreen
-from .sources import FixedSource
+from .sources import Deliver
 
 STATIC = Path(__file__).parent / "static"
 PUSH_INTERVAL_S = 0.1
+
+
+class Source(Protocol):
+    """An understanding source (`ui.sources`): starts one reading for `run_id`, answers
+    through `deliver` later, returns a label for the screen (a video id) or None."""
+
+    def start(self, run_id: str, deliver: Deliver) -> str | None: ...
 
 
 class Session(BaseModel):
@@ -42,7 +50,7 @@ class Pair(Session):
 
 def create_app(
     screen: ApprovalScreen,
-    source: FixedSource | None = None,
+    source: Source | None = None,
     frames: FrameStore | None = None,
 ) -> FastAPI:
     app = FastAPI(title="approval screen", docs_url=None, redoc_url=None, openapi_url=None)
@@ -76,10 +84,11 @@ def create_app(
         except ActionRefused as e:
             raise HTTPException(status_code=409, detail=str(e)) from e
         try:
-            source.start(run_id, screen.deliver)
+            label = source.start(run_id, screen.deliver)
         except Exception as e:  # noqa: BLE001 - the screen must not stay in 読み取り中
             screen.abort_reading(run_id, f"{type(e).__name__}: {e}")
             raise HTTPException(status_code=503, detail="understanding source failed") from e
+        screen.label_reading(run_id, label)
         return screen.view()
 
     @app.post("/api/approve")

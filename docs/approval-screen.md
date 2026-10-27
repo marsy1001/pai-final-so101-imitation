@@ -1,7 +1,7 @@
 # 承認画面と表示画面の起動
 
-- 作成: 2026-09-29（旧プロジェクト）。2026-10-27 に課題用に書き直した
-- 実装: `src/so101_demo/ui/`（`screen.py` 状態遷移、`server.py` HTTP / WebSocket、`sources.py` 理解結果の供給元（固定 JSON / 動画）、`runner_thread.py` 実行スレッド、`recording.py` 表示用フレームと録画、`runs_log.py` 1 run 1 行の記録、`evidence_e2e.py` 記録の検査と文書化、`static/` HTML / JS）。テスト: `tests/test_ui.py`、`tests/test_ui_e2e.py`
+- 作成: 2026-09-29（旧プロジェクト）。2026-10-27 に課題用に書き直した。2026-10-27 に動画の選択と大画面の切替（Issue #4）を追記
+- 実装: `src/so101_demo/ui/`（`screen.py` 状態遷移と選択、`server.py` HTTP / WebSocket / 動画配信、`sources.py` 理解結果の供給元（固定 JSON / 動画）、`runner_thread.py` 実行スレッド、`recording.py` 表示用フレームと録画、`runs_log.py` 1 run 1 行の記録、`evidence_e2e.py` 記録の検査と文書化、`static/` HTML / JS（`app.js` 承認画面、`big.js` 表示画面））。テスト: `tests/test_ui.py`、`tests/test_ui_e2e.py`、`tests/js/`（node で実際の JS を動かす）
 
 ## 結論
 `uv run python -m so101_demo.ui` で起動する。ブラウザで次の 2 つを開く（WSL2 の localhost は Windows 側のブラウザから開ける）。
@@ -11,7 +11,7 @@
 
 承認画面は、理解層が動画から読み取った結果を人が確認してからロボットを動かすための関所である。「これで動かす」を押すまで何も動かず、対応外の動画は「対応外にする」で動かさないまま終われる。
 
-**今の状態（2026-10-27、Issue #3）**: 「読み取り開始」は、`--videos` を付けて起動すると次の動画を本物の理解層（`understanding.pipeline.understand`: Cosmos の一文 → Astra の契約 JSON）に送り、結果を承認待ち / 拒否 / 失敗として画面に出す（`sources.py` の `VideoSource`）。`--videos` 無しでは従来どおり開発用の固定 JSON（`FixedSource`、`contracts/fixtures/4a/` を順番に返す）。`--record <dir>` を付けると、承認された実行を 1920×1080・25 fps の mp4 に録画し、1 run 1 行の記録を `<dir>/runs.jsonl` に残す。通しの記録は `docs/evidence/e2e/runs.md`。
+**今の状態（2026-10-27、Issue #3 と #4）**: `--videos` を付けて起動すると、承認画面に動画の一覧（id）が出る。1 本をクリックして選ぶと（`POST /api/select`）、表示画面（`/big`）がその人の作業動画を繰り返し再生する。「読み取り開始」は選んだ動画を本物の理解層（`understanding.pipeline.understand`: Cosmos の一文 → Astra の契約 JSON）に送り、結果を承認待ち / 拒否 / 失敗として画面に出す（`sources.py` の `VideoSource`）。その間も表示画面は人の動画のまま。「これで動かす」で実行中になった瞬間に表示画面は sim の描画に切り替わり、完了して待機に戻ると選んだ動画に戻る。これで画面収録だけで「人の動画 → 読み取り → 承認 → ロボットが同じ作業」の順に見える（旧プロジェクトの表示画面の方式。ユーザー決定 2026-10-27）。`--videos` 無しでは従来どおり開発用の固定 JSON（`FixedSource`、`contracts/fixtures/4a/` を順番に返す）で、一覧も動画もなく表示画面は sim だけ。`--record <dir>` を付けると、承認された実行を 1920×1080・25 fps の mp4 に録画し、1 run 1 行の記録を `<dir>/runs.jsonl` に残す。通しの記録は `docs/evidence/e2e/runs.md`。
 
 ## 起動
 ```bash
@@ -23,8 +23,8 @@ uv run python -m so101_demo.ui --port 8765 --delay 1.0
 MUJOCO_GL=egl uv run python -m so101_demo.ui --videos contracts/fixtures/uc/videos.json \
   --ids uc-02,uc-05,uc-08,uc-10,uc-13 --record docs/evidence/e2e
 ```
-- `--videos <manifest|dir>`: 読み取る動画。manifest（`contracts/fixtures/uc/videos.json` の形: `videos[].id` と `path`）か、mp4 を置いたディレクトリ（id はファイル名）。「読み取り開始」のたびに次の動画を順に（末尾で先頭に戻る）理解層へ送る。Cosmos サーバー（`serving/cosmos/serve.sh`、`http://localhost:8000`）と `.env` の Astra の接続先（`.env.example`）が要る。どちらも無いときは読み取りが 拒否 / 失敗 になる（Cosmos に繋がらない: `読み取りに失敗しました`。`.env` が無い: 同じ表示で、`runs.jsonl` の `source_error` に理由が残る）
-- `--ids a,b,c`: `--videos` のうち使う動画 id と順番（省略時は全部）
+- `--videos <manifest|dir>`: 読み取れる動画。manifest（`contracts/fixtures/uc/videos.json` の形: `videos[].id` と `path`）か、mp4 を置いたディレクトリ（id はファイル名）。mp4 以外の path は起動時にエラー。承認画面の一覧に id が並び（manifest の gold は出さない: 対応外かどうかを画面で先に明かさない）、選んだ 1 本だけを「読み取り開始」で理解層へ送る（順送りはしない。選択は待機のときだけ変えられ、実行が終わっても残る）。Cosmos サーバー（`serving/cosmos/serve.sh`、`http://localhost:8000`）と `.env` の Astra の接続先（`.env.example`）が要る。どちらも無いときは読み取りが 拒否 / 失敗 になる（Cosmos に繋がらない: `読み取りに失敗しました`。`.env` が無い: 同じ表示で、`runs.jsonl` の `source_error` に理由が残る）
+- `--ids a,b,c`: `--videos` のうち一覧に出す動画 id と、その並び順（省略時は全部）
 - `--record <dir>`: 承認・訂正・手動で実行した run を `<dir>/<run_id>-<target>-<destination>.mp4`（1920×1080、25 fps（sim 時間）、ラベル付き、実行中の区間のみ。`evidence/record.py` の screen recorder、NVENC があれば使う）に録画し、`<dir>/runs.jsonl` に 1 run 1 行を追記する（`ui/runs_log.py`）。拒否した run も 1 行（mp4 なし）。`--render` を含む
 - `--delay`: 固定 JSON の供給元が、読み取り開始から結果を返すまでに待つ秒数（開発用）
 - `--render` は `MUJOCO_GL=egl` と WSL2 の D3D12 選択（`evidence/gl_env.py`）を自動で設定する。runner と描画・録画は専用スレッド 1 本で動く（`ui/runner_thread.py`、`ui/recording.py`: 1920×1080 の renderer 1 つで、表示画面用の 1280×720 JPEG と録画を同じフレームから作る）
@@ -32,25 +32,33 @@ MUJOCO_GL=egl uv run python -m so101_demo.ui --videos contracts/fixtures/uc/vide
 - Cosmos（vLLM）と同じ GPU で描画するときは、ブラウザのハードウェアアクセラレーションを切ると GPU メモリに余裕ができる
 
 ## 操作
-| 状態 | 押せるボタン |
-| --- | --- |
-| 待機 | 読み取り開始、手動で選ぶ、事前録画 |
-| 読み取り中 | 手動で選ぶ、事前録画（待機上限 `RUN_TIMEOUT_S` を超えると 拒否 / 失敗 へ） |
-| 承認待ち | これで動かす（承認）、訂正する、対応外にする、手動で選ぶ |
-| 拒否 / 失敗 | 訂正する（結果が画面にあるときだけ。待機上限切れでは出ない）、対応外にする、手動で選ぶ、待機へ戻る |
-| 手動 | 候補（対象 × 置き先）を選んで動かす、待機へ戻る、事前録画 |
-| 実行中 | なし（実行中のプラン＝訂正・手動の後はその内容を表示。完了すると待機へ戻る） |
-| 事前録画 | 待機へ戻る（再生そのものは範囲外） |
+| 状態 | 押せるボタン | 表示画面（`big.kind`） |
+| --- | --- | --- |
+| 待機 | 動画の選択（`--videos` のとき）、読み取り開始（`--videos` では選択が要る）、手動で選ぶ、事前録画 | 選択あり: 人の動画 / 選択なし: sim |
+| 読み取り中 | 手動で選ぶ、事前録画（待機上限 `RUN_TIMEOUT_S` を超えると 拒否 / 失敗 へ） | 人の動画 |
+| 承認待ち | これで動かす（承認）、訂正する、対応外にする、手動で選ぶ | 人の動画 |
+| 拒否 / 失敗 | 訂正する（結果が画面にあるときだけ。待機上限切れでは出ない）、対応外にする、手動で選ぶ、待機へ戻る | 人の動画 |
+| 手動 | 候補（対象 × 置き先）を選んで動かす、待機へ戻る、事前録画 | sim |
+| 実行中 | なし（実行中のプラン＝訂正・手動の後はその内容を表示。完了すると待機へ戻る） | sim |
+| 事前録画 | 待機へ戻る（再生そのものは範囲外） | sim |
+
+「人の動画」は `--videos` に登録した動画だけ。固定 JSON（`--videos` 無し）では一覧も動画もなく、表示画面は常に sim。
 
 - 承認・訂正・手動で選んだプランは、契約で再検証してから `approve_from_review` を通って runner に渡る（`docs/execution-runner.md`）
 - 手動・待機へ戻る を押すと、読み取り中の run は取り消される。後から届いた結果は画面に出ず、実行も起こさない（`understanding/runs.py` の `RunGate`）。対応外にする は結果が画面にあるときだけ押せる（読み取り中は 409）
 - 読み取り中・承認待ち・拒否 / 失敗・実行中は、読んでいる動画の id を出す（`--videos` のとき。固定 JSON では fixture の id）
+- 表示画面は `view()["big"]` に従う: `{"kind": "video", "video": "<id>"}` なら `<video loop muted autoplay>`（`/videos/<id>`。muted + autoplay でブラウザの自動再生制限を避ける）を映し、`{"kind": "sim", "video": null}` なら sim の `<img>`（`/frame.jpg`）を映す（`static/big.js`）。同じ id の間は動画を読み直さない（承認待ちになっても止まらない）。実行が終わって待機に戻ると最初から再生し直す。動画を映している間は `/frame.jpg` を取りに行かない
 - 「読み取った内容」には、プランの `note`（日本語の一文の要約）を承認待ち・拒否 / 失敗・手動で出す。Cosmos の英語の一文は画面に出さない（2026-09-29 の決定）
 - 対象・置き先は色と登録ラベルで出す（例: 赤いキューブ R、箱 A。`contracts/registry.json` の `label`）
 - 操作は 1 操作 1 行で `ApprovalScreen.log` に残る。訂正と手動は `rescued: true` で、自動理解の成功には数えない
 
 ## API（画面が使うもの）
-`GET /api/view`、`WS /ws`（表示内容の push）、`GET /frame.jpg`、`POST /api/{read,approve,correct,reject,manual,choose,prerecorded,idle}`。今の状態で許されない操作は 409 を返し、何も変えない。`approve` / `correct` / `reject` / `choose` は、ページが表示していた view の `session`（読み取りの run ID、または手動の番号）を必ず送る。表示中のものと違う（古い画面や遅れたリクエスト）と 409 になる。供給元が起動できなかった `read` は 503 を返し、待機へ戻る。
+`GET /api/view`、`WS /ws`（表示内容の push）、`GET /frame.jpg`、`GET /videos/{id}`、`POST /api/select`、`POST /api/{read,approve,correct,reject,manual,choose,prerecorded,idle}`。今の状態で許されない操作は 409 を返し、何も変えない。`approve` / `correct` / `reject` / `choose` は、ページが表示していた view の `session`（読み取りの run ID、または手動の番号）を必ず送る。表示中のものと違う（古い画面や遅れたリクエスト）と 409 になる。供給元が起動できなかった `read` は 503 を返し、待機へ戻る。
+
+- `POST /api/select {"video_id": "<id>"}`: 読み取る動画を選ぶ。待機のときだけ（他は 409）。`--videos` に無い id も 409
+- `POST /api/read`: 選んだ動画を理解層へ送る。`--videos` で未選択なら 409
+- `GET /videos/{id}`（HEAD も可）: `--videos` に登録された動画だけを `video/mp4` で返す。登録外の id と `--videos` 無し（固定 JSON）は 404。任意のパスは返さない
+- `view()` の追加項目: `videos`（`[{"id": ...}]`、`--ids` の順）、`selected`（選んだ id、無ければ null）、`big`（`{"kind": "video" | "sim", "video": id | null}`、上の表のとおり）。待機で `select` が `actions` に入る（`--videos` のとき）
 
 ## 証拠の取り方
 - 固定 JSON での 4 経路（承認・訂正・拒否・手動）を headless で通す: `uv run python -m so101_demo.ui.evidence_3b` → `docs/evidence/3b/operations.md` + `operations.json`（laptop では参考）

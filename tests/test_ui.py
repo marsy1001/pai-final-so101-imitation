@@ -290,8 +290,10 @@ def test_refused_operations_are_logged():
 class NowSource:
     def __init__(self, *plans):
         self.plans = list(plans)
+        self.started = []  # (run_id, video_id) the screen asked for
 
-    def start(self, run_id, deliver):
+    def start(self, run_id, deliver, video_id=None):
+        self.started.append((run_id, video_id))
         deliver(run_id, self.plans.pop(0), "文")
 
 
@@ -379,7 +381,7 @@ def test_fixed_source_replays_the_4a_fixtures_in_turn():
 
     src = FixedSource(delay_s=0.0)
     for i in range(5):
-        src.start(f"r{i}", deliver)
+        src.start(f"r{i}", deliver, None)
     assert done.wait(5)
     assert sorted(got)[0] == ("r0", "red_cube", "box_a")
     assert sorted(got)[4] == ("r4", "red_cube", "box_a")  # wraps around after F4
@@ -533,7 +535,7 @@ def test_correct_is_offered_on_a_shown_non_ok_result():
 
 def test_http_read_with_a_failing_source_returns_to_idle():
     class Broken:
-        def start(self, run_id, deliver):
+        def start(self, run_id, deliver, video_id=None):
             raise RuntimeError("camera gone")
 
     s, _, _ = make()

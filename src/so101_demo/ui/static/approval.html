@@ -13,11 +13,15 @@
     .pick { display: flex; flex-direction: column; gap: 12px; }
     .pick button { display: flex; align-items: center; gap: 0.4em; text-align: left; }
     .pick button[aria-pressed="true"] { border-color: var(--accent); border-width: 6px; }
+    #videos { display: flex; flex-wrap: wrap; gap: 12px; }
+    #videos button { min-width: 160px; min-height: 72px; }
+    #videos button[aria-pressed="true"] { border-color: var(--accent); border-width: 6px; }
   </style>
 </head>
 <body>
   <main>
     <div class="row"><span id="phase" class="phase">待機</span><span id="waiting" class="muted"></span><span id="video" class="muted"></span></div>
+    <div id="videos"></div>
     <p id="reading" class="muted"></p>
     <div id="proposal" class="row" hidden>
       <span id="target" class="chip"></span><span>を</span><span id="destination" class="chip"></span><span>へ</span>

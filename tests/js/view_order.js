@@ -4,32 +4,14 @@
 "use strict";
 const fs = require("fs");
 const vm = require("vm");
+const { makeDom } = require("./fake_dom");
 
 const [appPath, scenarioPath] = process.argv.slice(2);
 const scenario = JSON.parse(fs.readFileSync(scenarioPath, "utf8"));
 
-function el(id) {
-  return {
-    id, textContent: "", hidden: false, disabled: false, dataset: {}, style: {},
-    children: [], onclick: null, attrs: {},
-    replaceChildren() { this.children = []; },
-    append(...c) { this.children.push(...c); },
-    setAttribute(k, v) { this.attrs[k] = v; },
-  };
-}
-const els = {};
-const document = {
-  getElementById: (id) => (els[id] ||= el(id)),
-  createElement: () => el(""),
-  createTextNode: (t) => ({ text: t }),
-};
+const { els, ctx, state } = makeDom();
 const pending = [];
-function fetch(url, opts) {
-  return new Promise((resolve) => pending.push({ url, opts, resolve }));
-}
-let socket = null;
-class WebSocket { constructor(url) { this.url = url; socket = this; } }
-const ctx = { document, fetch, WebSocket, setTimeout: () => 0, JSON, Math, console, location: { host: "h" } };
+ctx.fetch = (url, opts) => new Promise((resolve) => pending.push({ url, opts, resolve }));
 vm.createContext(ctx);
 vm.runInContext(fs.readFileSync(appPath, "utf8") + "\napprovalScreen();", ctx);
 
@@ -47,7 +29,7 @@ const shown = () => ({
   for (const step of scenario) {
     if (step.do === "get") respond(0, step.view);             // the initial GET
     if (step.do === "click") els[step.id].onclick();          // a POST is now pending
-    if (step.do === "push") socket.onmessage({ data: JSON.stringify(step.view) });
+    if (step.do === "push") state.socket.onmessage({ data: JSON.stringify(step.view) });
     if (step.do === "answer") respond(0, step.view);          // the oldest pending POST
     await new Promise((r) => setImmediate(r));
     await new Promise((r) => setImmediate(r));

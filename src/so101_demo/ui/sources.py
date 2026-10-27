@@ -4,12 +4,13 @@
 they were understanding results, after a short delay, so the screen can be driven without
 a camera, Cosmos or Astra. It is the default of `python -m so101_demo.ui`.
 
-`VideoSource` is the real chain (Issue #3): every 読み取り開始 sends the next video of a
-manifest or a directory through `understanding.pipeline.understand` (Cosmos sentence,
-Astra plan) on a worker thread and hands the result to the screen with the run ID the
-screen gave it. The screen settles it on its `RunGate`, so a result for a run that was
-cancelled (手動, 対応外, 待機へ戻る), replaced or expired meanwhile is dropped there. Both
-sources share `start(run_id, deliver) -> label`.
+`VideoSource` is the real chain (Issue #3): every 読み取り開始 sends the video the operator
+selected on the screen (Issue #4; one of a manifest or a directory) through
+`understanding.pipeline.understand` (Cosmos sentence, Astra plan) on a worker thread and
+hands the result to the screen with the run ID the screen gave it. The screen settles it
+on its `RunGate`, so a result for a run that was cancelled (手動, 対応外, 待機へ戻る),
+replaced or expired meanwhile is dropped there. Both sources share
+`start(run_id, deliver, video_id) -> label`; `FixedSource` ignores the id.
 """
 
 from __future__ import annotations
@@ -47,7 +48,7 @@ class FixedSource:
         self.delay_s = delay_s
         self._next = 0
 
-    def start(self, run_id: str, deliver: Deliver) -> str:
+    def start(self, run_id: str, deliver: Deliver, video_id: str | None = None) -> str:
         fixture_id, plan = self.plans[self._next % len(self.plans)]
         self._next += 1
         sentence = f"（開発用の固定 JSON {fixture_id.split('-')[0]}）"
@@ -89,6 +90,8 @@ def load_videos(spec: Path, ids: Sequence[str] | None = None) -> list[Video]:
     if not videos:
         raise ValueError(f"no videos in {spec}")
     for v in videos:
+        if v.path.suffix.lower() != ".mp4":  # served as video/mp4 on the big screen
+            raise ValueError(f"{v.id}: not an mp4 file: {v.path.name}")
         if not v.path.is_file():
             raise FileNotFoundError(f"{v.id}: {v.path}")
     return videos
@@ -110,7 +113,7 @@ def _now() -> str:
 
 
 class VideoSource:
-    """Delivers the videos in turn (cycling), each through `understand` on its own thread.
+    """Delivers the selected video through `understand` on its own thread.
 
     `understand` is `pipeline.understand` unless a test injects another; `kw` goes to it
     (the clients' injectable arguments: `post`, `base_url`, `env`). The result is settled by
@@ -130,14 +133,25 @@ class VideoSource:
         self.videos = list(videos)
         self.understand = understand
         self.kw = kw
+        self.by_id = {v.id: v for v in self.videos}
         self.runs: dict[str, VideoRun] = {}
-        self._next = 0
         self._lock = threading.Lock()
 
-    def start(self, run_id: str, deliver: Deliver) -> str:
+    @property
+    def ids(self) -> list[str]:
+        return [v.id for v in self.videos]
+
+    @property
+    def files(self) -> dict[str, Path]:
+        """id -> file, what the server may serve on `/videos/{id}`."""
+        return {v.id: v.path for v in self.videos}
+
+    def start(self, run_id: str, deliver: Deliver, video_id: str | None) -> str:
+        """Read `video_id` (a registered id; ValueError otherwise) for `run_id`."""
+        video = self.by_id.get(video_id) if video_id else None
+        if video is None:
+            raise ValueError(f"not a registered video: {video_id!r}")
         with self._lock:
-            video = self.videos[self._next % len(self.videos)]
-            self._next += 1
             run = VideoRun(video, run_id, _now())
             self.runs[run_id] = run
 

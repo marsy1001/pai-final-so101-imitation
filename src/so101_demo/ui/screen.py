@@ -22,6 +22,11 @@ A result is delivered with its run ID and settled through the `RunGate` (#23): a
 whose run was cancelled (manual, reject, a new reading) or replaced, or that arrived after
 the wait limit, is dropped and changes nothing on screen. Rescued runs (訂正, 手動) are
 logged as such and never count as automatic understanding (demo-plan 共通規約).
+
+With real videos (`videos`, Issue #4) the operator first selects one (`select`, only in
+待機); 読み取り開始 sends that video. The big screen follows `view()["big"]`: the selected
+person's video (kind "video") while it is selected, read and shown or refused, the sim
+(kind "sim") while the robot runs, in 手動 / 事前録画 and when nothing is selected.
 """
 
 from __future__ import annotations
@@ -30,7 +35,7 @@ import datetime as dt
 import threading
 import time
 import uuid
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Any
@@ -55,6 +60,7 @@ APPROVE = "承認"
 CORRECT = "訂正"
 REJECT = "拒否"
 MANUAL = "手動"
+SELECT = "選択"
 RESCUE_PATHS = (CORRECT, MANUAL)
 
 # What the screen calls the registered ids. Colours come from the registry (rgba).
@@ -115,6 +121,7 @@ class ApprovalScreen:
     registry: Registry = field(default_factory=load_registry)
     clock: Callable[[], float] = time.monotonic  # the wait limit; pass the gate's clock
     on_log: Callable[[LogEntry], None] | None = None  # every log entry (the run log, #3)
+    videos: Sequence[str] = ()  # ids the operator can select (`--videos`); empty: fixed JSONs
 
     def __post_init__(self) -> None:
         self._lock = threading.RLock()
@@ -124,6 +131,8 @@ class ApprovalScreen:
         self.last_outcome: str | None = None
         self.version = 0  # grows with every change; pages never draw an older view
         self.boot = uuid.uuid4().hex[:8]  # tells pages that the server restarted
+        self.videos = list(self.videos)
+        self.selected: str | None = None  # the video 読み取り開始 will send (kept after a run)
         self._worker: threading.Thread | None = None
         self._idle = threading.Event()
         self._idle.set()
@@ -189,14 +198,30 @@ class ApprovalScreen:
             }
         )
 
-    # --- reading -------------------------------------------------------------------
+    # --- selecting and reading -----------------------------------------------------
+    def select(self, video_id: str | None) -> None:
+        """Pick the video 読み取り開始 sends (and the big screen shows): a registered id,
+        only in 待機."""
+        with self._lock:
+            self._expire_if_over()
+            if self.phase is not Phase.IDLE:
+                self._refuse(SELECT, f"phase is {self.phase.value}")
+            if video_id not in self.videos:
+                self._refuse(SELECT, f"unknown video {video_id!r}")
+            self.selected = video_id
+            self.version += 1
+
     def begin_reading(self) -> str:
+        """Start a run; with registered videos one must be selected (`selected` is what
+        the source reads, and `cur.video` keeps it on screen until 待機)."""
         with self._lock:
             self._expire_if_over()
             if self.phase is not Phase.IDLE:
                 self._refuse("読み取り", f"phase is {self.phase.value}")
+            if self.videos and self.selected is None:
+                self._refuse("読み取り", "no video selected")
             run_id = self.gate.start()
-            self.cur = _Current(run_id=run_id, started_at=self.clock())
+            self.cur = _Current(run_id=run_id, started_at=self.clock(), video=self.selected)
             self._set(Phase.READING)
             return run_id
 
@@ -385,7 +410,7 @@ class ApprovalScreen:
     def actions(self) -> list[str]:
         p = self.phase
         return {
-            Phase.IDLE: ["read", "manual", "prerecorded"],
+            Phase.IDLE: (["select"] if self.videos else []) + ["read", "manual", "prerecorded"],
             Phase.READING: ["manual", "prerecorded"],
             Phase.RESULT: ["approve", "correct", "reject", "manual"],
             # 訂正 needs a result on screen; after the wait limit there is none
@@ -394,6 +419,16 @@ class ApprovalScreen:
             Phase.RUNNING: [],
             Phase.PRERECORDED: ["idle"],
         }[p]
+
+    def big(self) -> dict:
+        """What the big screen shows: the person's video while it is selected (待機), read,
+        shown or refused; the sim while the robot runs and whenever no video is on."""
+        # only registered videos: a fixed JSON's label (`label_reading`) is not a video
+        on = self.cur.video if self.phase in (Phase.READING, Phase.RESULT, Phase.FAILED) else None
+        on = self.selected if self.phase is Phase.IDLE else on
+        if on in self.videos:
+            return {"kind": "video", "video": on}
+        return {"kind": "sim", "video": None}
 
     def view(self) -> dict:
         """Everything the two screens show. No raw plan, no model or API names."""
@@ -421,6 +456,9 @@ class ApprovalScreen:
                 "destination": self._destination(plan.destination) if plan else None,
                 "message": self.cur.reason,
                 "video": self.cur.video,  # the video being / last read, until 待機
+                "videos": [{"id": v} for v in self.videos],  # the list to select from
+                "selected": self.selected,
+                "big": self.big(),
                 "waiting_s": waiting,
                 "wait_limit_s": self.gate.timeout_s,
                 "candidates": self.candidates() if self.phase is Phase.MANUAL else [],

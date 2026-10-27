@@ -1,4 +1,5 @@
-// Both screens follow the view pushed on /ws. Only labels and colours are shown.
+// Both screens follow the view pushed on /ws (the big screen: big.js). Only labels and
+// colours are shown.
 "use strict";
 
 function chip(el, item) {
@@ -72,6 +73,26 @@ function approvalScreen() {
 
   const picker = document.getElementById("picker");
   const confirm = document.getElementById("confirm");
+  const videos = document.getElementById("videos");
+
+  // the registered videos (`--videos`), in the given order; the selected one is pressed.
+  // Rebuilt only when the list, the selection or its availability changed (a reading
+  // pushes a new view every 0.1 s for the waiting seconds)
+  let videosKey = null;
+  function fillVideos(v) {
+    const key = JSON.stringify([v.videos, v.selected, v.actions.includes("select")]);
+    if (key === videosKey) return;
+    videosKey = key;
+    videos.replaceChildren();
+    for (const item of v.videos) {
+      const b = document.createElement("button");
+      b.textContent = item.id;
+      b.setAttribute("aria-pressed", String(v.selected === item.id));
+      b.disabled = !v.actions.includes("select");
+      b.onclick = () => post("select", { video_id: item.id });
+      videos.append(b);
+    }
+  }
 
   function fillPicker(v) {
     const make = (box, items, key) => {
@@ -109,6 +130,7 @@ function approvalScreen() {
   follow((v) => {
     view = v;
     common(v);
+    fillVideos(v);
     const r = document.getElementById("reading");
     r.textContent = v.reading ? `読み取った内容: ${v.reading}` : "";
     const w = document.getElementById("waiting");
@@ -120,16 +142,4 @@ function approvalScreen() {
     if (v.phase_key !== "manual" && mode === "choose") { picker.hidden = true; mode = null; }
     if (mode === "correct" && !v.actions.includes("correct")) { picker.hidden = true; mode = null; }
   });
-}
-
-function bigScreen() {
-  const img = document.getElementById("frame");
-  const refresh = () => {
-    const next = new Image();
-    next.onload = () => { img.src = next.src; setTimeout(refresh, 40); };
-    next.onerror = () => setTimeout(refresh, 1000);
-    next.src = `/frame.jpg?t=${Date.now()}`;
-  };
-  refresh();
-  follow(common);
 }

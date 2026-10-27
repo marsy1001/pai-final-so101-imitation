@@ -3,9 +3,11 @@
 Opens nothing by itself; open http://localhost:<port>/ (approval) and /big (big screen)
 in the Windows browser, one full-screen window each (docs/approval-screen.md).
 
-    --videos <manifest|dir>   read real videos through Cosmos and Astra (needs the Cosmos
-                              server and the Astra keys in .env); default: fixed JSONs
-    --ids a,b,c               which videos of --videos, in this order (default: all, cycling)
+    --videos <manifest|dir>   real videos: the approval screen lists them, the selected one
+                              plays on the big screen and goes through Cosmos and Astra
+                              (needs the Cosmos server and the Astra keys in .env);
+                              default: fixed JSONs
+    --ids a,b,c               which videos of --videos, in this order (default: all)
     --record <dir>            record every run as <dir>/<run_id>-<target>-<destination>.mp4
                               (1920x1080, 25 fps) and write <dir>/runs.jsonl; implies --render
 """
@@ -82,8 +84,9 @@ def main(argv: list[str] | None = None) -> int:
         )
         executor = log.executor(executor)
         print(f"recording to {args.record} (runs.jsonl + mp4 per run)")
-    screen = ApprovalScreen(executor=executor, on_log=log)
-    app = create_app(screen, source, frames)
+    video_files = source.files if isinstance(source, VideoSource) else {}
+    screen = ApprovalScreen(executor=executor, on_log=log, videos=list(video_files))
+    app = create_app(screen, source, frames, video_files)
     print(f"approval screen: http://localhost:{args.port}/  big screen: /big")
     uvicorn.run(app, host=args.host, port=args.port, log_level="warning")
     return 0

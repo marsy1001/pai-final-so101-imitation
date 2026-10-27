@@ -69,11 +69,14 @@ class FakeExecutor:
         return SimpleNamespace(outcome="success", commands_sent=7, wall_time_s=1.5, reason=None)
 
 
-def make(post, executor=None, on_log=None):
+def make(post, executor=None, on_log=None, videos=VIDEOS):
+    """A screen with the real `VideoSource` (fake network); the first video selected, as
+    the operator does before 読み取り開始."""
     ex = executor or FakeExecutor()
-    screen = ApprovalScreen(executor=ex, on_log=on_log)
-    source = VideoSource(VIDEOS, post=post, env=ENV, base_url=COSMOS_URL)
-    return screen, source, ex, TestClient(create_app(screen, source))
+    source = VideoSource(videos, post=post, env=ENV, base_url=COSMOS_URL)
+    screen = ApprovalScreen(executor=ex, on_log=on_log, videos=source.ids)
+    screen.select(videos[0].id)
+    return screen, source, ex, TestClient(create_app(screen, source, None, source.files))
 
 
 def until(pred, timeout=5.0):
@@ -117,7 +120,7 @@ def test_video_source_result_reaches_the_screen_as_a_result():
     assert ex.calls == []  # nothing runs before a person approves
 
 
-def test_video_source_cycles_through_its_videos():
+def test_video_source_reads_the_selected_video_and_only_registered_ids():
     seen = []
     done = threading.Event()
 
@@ -128,13 +131,156 @@ def test_video_source_cycles_through_its_videos():
         raise RuntimeError("stop here")
 
     src = VideoSource([Video("a", VIDEO), Video("b", VIDEO)], understand=understand)
+    assert src.ids == ["a", "b"]
     delivered = []
-    for i in range(3):
-        assert src.start(f"r{i}", lambda *a: delivered.append(a) or True) == "ab"[i % 2]
+    for i, vid in enumerate(["b", "b", "a"]):
+        assert src.start(f"r{i}", lambda *a: delivered.append(a) or True, vid) == vid
     assert done.wait(5) and [r for r, _ in seen] == ["r0", "r1", "r2"]
     assert until(lambda: len(delivered) == 3)
     assert all(plan.status == "error" for _, plan, _ in delivered)
     assert src.run_of("r0").error.startswith("RuntimeError")
+    assert [src.run_of(f"r{i}").video.id for i in range(3)] == ["b", "b", "a"]
+    with pytest.raises(ValueError, match="not a registered video: 'zz'"):
+        src.start("r9", lambda *a: True, "zz")
+    with pytest.raises(ValueError, match="not a registered video: None"):
+        src.start("r9", lambda *a: True, None)
+
+
+# --- (e) the operator selects the video; the big screen follows (Issue #4) -------------
+
+TWO = [Video("uc-02", VIDEO), Video("uc-13", VIDEO)]
+
+
+def big(c):
+    return c.get("/api/view").json()["big"]
+
+
+def test_select_then_read_sends_the_selected_video_to_understand():
+    seen = []
+    go = threading.Event()  # the chain waits, so 読み取り中 can be seen
+
+    def understand(video, run_id=None, **kw):
+        seen.append(video)
+        go.wait(5.0)
+        raise RuntimeError("stop here")
+
+    source = VideoSource(TWO, understand=understand)
+    screen = ApprovalScreen(executor=FakeExecutor(), videos=source.ids)
+    c = TestClient(create_app(screen, source, None, source.files))
+    v = c.get("/api/view").json()
+    assert v["videos"] == [{"id": "uc-02"}, {"id": "uc-13"}] and v["selected"] is None
+    assert "select" in v["actions"]
+    # nothing selected: 読み取り開始 is refused and the chain is not called
+    assert c.post("/api/read").status_code == 409 and seen == []
+    assert screen.phase is Phase.IDLE
+    # an unregistered id is refused; the screen keeps no selection
+    assert c.post("/api/select", json={"video_id": "uc-99"}).status_code == 409
+    assert c.get("/api/view").json()["selected"] is None
+    v = c.post("/api/select", json={"video_id": "uc-13"}).json()
+    assert v["selected"] == "uc-13" and v["big"] == {"kind": "video", "video": "uc-13"}
+    v = c.post("/api/read").json()
+    assert v["phase"] == "読み取り中" and v["video"] == "uc-13"
+    # selecting is only for 待機
+    assert c.post("/api/select", json={"video_id": "uc-02"}).status_code == 409
+    go.set()
+    assert until(lambda: screen.phase is Phase.FAILED)
+    assert seen == [VIDEO] and source.run_of(screen.cur.run_id).video.id == "uc-13"
+    assert c.post("/api/select", json={"video_id": "uc-02"}).status_code == 409
+    assert cpost(c, "reject").json()["phase"] == "待機"
+    assert c.get("/api/view").json()["selected"] == "uc-13"  # kept for the next reading
+
+
+def test_big_screen_shows_the_video_until_the_robot_runs():
+    post = HoldPost(cosmos_ok(), astra_ok())
+    ex = FakeExecutor()
+    ex.hold = threading.Event()
+    held = ex.__call__
+
+    def slow(approved):
+        ex.hold.wait(5.0)
+        return held(approved)
+
+    screen, source, _, c = make(post, executor=slow, videos=TWO)
+    assert screen.phase is Phase.IDLE and big(c) == {"kind": "video", "video": "uc-02"}
+    c.post("/api/read")
+    assert post.started.wait(5)
+    assert big(c) == {"kind": "video", "video": "uc-02"}  # 読み取り中
+    post.release.set()
+    assert until(lambda: screen.phase is Phase.RESULT)
+    assert big(c) == {"kind": "video", "video": "uc-02"}  # 承認待ち
+    assert cpost(c, "approve").status_code == 200
+    assert screen.phase is Phase.RUNNING and big(c) == {"kind": "sim", "video": None}
+    ex.hold.set()
+    assert screen.wait_idle(5)
+    assert big(c) == {"kind": "video", "video": "uc-02"}  # 待機, still selected
+    # 手動 and 事前録画 show the sim; back in 待機 the selection is still on
+    assert c.post("/api/manual").json()["big"] == {"kind": "sim", "video": None}
+    assert c.post("/api/idle").json()["big"]["kind"] == "video"
+    assert c.post("/api/prerecorded").json()["big"]["kind"] == "sim"
+
+
+def test_big_screen_shows_the_video_of_a_refused_reading():
+    post = FakePost(TransportError("connection failed"))
+    screen, source, ex, c = make(post, videos=TWO)
+    c.post("/api/read")
+    assert until(lambda: screen.phase is Phase.FAILED)
+    assert big(c) == {"kind": "video", "video": "uc-02"}
+
+
+def test_big_screen_is_sim_without_a_selection_and_with_fixed_jsons():
+    source = VideoSource(TWO, understand=lambda *a, **k: None)
+    screen = ApprovalScreen(executor=FakeExecutor(), videos=source.ids)
+    c = TestClient(create_app(screen, source, None, source.files))
+    assert big(c) == {"kind": "sim", "video": None}
+    # fixed JSONs: no list, nothing to select, the reading's label is not a video
+    from so101_demo.ui.sources import FixedSource
+
+    fixed = ApprovalScreen(executor=FakeExecutor())
+    cf = TestClient(create_app(fixed, FixedSource(delay_s=0.0)))
+    v = cf.get("/api/view").json()
+    assert v["videos"] == [] and "select" not in v["actions"]
+    assert cf.post("/api/select", json={"video_id": "F1-red_cube-box_a"}).status_code == 409
+    v = cf.post("/api/read").json()
+    assert v["phase"] in ("読み取り中", "承認待ち") and v["big"] == {"kind": "sim", "video": None}
+    assert until(lambda: fixed.phase is Phase.RESULT)
+    assert cf.get("/api/view").json()["big"] == {"kind": "sim", "video": None}
+
+
+def test_videos_are_served_only_when_registered():
+    source = VideoSource(TWO, understand=lambda *a, **k: None)
+    screen = ApprovalScreen(executor=FakeExecutor(), videos=source.ids)
+    c = TestClient(create_app(screen, source, None, source.files))
+    r = c.get("/videos/uc-02")
+    assert r.status_code == 200 and r.headers["content-type"] == "video/mp4"
+    assert r.content[:12] == VIDEO.read_bytes()[:12]
+    assert c.head("/videos/uc-02").status_code == 200  # what `curl -I` sends
+    assert c.get("/videos/uc-99").status_code == 404
+    assert c.get("/videos/../pyproject.toml").status_code == 404
+    # fixed JSONs: nothing is served
+    from so101_demo.ui.sources import FixedSource
+
+    cf = TestClient(create_app(ApprovalScreen(executor=FakeExecutor()), FixedSource()))
+    assert cf.get("/videos/uc-02").status_code == 404
+    assert cf.get("/videos/F1-red_cube-box_a").status_code == 404
+    # without an explicit map the source's own videos are served (Codex-style review 1)
+    c2 = TestClient(create_app(screen, source))
+    assert c2.get("/videos/uc-13").status_code == 200
+    assert TestClient(create_app(screen, source, None, {})).get("/videos/uc-13").status_code == 404
+
+
+def test_runs_log_keeps_the_selected_video_id(tmp_path):
+    ex = FakeExecutor({})
+    post = FakePost(cosmos_ok(), astra_ok())
+    source = VideoSource(TWO, post=post, env=ENV, base_url=COSMOS_URL)
+    log = RunsLog(tmp_path / "runs.jsonl", source=source, recordings=ex.recordings)
+    screen = ApprovalScreen(executor=log.executor(ex), on_log=log, videos=source.ids)
+    c = TestClient(create_app(screen, source, None, source.files))
+    assert c.post("/api/select", json={"video_id": "uc-02"}).status_code == 200
+    c.post("/api/read")
+    assert until(lambda: screen.phase is Phase.RESULT)
+    assert cpost(c, "approve").status_code == 200 and screen.wait_idle(5)
+    (row,) = read_rows(tmp_path / "runs.jsonl")
+    assert row["video_id"] == "uc-02" and row["outcome"] == "success"
 
 
 # --- (b) a late result after 手動 / 待機へ戻る / 対応外 is dropped --------------------------
@@ -202,10 +348,11 @@ def test_cosmos_failure_is_failed_on_screen_and_astra_is_not_called(post):
 
 
 def test_source_that_cannot_call_the_chain_is_failed_on_screen():
-    screen = ApprovalScreen(executor=FakeExecutor())
     # Cosmos answers, then Astra has no keys (.env missing): `understand` raises
     source = VideoSource(VIDEOS, post=FakePost(cosmos_ok()), env={})
+    screen = ApprovalScreen(executor=FakeExecutor(), videos=source.ids)
     c = TestClient(create_app(screen, source))
+    c.post("/api/select", json={"video_id": "s1-01"})
     c.post("/api/read")
     assert until(lambda: screen.phase is Phase.FAILED)
     assert source.run_of(screen.cur.run_id).error.startswith("RuntimeError")
@@ -228,12 +375,13 @@ def test_approved_run_and_rejected_run_each_write_one_line(tmp_path):
         recordings=recordings,
         session=lambda: {"commit": "abc1234", "machine": {"gpu": "fake"}},
     )
-    screen = ApprovalScreen(executor=log.executor(ex), on_log=log)
+    screen = ApprovalScreen(executor=log.executor(ex), on_log=log, videos=source.ids)
     c = TestClient(create_app(screen, source))
+    c.post("/api/select", json={"video_id": "s1-01"})
     c.post("/api/read")
     assert until(lambda: screen.phase is Phase.RESULT)
     assert cpost(c, "approve").status_code == 200 and screen.wait_idle(5)
-    c.post("/api/read")
+    c.post("/api/read")  # the selection is kept
     assert until(lambda: screen.phase is Phase.FAILED)
     assert cpost(c, "reject").status_code == 200
     rows = read_rows(tmp_path / "runs.jsonl")
@@ -287,8 +435,9 @@ def test_manual_after_a_shown_result_records_the_reading_it_came_from(tmp_path):
         "steps": [], "note": "ペンは対応外"})))  # fmt: skip
     source = VideoSource(VIDEOS, post=post, env=ENV, base_url=COSMOS_URL)
     log = RunsLog(tmp_path / "runs.jsonl", source=source, recordings=recordings)
-    screen = ApprovalScreen(executor=log.executor(ex), on_log=log)
+    screen = ApprovalScreen(executor=log.executor(ex), on_log=log, videos=source.ids)
     c = TestClient(create_app(screen, source))
+    c.post("/api/select", json={"video_id": "s1-01"})
     c.post("/api/read")
     assert until(lambda: screen.phase is Phase.FAILED)
     reading = screen.cur.run_id
@@ -393,6 +542,13 @@ def test_load_videos_from_a_directory(tmp_path):
     (tmp_path / "empty").mkdir()
     with pytest.raises(ValueError, match="no videos"):
         load_videos(tmp_path / "empty")
+    # a manifest may name any file; only mp4 is served as video/mp4 (an absolute path
+    # joined to the repository root stays absolute)
+    (tmp_path / "c.mov").write_bytes(b"x")
+    manifest = tmp_path / "videos.json"
+    manifest.write_text(json.dumps({"videos": [{"id": "c", "path": str(tmp_path / "c.mov")}]}))
+    with pytest.raises(ValueError, match="not an mp4"):
+        load_videos(manifest)
 
 
 # --- evidence: --check and --report ------------------------------------------------------
@@ -618,3 +774,55 @@ def test_probe_mp4_reads_size_and_frame_rate(tmp_path):
     plan = ok_plan("red_cube", "box_a")
     r = row("r", "uc-02", "承認", "success", plan, plan, "t.mp4", 1)
     assert not [p for p in evidence_e2e.check([r], tmp_path) if "t.mp4" in p]
+
+
+# --- (d) the real big.js switches <video> and <img> on big.kind (node harness) --------
+
+NODE = shutil.which("node")
+BIG_HARNESS = Path(__file__).parent / "js" / "big_screen.js"
+
+
+@pytest.mark.skipif(NODE is None, reason="node is not installed")
+def test_big_js_switches_between_the_video_and_the_sim(tmp_path):
+    from so101_demo.ui.server import STATIC
+
+    source = VideoSource(TWO, understand=lambda *a, **k: None)
+    screen = ApprovalScreen(executor=FakeExecutor(), videos=source.ids)
+    views = [screen.view()]  # 待機, nothing selected: sim
+    screen.select("uc-02")
+    views.append(screen.view())  # 待機, selected: video
+    rid = screen.begin_reading()
+    views.append(screen.view())  # 読み取り中: video
+    screen.deliver(rid, source_plan(), "s")
+    views.append(screen.view())  # 承認待ち: video
+    screen.cur.final = screen.cur.plan  # 実行中 as the screen shows it, without a runner
+    screen._set(Phase.RUNNING)
+    views.append(screen.view())  # 実行中: sim
+    screen.cur = type(screen.cur)()
+    screen._set(Phase.IDLE)
+    views.append(screen.view())  # 待機 after the run, still selected: video
+    assert [v["big"]["kind"] for v in views] == ["sim", "video", "video", "video", "sim", "video"]
+    path = tmp_path / "scenario.json"
+    path.write_text(json.dumps(views, ensure_ascii=False), encoding="utf-8")
+    out = subprocess.run(
+        [NODE, str(BIG_HARNESS), str(STATIC / "app.js"), str(STATIC / "big.js"), str(path)],
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=30,
+    ).stdout
+    shown = [json.loads(line) for line in out.splitlines()]
+    assert [(s["video_shown"], s["sim_shown"]) for s in shown] == [
+        (False, True),
+        (True, False),
+        (True, False),
+        (True, False),
+        (False, True),
+        (True, False),
+    ]
+    assert shown[1]["src"] == "/videos/uc-02" and shown[1]["played"] == 1
+    assert shown[3]["src"] == "/videos/uc-02"  # the same clip keeps playing, not reloaded
+    assert shown[4]["paused"] == 1 and shown[5]["played"] > shown[3]["played"]
+    assert shown[4]["phase"] == "実行中"
+    # the clip is not rewound while it stays on screen; back from the sim it restarts
+    assert shown[2]["time"] == 3 and shown[3]["time"] == 3 and shown[5]["time"] == 0

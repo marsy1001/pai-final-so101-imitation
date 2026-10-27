@@ -54,7 +54,7 @@ class ScriptedSource:
     def push(self, plan: Plan, sentence: str, *, hold: bool = False) -> None:
         self.queue.append((plan, sentence, hold))
 
-    def start(self, run_id: str, deliver) -> None:
+    def start(self, run_id: str, deliver, video_id: str | None = None) -> None:
         plan, sentence, hold = self.queue.pop(0)
         if hold:
             self.held.append((run_id, plan, sentence, deliver))

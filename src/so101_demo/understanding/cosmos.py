@@ -26,11 +26,11 @@ from typing import Any
 from . import settings as S
 from .transport import Post, TransportError, TransportTimeout, post_json
 
-# The S1 prompt (no word about containers, 2026-09-28, user decision on Issue #22: the first
+# The S1 prompt (no word about containers, user decision, 2026-09-28: the first
 # S1 prompt asked whether the object "ends up inside a container", and on the lift-and-return
 # video Cosmos then invented two tray placements) failed Uc 6/12: without being told the
 # trays, Cosmos called them "white cube" / "white box" and put things "on top of" them.
-# Uc revision 2 (2026-09-29, user decision on Issue #25) states the scene as a fact before
+# Uc revision 2 (user decision, 2026-09-29) states the scene as a fact before
 # the S1 prompt and asks nothing about the trays (docs/evidence/uc/eval-r2.md).
 SCENE = (
     "The table shows a red cube, a blue cube, and two white trays at the far edge of the "
@@ -93,7 +93,7 @@ def build_request(video: Path) -> dict[str, Any]:
 
 def final_answer(content: str | None) -> str:
     """The first answer block. With reasoning on, the same answer can come back 2-4 times
-    separated by `</think>` (cosmos-measurements.md §4); only the first one is used."""
+    separated by `</think>` (seen on the 2026-09-28 runs); only the first one is used."""
     if not content:
         return ""
     text = content

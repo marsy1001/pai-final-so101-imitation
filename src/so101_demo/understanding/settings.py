@@ -1,8 +1,8 @@
-"""Operational values of the understanding layer, in one place (Issue #22).
+"""Operational values of the understanding layer, in one place.
 
-Fixed on 2026-09-28 from the S1 measurements (GPU part of Issue #22): the provisional
+Fixed on 2026-09-28 from the S1 measurements (the 2026-09-28 GPU runs): the provisional
 values below held with a wide margin, so they were kept. The measured evidence is in
-docs/evidence/s1/diagnosis.md 「運用値」 (demo-plan 「未決の値」4). Over both S1 runs (first
+docs/evidence/s1/diagnosis.md 「運用値」. Over both S1 runs (first
 prompt on 004b276, prompt without containers on 8150f07): at most 268 completion tokens,
 Cosmos at most 6.6 s, Astra at most 7.7 s, about 115 tokens/s decoding (serving.md).
 Every client reads these names; nothing else in the code carries its own number.
@@ -29,7 +29,7 @@ from __future__ import annotations
 COSMOS_MAX_TOKENS = 1024
 COSMOS_TIMEOUT_S = 30.0
 COSMOS_SAMPLE_FPS = 4.0
-# Sampling defaults of every handed-over run (cosmos-measurements.md §6); a fixed seed
+# Sampling defaults of every run since 2026-09-28; a fixed seed
 # does not make the text reproducible, it only keeps the runs comparable.
 COSMOS_TEMPERATURE = 0.6
 COSMOS_TOP_P = 0.95
@@ -41,7 +41,7 @@ COSMOS_BASE_URL = "http://localhost:8000"
 ASTRA_TIMEOUT_S = 30.0
 
 # Deadline of one understanding run (gate.start() -> result settled), after which its result
-# is dropped by run ID (understanding.runs, demo-plan R1). Not a separate measured value:
+# is dropped by run ID (understanding.runs, risk R1). Not a separate measured value:
 # the two request deadlines back to back, plus a slack for what lies outside the requests
 # (thread start / join in post_json, JSON parsing, contract validation, the caller's gap
 # between start() and the first request; milliseconds in the tests), so a run whose

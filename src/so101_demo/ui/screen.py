@@ -1,4 +1,4 @@
-"""Approval screen logic (demo-plan stage 2 "3b 承認画面", Issue #27).
+"""Approval screen logic (the approval screen, 3b).
 
 One `ApprovalScreen` owns what the audience and the operator see and the only way from an
 understanding result to the runner. It holds no HTTP and no rendering: the server
@@ -18,12 +18,12 @@ the target or the destination of a shown result), 拒否 (対応外: nothing run
 runner is re-validated against the contract and approved with `approve_from_review`, the
 only review approval there is; the model's own plan also passes `RunGate.claim` first.
 
-A result is delivered with its run ID and settled through the `RunGate` (#23): a result
+A result is delivered with its run ID and settled through the `RunGate`: a result
 whose run was cancelled (manual, reject, a new reading) or replaced, or that arrived after
 the wait limit, is dropped and changes nothing on screen. Rescued runs (訂正, 手動) are
-logged as such and never count as automatic understanding (demo-plan 共通規約).
+logged as such and never count as automatic understanding (the project rule).
 
-With real videos (`videos`, Issue #4) the operator first selects one (`select`, only in
+With real videos (`videos`) the operator first selects one (`select`, only in
 待機); 読み取り開始 sends that video. The big screen follows `view()["big"]`: the selected
 person's video (kind "video") while it is selected, read and shown or refused, the sim
 (kind "sim") while the robot runs, in 手動 / 事前録画 and when nothing is selected.
@@ -120,7 +120,7 @@ class ApprovalScreen:
     gate: RunGate = field(default_factory=RunGate)
     registry: Registry = field(default_factory=load_registry)
     clock: Callable[[], float] = time.monotonic  # the wait limit; pass the gate's clock
-    on_log: Callable[[LogEntry], None] | None = None  # every log entry (the run log, #3)
+    on_log: Callable[[LogEntry], None] | None = None  # every log entry (the run log)
     videos: Sequence[str] = ()  # ids the operator can select (`--videos`); empty: fixed JSONs
 
     def __post_init__(self) -> None:
@@ -447,8 +447,8 @@ class ApprovalScreen:
                 "session": self.cur.run_id
                 if self.phase in (Phase.RESULT, Phase.FAILED, Phase.MANUAL)
                 else None,
-                # the plan's Japanese note (demo-plan contract: 画面に出す一文の要約); the model's
-                # English sentence stays off screen
+                # the plan's Japanese note (the contract's one-sentence summary for the
+                # screen); the model's English sentence stays off screen
                 "reading": self.cur.plan.note
                 if self.cur.plan and self.phase in (Phase.RESULT, Phase.FAILED, Phase.MANUAL)
                 else None,

@@ -27,7 +27,7 @@ from .scene import GRIPPER_BODY, weld_name
 # the fixed jaw's inner face (measured 2026-09-19: fixed pad at Z -7..0 mm, moving jaw
 # at Z +48..55 mm when closed to 30), so the pocket is on the +Z side of the site.
 # Single source: the hold rule below uses them at the close command, and the carry audit
-# in execution.judge re-checks them at every control tick (Issue #4, 固定 3/3).
+# in execution.judge re-checks them at every control tick (fixed 2026-09-19).
 # Defined here rather than in execution.criteria: execution.__init__ imports primitives,
 # which reaches robot.mujoco_backend, which imports this module - importing the other
 # way round would be circular.

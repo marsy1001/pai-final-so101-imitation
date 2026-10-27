@@ -1,4 +1,4 @@
-"""S1 diagnosis evidence (Issue #22): the full video run, the manifest check, the Astra round trip.
+"""S1 diagnosis evidence: the full video run, the manifest check, the Astra round trip.
 
     uv run python -m so101_demo.evidence.s1_diagnosis             # full run (GPU machine)
     uv run python -m so101_demo.evidence.s1_diagnosis --render    # rebuild diagnosis.md only
@@ -538,7 +538,7 @@ def write_diagnosis() -> None:
         f"Cosmos タイムアウト {s['COSMOS_TIMEOUT_S']:.0f} 秒、"
         f"Astra 待機上限 {s['ASTRA_TIMEOUT_S']:.0f} 秒（根拠は「運用値」）",
         "",
-        "## 運用値（demo-plan「未決の値」4）",
+        "## 運用値",
         "| 値 | 固定値 | 実測 | 根拠 |",
         "|---|---|---|---|",
         f"| Cosmos `max_tokens` | {s['COSMOS_MAX_TOKENS']} | 完了トークン最大 {max_completion}"

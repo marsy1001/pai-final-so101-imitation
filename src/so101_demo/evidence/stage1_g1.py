@@ -28,7 +28,7 @@ from pathlib import Path
 
 from .gl_env import gl_renderer_name, gpu_name, prefer_gpu_on_wsl2
 
-prefer_gpu_on_wsl2()  # before MuJoCo creates a GL context (Issue #10)
+prefer_gpu_on_wsl2()  # before MuJoCo creates a GL context
 
 import mujoco  # noqa: E402
 
@@ -273,7 +273,7 @@ def render(
     commit = (
         f"`{manifest_commit}`"
         if manifest_commit
-        else "（未凍結: 作業ツリーの manifest。凍結時に #13 へ commit ハッシュを記録）"
+        else "（未凍結: 作業ツリーの manifest。凍結時に commit ハッシュを記録）"
     )
     failures = [r for r in records if not r.success]
     fail_lines = (
@@ -286,7 +286,7 @@ def render(
     return f"""# G1 固定 10 試行の実行ログ（{label}）
 
 - 記録日: {today}。生成: `{cmd}`（再現可能）
-- 結論: manifest `contracts/fixtures/g1/manifest.json`（commit {commit}）の 10 試行 —— `{manifest.config_id}` **{n_ok}/{n} 成功**。合否の宣言はしない（合格数字と合否はユーザーが #13 で決める）
+- 結論: manifest `contracts/fixtures/g1/manifest.json`（commit {commit}）の 10 試行 —— `{manifest.config_id}` **{n_ok}/{n} 成功**。合否の宣言はしない（合格数字と合否はユーザーが決める）
 - 位置づけ: {position}
 - 試行の設計と開始位置の決め方（ユーザーが配置を決め、規則と headless 実行で確認）: `docs/g1-manifest.md`。判定は 0b / 4a と同じ `execution/criteria.py`（変更なし）
 - 成功 = 判定器 success（搬送監査 A/B/C 含む）**かつ開始配置の判定 合 かつ実行後のリセット判定 合**。失敗した試行も消さない
@@ -313,8 +313,8 @@ manifest の順に実行し、毎回リセット。「他物体の移動」= 対
 {fail_lines}
 
 ## 注記
-- この記録は「凍結した固定 10 試行を、承認済みと明示した開発用固定 JSON から sim が実行した」証拠である。合格数字（提案値 10/10）はユーザーが #13 で評価前に固定し、この記録の結果に合わせない
-- 簡略把持は把持力の証拠にならない（demo-plan 共通規約）。sim の成功は実機の証拠にしない
+- この記録は「凍結した固定 10 試行を、承認済みと明示した開発用固定 JSON から sim が実行した」証拠である。合格数字（提案値 10/10）はユーザーが評価前に固定し、この記録の結果に合わせない
+- 簡略把持は把持力の証拠にならない（プロジェクトの規約）。sim の成功は実機の証拠にしない
 - テスト: `tests/test_g1_manifest.py`（manifest の規則 (a)〜(e)、開始配置と記録項目）
 """
 

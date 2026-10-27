@@ -17,7 +17,7 @@ from .backend import GRIPPER_MAX, GRIPPER_MIN, CommandToken, NotCommandOwner, Ro
 GRIPPER_CLOSED_DEG = -10.0
 GRIPPER_OPEN_DEG = 100.0
 # Commands at or below CLOSE_CMD_MAX are "close" commands, at or above OPEN_CMD_MIN "open"
-# (Issue #4 fixed values: closed <= 40, open >= 60). In between: move only.
+# (values fixed 2026-09-19: closed <= 40, open >= 60). In between: move only.
 CLOSE_CMD_MAX = 40.0
 OPEN_CMD_MIN = 60.0
 MOVING_SPEED_DEG_S = 2.0

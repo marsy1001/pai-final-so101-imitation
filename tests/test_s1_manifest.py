@@ -1,4 +1,4 @@
-"""contracts/fixtures/s1/videos.json matches the committed videos (Issue #22)."""
+"""contracts/fixtures/s1/videos.json matches the committed videos."""
 
 import json
 

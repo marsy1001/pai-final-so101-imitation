@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # Register this checkout with agmsg so Claude Code and Codex can message each
-# other here. Run once per clone (scripts/new.sh runs it for you); rerunning is
-# harmless.
+# other here. Run once per clone; rerunning is harmless.
 #
 # What it does (all through agmsg's own scripts, never by editing its files):
 #   1. team = directory name (override with AGMSG_TEAM=<name>)

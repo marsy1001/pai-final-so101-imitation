@@ -1,5 +1,5 @@
 """Shared fixtures. Rendering tests (`-m gpu`) need the GPU selected before MuJoCo is
-imported (Issue #10), so that import comes first."""
+imported, so that import comes first."""
 
 from so101_demo.evidence.gl_env import prefer_gpu_on_wsl2
 

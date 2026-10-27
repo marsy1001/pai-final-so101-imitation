@@ -1,6 +1,6 @@
 """SO-101 demo: MuJoCo simulation, kinematics and the pick/place execution layer.
 
-Package map (decided on Issue #3, 2026-09-19). Layers are sub-packages; the two
+Package map (decided 2026-09-19). Layers are sub-packages; the two
 sim/real replacement boundaries (RobotBackend, position source) get their own.
 
     assets.py, frames.py, units.py, tolerances.py

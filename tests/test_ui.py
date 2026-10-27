@@ -534,7 +534,7 @@ def test_http_read_with_a_failing_source_returns_to_idle():
     assert c.post("/api/manual").status_code == 200
 
 
-# --- stale pages (Codex review 1, #27): an operation names the session it saw --------
+# --- stale pages (earlier review 1): an operation names the session it saw --------
 
 
 def test_stale_page_cannot_approve_the_next_result():
@@ -593,7 +593,7 @@ def test_session_is_shown_only_where_an_operation_needs_it():
     assert s.view()["session"].startswith("manual-")
 
 
-# --- the real server (Codex review 1, #27): WebSocket through uvicorn ---------------
+# --- the real server (earlier review 1): WebSocket through uvicorn ---------------
 
 
 def test_real_uvicorn_upgrades_the_websocket_and_pushes_after_an_operation():
@@ -636,7 +636,7 @@ def test_real_uvicorn_upgrades_the_websocket_and_pushes_after_an_operation():
         t.join(5)
 
 
-# --- the page never draws an older view (Codex review 2, #27) -------------------------
+# --- the page never draws an older view (earlier review 2) -------------------------
 
 NODE = __import__("shutil").which("node")
 HARNESS = __import__("pathlib").Path(__file__).parent / "js" / "view_order.js"

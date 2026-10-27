@@ -3,7 +3,7 @@
 Frames come from `mujoco.Renderer` (offscreen; set `MUJOCO_GL=egl` on a machine
 without a display) and go straight into an `ffmpeg` process on stdin, so no video
 library is added to the project. One file per trial, H.264, 640x480 at 25 fps: a
-10 s trial is well under the 10 MB per-file limit of Issue #4.
+10 s trial is well under the 10 MB per-file limit for evidence clips.
 
 The recorder is an observer of `execution.trial.run_trial`: it is called after every
 control tick and renders whenever sim time has advanced by one frame period.
@@ -25,7 +25,7 @@ from ..sim.model import So101Sim
 WIDTH, HEIGHT, FPS = 640, 480, 25
 # screen recording (2026-09-19): 1080p, frames on every 2nd control tick (CONTROL_DT_S = 0.02 s)
 VIDEO_WIDTH, VIDEO_HEIGHT, VIDEO_FPS = 1920, 1080, 25
-# free camera on the work area (Issue #10, 2026-09-19): straight in front of the base,
+# free camera on the work area (2026-09-19): straight in front of the base,
 # low and close, so both cubes, both trays and the jaws stay visible in every phase of
 # all four fixtures (segmentation search over azimuth 110-230, elevation -20..-55,
 # distance 0.45-0.7; the earlier 145/-35/0.6 hid the non-target cube behind the arm)
@@ -64,7 +64,7 @@ X264 = "libx264"
 def h264_encoder(encoder: str = X264) -> str:
     """Resolve `encoder`: `auto` = NVENC when ffmpeg lists it, else libx264.
 
-    Issue #10 (2026-09-19): libx264's threads compete with the D3D12 render path on
+    Measured 2026-09-19: libx264's threads compete with the D3D12 render path on
     the GPU laptop and slow every frame (render 20 -> 28 ms, pipeline 27 fps); NVENC
     keeps the render at 15 ms (39 fps). The 0b / 4a evidence stays on libx264.
     """
@@ -114,7 +114,7 @@ class VideoRecorder:
         self.width, self.height, self.fps = width, height, fps
         self.decorate = decorate
         # One GL context per process: every extra mujoco.Renderer slows all later frames
-        # (Issue #10: 35 -> 29 -> 27 fps over three recorders). Callers that record
+        # (2026-09-19: 35 -> 29 -> 27 fps over three recorders). Callers that record
         # several videos pass one shared renderer of the same size.
         self._owns_renderer = renderer is None
         self.renderer = renderer or mujoco.Renderer(sim.model, height, width)
@@ -181,7 +181,7 @@ class VideoRecorder:
     def fps_stats(self) -> dict[str, float]:
         """Effective frame rate over the recorded interval, measured on the wall clock:
         `effective_fps` = (frames - 1) / (last - first), `max_interval_s` = longest gap
-        between two consecutive frames. Both are fixed in Issue #10 (Started comment)."""
+        between two consecutive frames. Both are fixed (measured 2026-09-19)."""
         if len(self.wall_times) < 2:
             return {"effective_fps": 0.0, "max_interval_s": float("inf"), "frames": self.frames}
         w = np.diff(np.asarray(self.wall_times))

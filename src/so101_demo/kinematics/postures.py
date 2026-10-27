@@ -1,4 +1,4 @@
-"""Fixed joint postures for the placo / MuJoCo agreement check (Issue #3, 0a).
+"""Fixed joint postures for the placo / MuJoCo agreement check (0a).
 
 Used by tests/test_kinematics_fk_agreement.py (the 0a evidence generator that shared
 it was removed 2026-10-27); the set: zero, five seeded random postures inside 80 % of the joint

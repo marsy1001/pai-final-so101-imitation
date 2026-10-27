@@ -20,7 +20,8 @@ from ..units import deg_to_rad
 from ..vendor.lerobot_kinematics import RobotKinematics
 from .errors import IkRejected
 
-# LeRobot's defaults for the soft frame task; recorded in docs/evidence/0a.
+# LeRobot's defaults for the soft frame task; measured 2026-09-19 in the earlier project
+# (that record was not carried over).
 IK_MAX_ITERS = 8
 IK_POSITION_WEIGHT = 1.0
 IK_ORIENTATION_WEIGHT = 0.01

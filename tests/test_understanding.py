@@ -1,4 +1,4 @@
-"""Understanding-layer clients without the network (Issue #22 XPS part).
+"""Understanding-layer clients without the network (laptop part).
 
 The HTTP layer is replaced by a fake `post`; nothing here calls Cosmos or Astra.
 """

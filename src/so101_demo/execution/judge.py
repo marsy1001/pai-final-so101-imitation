@@ -3,7 +3,7 @@
 Success is decided from the object pose/velocity and the gripper value only; the
 grasp hold list is never read. One failure class per trial: the first that occurred.
 
-The carry audit (Issue #4 固定 3/3, 2026-09-19) is part of the verdict, not a separate
+The carry audit (fixed 2026-09-19) is part of the verdict, not a separate
 report: between the lift and the true release the object must stay inside the grasp
 zone and within CARRY_TCP_DIST_MAX_M of the TCP, and no equality constraint may still
 be active after the release. The audit reads the object's position in the tip-site

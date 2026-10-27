@@ -1,4 +1,4 @@
-"""Uc acceptance manifest and the G2 scorer (Issue #24, demo-plan Ub)."""
+"""Uc acceptance manifest and the G2 scorer."""
 
 import json
 
@@ -309,7 +309,7 @@ def test_duplicate_or_unknown_rows_are_rejected(videos):
         score([{**r, "video": "s1-01"}], videos)
 
 
-# --- Uc evaluation report (Issue #25) ------------------------------------------------
+# --- Uc evaluation report (2026-09-29) ------------------------------------------------
 
 
 def test_committed_reports_are_rendered_from_the_committed_json():

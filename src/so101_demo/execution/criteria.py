@@ -1,7 +1,7 @@
-"""0b judgement values and behaviours fixed by the user on Issue #4 (2026-09-19).
+"""0b judgement values and behaviours fixed by the user on 2026-09-19.
 
 Fixed before evaluation; never relaxed to fit a trial. A correction (wrong setup)
-is recorded on the Issue with the old value and date, and earlier trials keep the
+is recorded here with the old value and date, and earlier trials keep the
 old verdict. Consumed by execution.judge and reported by evidence.stage1_g1.
 """
 
@@ -12,10 +12,10 @@ GRIPPER_CLOSED_MAX = 40.0  # 0-100
 # dropped = the object separated from the gripper between the lift and the release:
 # its distance to the TCP grew by more than this over the distance at lift time.
 # (Amended 2026-09-19 from "centre z < 0.05 before release": the place descent
-# legitimately passes below the lift height while still holding; Issue #4.)
+# legitimately passes below the lift height while still holding.)
 DROP_SEPARATION_M = 0.020
 
-# carry audit (fixed on Issue #4 2026-09-19, "固定 3/3"): the checks above cannot tell
+# carry audit (fixed 2026-09-19): the checks above cannot tell
 # "held between the jaws" from "somewhere in space with the jaws closed", and cannot tell
 # that nothing still constrains the object after the release. Three checks supplement
 # them and are part of the verdict: success = judged success AND audit passed.
@@ -58,7 +58,7 @@ FAILURE_CLASSES = (
     "timeout",
 )
 
-# reset complete (fixed on Issue #9 2026-09-19, before the 4a runs): every object back at
+# reset complete (fixed 2026-09-19, before the 4a runs): every object back at
 # its registered home pose, the arm at the home posture, the jaws open, nothing held and
 # no equality constraint active, after RESET_SETTLE_S of settling. Checked after every
 # reset, i.e. once when the runner starts and once after every run, rejection or stop; the

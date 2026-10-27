@@ -1,9 +1,9 @@
-"""Uc acceptance set and the G2 scorer (Issue #24; demo-plan stage 2 "Ub 採点器").
+"""Uc acceptance set and the G2 scorer.
 
     uv run python -m so101_demo.evidence.uc_eval --check-manifest
     uv run python -m so101_demo.evidence.uc_eval --cut tmp/uc-movie     # rebuild the videos
     uv run python -m so101_demo.evidence.uc_eval --frames               # 1 fps frame sheets
-    uv run python -m so101_demo.evidence.uc_eval --fix-config | --run | --report-only  # Uc (#25)
+    uv run python -m so101_demo.evidence.uc_eval --fix-config | --run | --report-only  # Uc eval
 
 `--check-manifest` checks contracts/fixtures/uc/videos.json against the committed videos
 (`check_manifest`: count, ids, hashes, breakdown, gold, revision log, and the file format
@@ -45,7 +45,7 @@ FPS = 24
 FRAMES = 240
 IDS = tuple(f"uc-{n:02d}" for n in range(1, 16))
 
-# G2 (demo-plan, 2026-09-19): accuracy and time limits of the fixed acceptance set.
+# G2 (fixed 2026-09-19): accuracy and time limits of the fixed acceptance set.
 G2_IN_SCOPE_MIN = 10
 G2_PER_COMBO_MIN = 2
 G2_MEDIAN_S = 60.0
@@ -431,7 +431,7 @@ def main(argv: list[str] | None = None) -> int:
     g.add_argument("--check-manifest", action="store_true")
     g.add_argument("--cut", type=Path, metavar="SOURCE_DIR")
     g.add_argument("--frames", action="store_true")
-    g.add_argument("--fix-config", action="store_true", help="write config.json (Issue #25)")
+    g.add_argument("--fix-config", action="store_true", help="write config.json")
     g.add_argument("--run", action="store_true", help="evaluate the 15 videos (GPU machine)")
     g.add_argument("--report-only", action="store_true", help="rebuild eval.md from the json")
     ap.add_argument("--revision", type=int, default=1)

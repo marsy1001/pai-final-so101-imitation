@@ -1,7 +1,7 @@
 [project]
 name = "so101-demo"
 version = "0.1.0"
-description = "Participatory demo: SO-101 in MuJoCo reproduces a visitor's pick/place from a contract JSON"
+description = "SO-101 in MuJoCo reproduces a person's pick/place, read from a short video into a contract JSON"
 requires-python = ">=3.12,<3.13"
 dependencies = [
     "mujoco==3.13.0",

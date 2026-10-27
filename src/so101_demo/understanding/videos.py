@@ -1,4 +1,4 @@
-"""The S1 video manifest (contracts/fixtures/s1/videos.json, Issue #22).
+"""The S1 video manifest (contracts/fixtures/s1/videos.json).
 
 `check_manifest` returns every rule the manifest breaks (empty = valid): three videos
 with unique ids; each file exists and its sha256 matches; the breakdown is two in-scope

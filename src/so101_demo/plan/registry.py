@@ -34,7 +34,7 @@ class DestinationSpec:
     rgba: tuple[float, float, float, float]
     label: str
     # Trays are built axis-aligned (sim.scene); the place yaw follows this value so the
-    # cube's edges end up parallel to the walls (Issue #21). Not in registry.json.
+    # cube's edges end up parallel to the walls (2026-09-20). Not in registry.json.
     yaw_deg: float = 0.0
 
     @property

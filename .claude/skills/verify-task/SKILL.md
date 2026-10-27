@@ -24,6 +24,11 @@ again from step 1. Never hand back partially verified work.
    evidence (command and result, or file and line).
 6. Shell scripts under `scripts/`: run at least one real subcommand end to
    end (with `timeout`) and paste its output. `bash -n` is not enough.
+7. Every repository path named in the changed files (`docs/...`, `scripts/...`,
+   `src/...`) exists in `git ls-files` or is a documented output directory.
+   Extract them with `git grep -o -E '\b(docs|scripts|src|tests|contracts|serving)/[A-Za-z0-9_./-]+'`
+   and test each with `[ -e ]`. (Added 2026-10-27, Issue #9: the support found
+   references to deleted documents twice after the lead's grep for old names.)
 
 Take exit codes from the command itself, not from a pipe's last stage: run
 with `set -o pipefail` (or check `${PIPESTATUS[0]}`) whenever the output goes

@@ -4,8 +4,8 @@
 they were understanding results, after a short delay, so the screen can be driven without
 a camera, Cosmos or Astra. It is the default of `python -m so101_demo.ui`.
 
-`VideoSource` is the real chain (Issue #3): every 読み取り開始 sends the video the operator
-selected on the screen (Issue #4; one of a manifest or a directory) through
+`VideoSource` is the real chain: every 読み取り開始 sends the video the operator
+selected on the screen (one of a manifest or a directory) through
 `understanding.pipeline.understand` (Cosmos sentence, Astra plan) on a worker thread and
 hands the result to the screen with the run ID the screen gave it. The screen settles it
 on its `RunGate`, so a result for a run that was cancelled (手動, 対応外, 待機へ戻る),

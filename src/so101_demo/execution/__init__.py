@@ -2,7 +2,7 @@
 
 Uses kinematics (targets -> joints), locate (where objects are) and robot (how joints
 are commanded). The backend never sees a Cartesian target; every joint target passes
-through `safety` first. `criteria` holds the 0b pass/fail numbers fixed on Issue #4.
+through `safety` first. `criteria` holds the 0b pass/fail numbers fixed on 2026-09-19.
 """
 
 from .primitives import PickPlace

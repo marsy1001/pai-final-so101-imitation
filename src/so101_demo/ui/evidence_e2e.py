@@ -1,4 +1,4 @@
-"""The end-to-end run's evidence: check `runs.jsonl`, render `runs.md` (Issue #3).
+"""The end-to-end run's evidence: check `runs.jsonl`, render `runs.md`.
 
     uv run python -m so101_demo.ui.evidence_e2e --check docs/evidence/e2e/runs.jsonl
     uv run python -m so101_demo.ui.evidence_e2e --report docs/evidence/e2e/runs.jsonl
@@ -198,7 +198,7 @@ def check(
     probe: Probe | None = probe_mp4,
     manifest: Path = UC_MANIFEST_PATH,
 ) -> list[str]:
-    """Every rule the record breaks (empty = the evidence of Issue #3 is complete).
+    """Every rule the record breaks (empty = the end-to-end evidence is complete).
     `probe=None` skips ffprobe (the files' presence and size are still checked)."""
     problems: list[str] = []
     if not rows:

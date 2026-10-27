@@ -1,6 +1,6 @@
 """placo FK on the URDF agrees with MuJoCo's tip site through one fixed transform.
 
-Tolerances: so101_demo.tolerances (fixed by the user on 2026-09-19, Issue #3).
+Tolerances: so101_demo.tolerances (fixed by the user on 2026-09-19).
 """
 
 import xml.etree.ElementTree as ET

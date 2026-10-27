@@ -12,7 +12,8 @@ Headless, `sim-v1-simple`. Three groups, every one through `execution.trial.run_
           (`plan.manifest.start_violations`: dist / tray / tcp, non-target at home)
           x 2 objects x 2 destinations, two cubes in the scene
   column  the y = 0 column, x 0.16..0.23, x 2 objects x 2 destinations, target alone
-          (the failure shape of Issue #9 red (16, 0) and Issue #20 T2; most of these
+          (the failure shape of the red (16, 0) trial and the T2 blue (22, 0) trial of
+          2026-09-20; most of these
           points break the `dist` rule when the other cube is at home, so they are run
           without it, like the 0b trials)
 Per run: result, final centre offset from the tray centre, cube yaw against the tray
@@ -46,7 +47,7 @@ from ..plan.paths import FIXTURES_4A_DIR
 from ..plan.schema import validate_plan
 from .gl_env import gpu_name
 
-MARGIN_MIN_M = 0.005  # landing margin every fixed trial must keep (Issue #21, 2026-09-20)
+MARGIN_MIN_M = 0.005  # landing margin every fixed trial must keep (fixed 2026-09-20)
 GRID_M = 0.010
 COLUMN_XS_M = (0.16, 0.17, 0.18, 0.19, 0.20, 0.21, 0.22, 0.23)  # the y = 0 column
 CONFIG_ID = "sim-v1-simple"
@@ -134,7 +135,7 @@ def measure(r: TrialResult, reg: Registry) -> dict:
 
 
 def passes(m: dict) -> bool:
-    """The acceptance rule of Issue #21 for one fixed trial."""
+    """The acceptance rule of 2026-09-20 for one fixed trial."""
     return (
         m["result"] == "success"
         and m["margin_mm"] is not None
@@ -265,7 +266,7 @@ def render(before: dict | None, after: dict, reg: Registry, today: str) -> str:
     ok_a, n_a, min_a = _summary(fixed_a)
     all_pass = all(passes(m) for m in fixed_a)
     lines = [
-        "# 置き余裕（着地余裕）の記録: 修正前と修正後（Issue #21）",
+        "# 置き余裕（着地余裕）の記録: 修正前と修正後",
         "",
         f"- 記録日: {today}。生成: `uv run python -m so101_demo.evidence.place_margin`（再現可能。修正前の半分は `--baseline --commit <hash>` で先に作った `{BEFORE_JSON}` から読む）。機材: {platform.node()}、{gpu_name() or 'NVIDIA GPU なし'}、headless、構成 `{CONFIG_ID}`",
     ]
@@ -297,7 +298,7 @@ def render(before: dict | None, after: dict, reg: Registry, today: str) -> str:
                 if before is not None and "sweep" in before
                 else ""
             )
-            + "。掃引全体の合格数字は決めない（記録のみ、Issue #21）"
+            + "。掃引全体の合格数字は決めない（記録のみ）"
         )
     lines += [
         f"- 修正前 = `main` {before['commit'] if before else '-'}（{before['date'] if before else '-'}、置きの向き = 基部から径方向、置き TCP = 設計値）。修正後 = `{after['commit']}`（pick / place の経路を最後に変えた commit。置きの yaw をトレイに合わせ、持ち上げ後に測った把持オフセットで置き TCP を補正。設計は `docs/place-margin.md`）",
@@ -319,7 +320,8 @@ def render(before: dict | None, after: dict, reg: Registry, today: str) -> str:
         )
     lines.append("")
     lines.append(
-        f"受け入れ（Issue #21）: 修正後の 9 試行すべて success かつ 余裕 ≥ {MARGIN_MIN_M * 1000:.0f} mm → {'**合格**' if all_pass else '**不合格**'}。"
+        f"受け入れ（2026-09-20 に固定）: 修正後の 9 試行すべて success かつ "
+        f"余裕 ≥ {MARGIN_MIN_M * 1000:.0f} mm → {'**合格**' if all_pass else '**不合格**'}。"
         f"テスト `tests/test_execution_pick_place.py` が 0b T1〜T5 で同じ値を確認する。"
     )
     if "column" in after:
@@ -327,7 +329,9 @@ def render(before: dict | None, after: dict, reg: Registry, today: str) -> str:
             "",
             "## y = 0 の列（x 16〜23 cm、対象のみ配置）: 修正前 → 修正後",
             "",
-            "Issue #9 の red (16, 0) → box_b、Issue #20 の T2 blue (22, 0) → box_b がこの型。非対象を home に置くと `dist` 規則（中心間 ≥ 60 mm）で大半が落ちるので、この列は 0b と同じく対象だけを置いて回す。",
+            "2026-09-20 以前の試行 red (16, 0) → box_b と T2 blue (22, 0) → box_b がこの型。"
+            "非対象を home に置くと `dist` 規則（中心間 ≥ 60 mm）で大半が落ちるので、"
+            "この列は 0b と同じく対象だけを置いて回す。",
             "",
             "| 物体 | 開始 x m | 置き先 | 修正前 結果 | 中心ずれ mm | yaw 差 ° | 余裕 mm | 傾き ° | 修正後 結果 | 中心ずれ mm | yaw 差 ° | 余裕 mm | 傾き ° |",
             "|---|---|---|---|---|---|---|---|---|---|---|---|---|",

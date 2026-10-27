@@ -1,4 +1,4 @@
-"""Uc evaluation (Issue #25): fix the configuration, run the 15 acceptance videos, report G2.
+"""Uc evaluation: fix the configuration, run the 15 acceptance videos, report G2.
 
     uv run python -m so101_demo.evidence.uc_eval --fix-config   # write config.json (commit it)
     uv run python -m so101_demo.evidence.uc_eval --run          # GPU machine: eval.json + eval.md
@@ -18,8 +18,9 @@ human-check.json, the manifest), so `--report-only` reproduces the committed eva
 byte for byte. The hashes of config.json and the manifest are taken at run time and
 compared with the current files in the report.
 
-A revision (Issue #25, amended 2026-09-29: no limit on the number) gets its own files: config-r2.json, eval-r2.json, eval-r2.md,
-human-check-r2.json. The first revision's files are never rewritten by a later one.
+A revision (amended 2026-09-29: no limit on the number) gets its own files: config-r2.json,
+eval-r2.json, eval-r2.md, human-check-r2.json. The first revision's files are never rewritten
+by a later one.
 """
 
 from __future__ import annotations
@@ -57,8 +58,8 @@ TUNING_RULES = {
     1: "The Cosmos instruction and the preprocessing were chosen on the development set only "
     "(S1, docs/evidence/s1/diagnosis.md 「プロンプトの比較」); the acceptance videos uc-* are "
     "run only with this fixed configuration.",
-    2: "Chosen after looking at the acceptance results of the earlier revisions (Issue #25, "
-    "amended 2026-09-29 by the user: the development set cannot tell prompts apart). The "
+    2: "Chosen after looking at the acceptance results of the earlier revisions (rule amended "
+    "2026-09-29 by the user: the development set cannot tell prompts apart). The "
     "acceptance score of this revision is therefore tuned on the acceptance videos and can be "
     "higher than on videos seen for the first time; revision 1 is the untuned score.",
 }
@@ -386,7 +387,7 @@ def render(rev: int = 1) -> str:
         + (
             "。deployment は config に sha256 で固定"
             if "deployment_sha256" in cfg["astra"]
-            else "。この改訂の config は deployment を記録していない（Codex 指摘、#25）ため、"
+            else "。この改訂の config は deployment を記録していない（レビュー指摘）ため、"
             "各行の API 報告モデルで照合した"
         ),
         f"- 評価後の変更の照合: config の sha256 `{data['config_sha256']}`、manifest の sha256 "
@@ -488,7 +489,7 @@ def render(rev: int = 1) -> str:
         f"- ウォームアップ: {data['warmup']['video']}（開発用）で 1 回、{data['warmup']['elapsed_s']:.1f} 秒。計測から外した",
         "",
         "## 条件",
-        "- 採点: `src/so101_demo/evidence/uc_eval.py` の `score`（#24）。対応内は status ok で"
+        "- 採点: `src/so101_demo/evidence/uc_eval.py` の `score`。対応内は status ok で"
         "target・destination・steps が gold と一致したものだけを完全一致とし、段の失敗は失敗の種類で数える",
         "- 所要: `pipeline.understand` の動画投入 〜 検証済み最終 JSON。Cosmos / Astra は各リクエストの送信 〜 応答受信",
         "- API へ送ったのは一文と登録 ID だけ（R7）。動画とフレームは送っていない",

@@ -1,6 +1,6 @@
-"""G1 preparation (Issue #19): the fixed 10-trial manifest, its rules, and the
+"""G1 preparation: the fixed 10-trial manifest, its rules, and the
 evidence runner's staging and record fields. The
-manifest rules are the XPS acceptance criteria (a)-(e) of the Issue; `check_manifest` is
+manifest rules are the laptop acceptance criteria (a)-(e); `check_manifest` is
 the single implementation and is exercised both on the real file and on deliberately
 broken copies. Since 2026-09-21 both objects have a start position per trial,
 so the rules apply to both and no object has to stay at its home."""

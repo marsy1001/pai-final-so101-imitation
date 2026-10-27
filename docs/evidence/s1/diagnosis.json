@@ -140,7 +140,7 @@
         "target": null,
         "destination": null,
         "steps": [],
-        "facts": "Red cube centre left, blue cube front right, both trays empty. A hand lifts the red cube and puts it back at about the same place; then the hand touches the blue cube and shifts it slightly. Nothing is put into either tray; both trays are empty at the end. Unregistered action (lift and return), so no executable plan; needs_review is also acceptable as long as no executable plan is returned (demo-plan G2)."
+        "facts": "Red cube centre left, blue cube front right, both trays empty. A hand lifts the red cube and puts it back at about the same place; then the hand touches the blue cube and shifts it slightly. Nothing is put into either tray; both trays are empty at the end. Unregistered action (lift and return), so no executable plan; needs_review is also acceptable as long as no executable plan is returned (G2 rule)."
       },
       "processor": {
         "source_frames": 240,

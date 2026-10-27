@@ -1,4 +1,4 @@
-"""The big screen's frames and the per-run 1080p recording, on the runner's thread (#3).
+"""The big screen's frames and the per-run 1080p recording, on the runner's thread.
 
 One `mujoco.Renderer` of the video size (1920x1080) is created on the runner thread by
 the observer factory and used for both outputs: the big screen gets the same frame
@@ -12,7 +12,7 @@ lets the run go ahead without a video, a frame failure stays in
 noted in `Recording.error`; the `RunRecord` is returned in every case.
 
 The wall-clock frame rate of the recording is measured (`Recording.effective_fps`); a run
-under 25 fps is recorded as such, not failed (Issue #3).
+under 25 fps is recorded as such, not failed.
 """
 
 from __future__ import annotations

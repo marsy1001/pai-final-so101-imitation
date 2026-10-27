@@ -1,4 +1,4 @@
-"""Pick the GPU for offscreen rendering on WSL2 (Issue #10, measured 2026-09-19).
+"""Pick the GPU for offscreen rendering on WSL2 (measured 2026-09-19).
 
 On WSL2 Mesa's EGL falls back to llvmpipe (CPU) unless the D3D12 Gallium driver is
 selected, and that driver picks the first adapter (the Intel iGPU on the GPU

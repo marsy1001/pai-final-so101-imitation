@@ -1,4 +1,4 @@
-"""Print what Cosmos' video processor does to one video, as JSON (Issue #22).
+"""Print what Cosmos' video processor does to one video, as JSON.
 
     uv run --project serving/cosmos python serving/cosmos/probe_video.py <video> [fps]
 

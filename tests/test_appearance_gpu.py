@@ -1,4 +1,4 @@
-"""Issue #10 rendering checks (GPU machine): projection against segmentation, 1080p frame
+"""Rendering checks (2026-09-19, GPU machine): projection against segmentation, 1080p frame
 with labels, glyph height."""
 
 import mujoco

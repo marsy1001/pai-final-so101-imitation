@@ -1,4 +1,4 @@
-"""S1 diagnosis evidence (Issue #22 GPU part).
+"""S1 diagnosis evidence (the 2026-09-28 GPU runs).
 
 The first tests read the committed evidence and need nothing; the `gpu` ones talk to the
 running Cosmos server (serving/cosmos/serve.sh) and check the client and server agree on
@@ -143,7 +143,7 @@ def test_cosmos_server_answers_one_sentence_for_a_manifest_video():
     assert r.reasoning, "reasoning_content is empty: --reasoning-parser qwen3 not applied?"
     # the server applied fps=4 and the pixel budget exactly as the processor probe says
     probe = next(v["processor"] for v in DATA["videos"] if v["id"] == video.id)
-    # the S1 rows used the prompt without the scene (#25); the Uc revision fixed with the
+    # the S1 rows used the prompt without the scene (2026-09-29); the Uc revision fixed with the
     # current prompt ran the same 10 s format and gives the expected count
     from so101_demo.evidence import uc_report
 

@@ -1,5 +1,5 @@
 """The real understanding chain on the approval screen, the run log and the end-to-end
-evidence checker (Issue #3). No network: Cosmos and Astra are a fake `post` injected
+evidence checker. No network: Cosmos and Astra are a fake `post` injected
 through `understand(**kw)`. No sim and no rendering: the executor and the recordings are
 fakes."""
 
@@ -146,7 +146,7 @@ def test_video_source_reads_the_selected_video_and_only_registered_ids():
         src.start("r9", lambda *a: True, None)
 
 
-# --- (e) the operator selects the video; the big screen follows (Issue #4) -------------
+# --- (e) the operator selects the video; the big screen follows -------------
 
 TWO = [Video("uc-02", VIDEO), Video("uc-13", VIDEO)]
 
@@ -733,7 +733,7 @@ def test_report_survives_a_one_frame_recording_and_an_in_scope_rejection(tmp_pat
 
 
 def test_config_differences_is_empty_for_the_fixed_uc_configuration():
-    # the acceptance of Issue #3: the Cosmos / Astra instructions are those of Uc revision 2
+    # the fixed acceptance: the Cosmos / Astra instructions are those of Uc revision 2
     assert evidence_e2e.config_differences() == []
 
 

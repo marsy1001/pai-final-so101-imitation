@@ -3,7 +3,7 @@
 Everything here touches `mjVisual`, materials, lights and textures: nothing that
 `mj_step` reads. `tests/test_appearance.py` checks that a styled and an unstyled
 scene have identical physics arrays and identical trajectories. The defaults come
-from demo-plan「見栄えの最低ライン」: plain table and background, one fixed camera,
+from the appearance rules: plain table and background, one fixed camera,
 enough light and a shadow to read the lift height, 1080p offscreen buffer.
 """
 

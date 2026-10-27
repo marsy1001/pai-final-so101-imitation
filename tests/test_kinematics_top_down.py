@@ -54,7 +54,7 @@ def test_top_down_target_points_straight_down():
 
 @pytest.mark.parametrize("yaw", [0.0, 30.0, -22.0, 90.0])
 def test_top_down_target_jaw_axis_follows_the_yaw_not_the_azimuth(yaw):
-    # Issue #21: the jaw-opening direction (site +Z) is the requested yaw in the base
+    # The jaw-opening direction (site +Z) is the requested yaw in the base
     # frame, independent of where the target is (it used to point radially outward).
     for p in ([0.2, 0.05, 0.04], [0.16, -0.09, 0.02], [0.22, 0.09, 0.07]):
         T = top_down_target(p, yaw)
@@ -92,7 +92,7 @@ def test_top_down_ik_solves_inside_workspace(sim: So101Sim, kin: So101Kinematics
     "point", [CENTRE, *CORNERS], ids=["centre"] + [f"corner{i}" for i in range(8)]
 )
 def test_top_down_ik_reaches_the_requested_yaw(kin: So101Kinematics, point, yaw):
-    # Issue #21: pick uses the cube's yaw, place the tray's; the transfer interpolates
+    # Pick uses the cube's yaw, place the tray's; the transfer interpolates
     # between them, so the solver must hold any yaw in this range across the work area.
     q = solve_top_down(kin, point, yaw)
     _, _, yaw_err = evaluate_candidate(kin, q, point, yaw)
@@ -129,7 +129,7 @@ def test_wrist_roll_seed_follows_yaw_minus_azimuth(kin: So101Kinematics):
 def test_workspace_contains_is_closed_box():
     assert workspace_contains(WORKSPACE_MIN) and workspace_contains(WORKSPACE_MAX)
     assert not workspace_contains(WORKSPACE_MAX + [0.001, 0, 0])
-    # rounding tolerance only (Issue #21): a settled cube at y = -0.09 reads -0.09 - 2e-11
+    # rounding tolerance only: a settled cube at y = -0.09 reads -0.09 - 2e-11
     assert workspace_contains(WORKSPACE_MIN - [0, 2e-11, 0])
     assert not workspace_contains(WORKSPACE_MIN - [0, 1e-5, 0])
     assert not workspace_contains(WORKSPACE_MAX + [0, 1e-5, 0])

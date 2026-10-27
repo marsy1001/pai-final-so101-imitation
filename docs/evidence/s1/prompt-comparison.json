@@ -1,5 +1,5 @@
 {
- "$comment": "Prompt comparison on 2026-09-28 (Issue #22 GPU part), run by tmp/prompt_ab.py on commit 7c3b93a with the same server and request as diagnosis.json except the prompt text and the seed. Both prompts get the same reasoning suffix.",
+ "$comment": "Prompt comparison on 2026-09-28 (2026-09-28 GPU run), run by tmp/prompt_ab.py on commit 7c3b93a with the same server and request as diagnosis.json except the prompt text and the seed. Both prompts get the same reasoning suffix.",
  "date": "2026-09-28",
  "commit": "7c3b93a",
  "seeds": [

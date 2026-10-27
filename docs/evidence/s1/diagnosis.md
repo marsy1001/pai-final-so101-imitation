@@ -15,7 +15,7 @@
 - 所要（ウォームアップ後）: Cosmos 中央値 3.2 秒、最大 3.6 秒、Astra 中央値 3.5 秒、最大 6.5 秒、動画投入 〜 検証済み最終 JSON 中央値 6.7 秒、最大 9.5 秒。ウォームアップ 1 回は 3.6 秒（起動直後の初回なら約 19 秒。この実行ではサーバーが既に温まっていた場合がある。`serving.md`）
 - 運用値は暫定値のまま固定: Cosmos `max_tokens` 1024、Cosmos タイムアウト 30 秒、Astra 待機上限 30 秒（根拠は「運用値」）
 
-## 運用値（demo-plan「未決の値」4）
+## 運用値
 | 値 | 固定値 | 実測 | 根拠 |
 |---|---|---|---|
 | Cosmos `max_tokens` | 1024 | 完了トークン最大 246（推論トレース込み） | 最大の 4.2 倍の余裕。生成は約 115 tokens/s（`serving.md`）なので、暴走しても約 9 秒で `length` で止まり、`finish_reason` 検査で失敗になる |
@@ -88,7 +88,7 @@ Astra の生 tool call arguments:
 
 ## s1-03（out_of_scope、unregistered_action）
 - 動画: `docs/evidence/s1/videos/s1-03-lift-and-return.mp4`（sha256 `89332c728602…`）
-- gold: unsupported / None / None。事実: Red cube centre left, blue cube front right, both trays empty. A hand lifts the red cube and puts it back at about the same place; then the hand touches the blue cube and shifts it slightly. Nothing is put into either tray; both trays are empty at the end. Unregistered action (lift and return), so no executable plan; needs_review is also acceptable as long as no executable plan is returned (demo-plan G2).
+- gold: unsupported / None / None。事実: Red cube centre left, blue cube front right, both trays empty. A hand lifts the red cube and puts it back at about the same place; then the hand touches the blue cube and shifts it slightly. Nothing is put into either tray; both trays are empty at the end. Unregistered action (lift and return), so no executable plan; needs_review is also acceptable as long as no executable plan is returned (G2 rule).
 - 前処理（モデルの video processor の実測）: 元 240 フレーム 1280×720 @ 24 fps → sample fps 4 で **40 フレーム**、1 フレーム **1056×576**。画素予算は全フレーム合計 25,165,824 画素（下限 4,096）で、それに合わせて縮小される。動画トークン 11,880（サーバーの prompt_tokens は 12,151）
 
 | run | Cosmos (s) | finish_reason | 完了トークン | Astra (s) | API status | 契約検証 | 結果 status / target / destination | 実行可能 | gold 一致 | 合計 (s) |

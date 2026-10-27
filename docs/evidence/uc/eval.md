@@ -12,7 +12,7 @@
 - 診断値（合否には使わない）: Cosmos の事実一致 **8/15**（不一致 7、未照合 0）、Astra の文への忠実性 **15/15**（不忠実 0）
 - Cosmos の `finish_reason`: stop 15/15（stop 以外は失敗として数えた）
 - 構成を固定したコミット: `42819d03937d86e78a9b989eb2878c6860778203`（評価の実行時の HEAD: `42819d03937d86e78a9b989eb2878c6860778203`）
-- Astra のモデル: API が報告したモデルが `gpt-6-astra` だった行 **15/15**。この改訂の config は deployment を記録していない（Codex 指摘、#25）ため、各行の API 報告モデルで照合した
+- Astra のモデル: API が報告したモデルが `gpt-6-astra` だった行 **15/15**。この改訂の config は deployment を記録していない（レビュー指摘）ため、各行の API 報告モデルで照合した
 - 評価後の変更の照合: config の sha256 `006c64fac67dadae590cd36daa75ea53aeb4f75908bf8fc1d16bdd0e86c912a1`、manifest の sha256 `9f7e1d2b0eccfbf8fab42ac27df3253c51bb006ddd4f9ba546d14bb1d5a176b1`（評価時に記録）。現在のファイルと**一致**
 
 ## 動画ごとの結果
@@ -153,7 +153,7 @@
 - ウォームアップ: s1-01（開発用）で 1 回、4.0 秒。計測から外した
 
 ## 条件
-- 採点: `src/so101_demo/evidence/uc_eval.py` の `score`（#24）。対応内は status ok でtarget・destination・steps が gold と一致したものだけを完全一致とし、段の失敗は失敗の種類で数える
+- 採点: `src/so101_demo/evidence/uc_eval.py` の `score`。対応内は status ok でtarget・destination・steps が gold と一致したものだけを完全一致とし、段の失敗は失敗の種類で数える
 - 所要: `pipeline.understand` の動画投入 〜 検証済み最終 JSON。Cosmos / Astra は各リクエストの送信 〜 応答受信
 - API へ送ったのは一文と登録 ID だけ（R7）。動画とフレームは送っていない
 

@@ -1,4 +1,4 @@
-"""One line per run in `<record dir>/runs.jsonl` (Issue #3).
+"""One line per run in `<record dir>/runs.jsonl`.
 
 A run is one operator decision on one reading: 承認 / 訂正 / 手動 (the runner ran) or
 拒否 (nothing ran). Refused operations and dropped results are not runs and are not

@@ -20,7 +20,7 @@ Two schemas, on purpose:
 
 Strict mode does not make Astra recognise an unsupported task correctly (a sentence
 about a green cylinder can still come back as `red_cube`); `status` and the nulls are the
-way out, and the human check against gold is what measures it (Issue #22 GPU part).
+way out, and the human check against gold is what measures it (the 2026-09-28 GPU runs).
 
 Everything that is not a completed response with exactly one `submit_plan` call whose
 arguments pass the contract becomes an error plan (`status: error`, not executable):

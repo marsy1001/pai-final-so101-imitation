@@ -1,8 +1,9 @@
-"""Tolerances fixed before evaluation (Issue #3). Tests and evidence read these, never literals.
+"""Tolerances fixed before evaluation. Tests and evidence read these, never literals.
 
-FK agreement values were fixed by the user on 2026-09-19 (demo-plan 0a proposal 1 mm / 1 deg).
-IK values are the lead's proposal recorded in docs/evidence/0a; they are not gate criteria.
-The yaw tolerance was added on Issue #21 (2026-09-20) when the grasp yaw became a target:
+FK agreement values were fixed by the user on 2026-09-19 (the 0a proposal of 1 mm / 1 deg).
+IK values are the lead's proposal of 2026-09-19 (the earlier project's record was not carried
+over); they are not gate criteria.
+The yaw tolerance was added on 2026-09-20 when the grasp yaw became a target:
 2 deg turns a 40 mm cube's footprint by 1.4 mm, well inside the 5 mm placing margin.
 """
 

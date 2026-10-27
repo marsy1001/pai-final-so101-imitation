@@ -1,4 +1,4 @@
-"""Plan runner: the single entry from a contract JSON to the sim (demo-plan 4a 実行側).
+"""Plan runner: the single entry from a contract JSON to the sim (the execution side).
 
 States: IDLE -> RUNNING -> DONE -> RESETTING -> IDLE (the enum values carry the labels
 shown on screen). A rejection before any motion goes DONE -> RESETTING -> IDLE; a safety
@@ -13,7 +13,7 @@ Approval: the runner executes an `ApprovedPlan` only. Two functions create one:
 directly is rejected without a single robot command. There is no third path.
 
 The judgement is 0b's (`execution.judge`, values in `execution.criteria`); the reset
-check adds the values fixed on Issue #9 (`criteria.RESET_*`). The check runs after every
+check adds the values fixed on 2026-09-19 (`criteria.RESET_*`). The check runs after every
 reset; `RunRecord.reset_previous` is the result of the reset that preceded the run (the
 scene may legitimately differ at submit time, e.g. G1 trials start objects away from
 home), and `scene_at_submit` records where every object actually was.
@@ -591,7 +591,7 @@ class PlanRunner:
         reset_after = self.reset()
         self.last_reset = reset_after
         if outcome == "success" and not reset_after.passed:
-            # criteria: a run whose reset check fails is not a pass (Issue #9)
+            # criteria: a run whose reset check fails is not a pass
             outcome, reason = "reset_failed", "; ".join(reset_after.reasons)
         rec = RunRecord(
             submitted_at,

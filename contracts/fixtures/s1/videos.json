@@ -1,5 +1,5 @@
 {
-  "$comment": "S1 diagnosis videos (Issue #22). Staff-recorded evaluation clips, kept in the repository; the same-day deletion rule applies to visitor recordings only (demo-plan Ua). Left / right are as seen in the video frame (camera view), not the person's own left / right: box_a = the tray on the left of the frame, box_b = the one on the right. Gold is written by the lead from 1 fps contact sheets; the human check of Cosmos' sentence against these facts is the GPU part of Issue #22. A re-take or an edit gets a new version with the reason and the old hash; entries are never replaced silently.",
+  "$comment": "S1 diagnosis videos (2026-09-28). Evaluation clips recorded by the lead, kept in the repository. Left / right are as seen in the video frame (camera view), not the person's own left / right: box_a = the tray on the left of the frame, box_b = the one on the right. Gold is written by the lead from 1 fps contact sheets; the human check of Cosmos' sentence against these facts is the 2026-09-28 GPU run. A re-take or an edit gets a new version with the reason and the old hash; entries are never replaced silently.",
   "version": 1,
   "recorded": "2026-09-28",
   "conditions": {
@@ -53,7 +53,7 @@
         "target": null,
         "destination": null,
         "steps": [],
-        "facts": "Red cube centre left, blue cube front right, both trays empty. A hand lifts the red cube and puts it back at about the same place; then the hand touches the blue cube and shifts it slightly. Nothing is put into either tray; both trays are empty at the end. Unregistered action (lift and return), so no executable plan; needs_review is also acceptable as long as no executable plan is returned (demo-plan G2)."
+        "facts": "Red cube centre left, blue cube front right, both trays empty. A hand lifts the red cube and puts it back at about the same place; then the hand touches the blue cube and shifts it slightly. Nothing is put into either tray; both trays are empty at the end. Unregistered action (lift and return), so no executable plan; needs_review is also acceptable as long as no executable plan is returned (G2 rule)."
       }
     }
   ]

@@ -59,7 +59,7 @@ def test_contact_baseline_runs_and_is_classified(trial):
     r = run_trial(trial, "sim-v1-contact")
     assert r.verdict.success or r.verdict.failure in criteria.FAILURE_CLASSES
     # a missed grasp must still be classified from the samples, never turned into a
-    # `rejected` place target by a nonsense held-offset reading (Issue #21 review)
+    # `rejected` place target by a nonsense held-offset reading (the 2026-09-20 review)
     assert r.verdict.failure != "rejected", r.verdict.details
     assert r.diagnostics["welds_in_model"] == 0
     assert "contacts_at_close" in r.diagnostics and "max_penetration_at_close_mm" in r.diagnostics
@@ -159,7 +159,7 @@ def test_trial_stops_at_the_sim_time_deadline(monkeypatch):
 
 def test_pick_and_place_use_object_and_tray_yaw():
     # The jaws open along the cube's registered yaw at the descent and along the tray's
-    # axes at the release (Issue #21); the tip pose is read from the sim at both marks.
+    # axes at the release; the tip pose is read from the sim at both marks.
     sim, pp = _pp()
     seen = {}
     orig = pp._mark
@@ -193,7 +193,7 @@ def test_place_without_measurement_uses_the_fixed_held_offset():
 def test_missed_grasp_falls_back_to_the_design_offset():
     # Cube moved away after the pre-grasp: the close misses, the "held offset" measured
     # after the lift is the cube on the table, far outside the grasp zone. It must not be
-    # used (it would send the place target out of the work area, Issue #21 review).
+    # used (it would send the place target out of the work area; the 2026-09-20 review).
     sim, pp = _pp()
     orig = pp._mark
 

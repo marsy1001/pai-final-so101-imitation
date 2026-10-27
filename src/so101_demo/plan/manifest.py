@@ -1,12 +1,12 @@
-"""The fixed G1 trial manifest (contracts/fixtures/g1/manifest.json, Issue #19).
+"""The fixed G1 trial manifest (contracts/fixtures/g1/manifest.json).
 
 Ten trials, each naming a 4a fixture (the plan that is submitted), the target and
 destination that plan must have, and where every registered object starts. The manifest
-is frozen before the G1 evaluation (its commit hash is recorded on the gate Issue #13)
-and is never rewritten afterwards; a change is a new manifest with its reason on #13.
+is frozen before the G1 evaluation (its commit hash was recorded before the evaluation)
+and is never rewritten afterwards; a change is a new manifest with its reason recorded.
 
 `check_manifest` returns every rule the file breaks (empty = valid). The rules are the
-XPS acceptance criteria of Issue #19: (a) each plan validates against the contract and
+manifest's acceptance criteria: (a) each plan validates against the contract and
 matches the trial's target / destination, (b) each of the four combinations appears at
 least twice, (c) consecutive trials switch the target, (d) every start of every object
 lies in the work area, the two objects are at least MIN_CENTRE_DISTANCE_M apart, neither
@@ -35,7 +35,7 @@ from .schema import Plan, PlanInvalid, validate_plan
 
 TRIAL_COUNT = 10
 MIN_REPEATS_PER_COMBINATION = 2
-# 40 mm cube + the reach of the moving jaw, which opens radially (Issue #9, 2026-09-19)
+# 40 mm cube + the reach of the moving jaw, which opens radially (2026-09-19)
 MIN_CENTRE_DISTANCE_M = 0.060
 
 
@@ -90,12 +90,12 @@ def in_work_area_xy(xy) -> bool:
 
 
 def start_violations(reg: Registry, object_id: str, xy, others_xy: dict[str, Any]) -> list[str]:
-    """Geometric rules a start position of `object_id` must satisfy (Issue #19):
+    """Geometric rules a start position of `object_id` must satisfy:
       area  the centre is inside the work area
       dist  centre-to-centre distance to every other object >= MIN_CENTRE_DISTANCE_M
       tray  the cube footprint does not overlap a tray's outer footprint
       tcp   the grasp TCP (half cube + pocket clearance from the centre along the object's
-            registered yaw, i.e. toward -x at yaw 0; Issue #21) is inside the work area,
+            registered yaw, i.e. toward -x at yaw 0) is inside the work area,
             so the top-down IK does not refuse it as outside_workspace
     Returns the tags of the rules broken (empty = fine)."""
     # execution.primitives imports this package; import lazily to avoid the cycle

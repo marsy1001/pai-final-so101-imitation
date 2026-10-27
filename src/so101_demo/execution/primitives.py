@@ -6,7 +6,7 @@ Sequence:
 Cartesian waypoints are solved one by one with the top-down IK and checked by the
 safety layer; motion is a linear joint interpolation at a fixed control rate.
 
-Placing (Issue #21, 2026-09-20): the jaws open along the cube's registered yaw at the
+Placing (2026-09-20): the jaws open along the cube's registered yaw at the
 pick and along the tray's axes at the place, and the place TCP is corrected by the
 cube's measured position in the tip frame after the lift, so the cube lands centred
 with its edges parallel to the walls (docs/place-margin.md).
@@ -84,8 +84,8 @@ def design_held_offset_m(size_m: float, clearance_m: float) -> np.ndarray:
 
 
 # How far the fixed jaw's collision mesh pushes the cube along the jaw-opening axis during
-# the descent, measured on the fixed 0b trials under `sim-v1-simple` (Issue #20 / #21,
-# 2026-09-20): the centre sits at 29.6 mm instead of the design 23.5 mm. `place` uses the
+# the descent, measured on the fixed 0b trials under `sim-v1-simple` (2026-09-20): the
+# centre sits at 29.6 mm instead of the design 23.5 mm. `place` uses the
 # design position plus this push when the held offset is not measured
 # (PickPlace.measure_held_offset=False: the real robot until a camera can see the held
 # cube, docs/place-margin.md). In the sim the offset is measured after every lift.
@@ -126,7 +126,7 @@ class PickPlace:
     token: CommandToken
     grasp: GraspParams = field(default_factory=lambda: GraspParams.for_config("sim-v1-simple"))
     deadline_s: float | None = None  # sim time; None = no deadline
-    # Issue #21: `place` puts the cube centre, not the TCP, at the tray centre. The cube's
+    # 2026-09-20: `place` puts the cube centre, not the TCP, at the tray centre. The cube's
     # position in the tip frame is measured after the lift from the position source and
     # the FK of the measured joints (sim: ground truth); a reading outside the grasp zone
     # (the pick missed) is discarded for the design value. With False the fixed value

@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Start Cosmos Reason 2 2B on vLLM (ADR 0009). Flags as in
-# docs/handover/cosmos-measurements.md §1; procedure in docs/evidence/s1/serving.md.
+# Start Cosmos Reason 2 2B on vLLM (the chosen server for it). Flags and procedure as in
+# docs/evidence/s1/serving.md (sections 手順 and 結論, measured 2026-09-28).
 # Media root: the repository (the S1 videos are under docs/evidence/s1/videos).
 set -euo pipefail
 here="$(cd "$(dirname "$0")" && pwd)"
 repo="$(cd "$here/../.." && pwd)"
-# Triton JIT needs a C compiler; the Zig shim is machine state (cosmos-measurements.md §2)
+# Triton JIT needs a C compiler; the Zig shim is machine state (docs/evidence/s1/serving.md, section 環境)
 if [[ -f "$HOME/.local/zigcc/env.sh" ]]; then
   # shellcheck disable=SC1091
   source "$HOME/.local/zigcc/env.sh"

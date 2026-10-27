@@ -39,7 +39,7 @@ def test_trial_start_is_inside_workspace_and_clear_of_trays(trial):
     for d in REG.destinations.values():
         gap_y = abs(trial.start_xy_m[1] - d.center_xy_m[1]) - d.outer_half_m - half
         gap_x = abs(trial.start_xy_m[0] - d.center_xy_m[0]) - d.outer_half_m - half
-        assert max(gap_x, gap_y) >= 0.010  # fixed 10 mm clearance (Issue #4)
+        assert max(gap_x, gap_y) >= 0.010  # fixed 10 mm clearance
 
 
 def test_set_object_pose_zeroes_velocity():

@@ -94,7 +94,7 @@ class RecordingBackend(MujocoBackend):
         if self._gt is None:
             return
         p = self._gt.pose_of(self._oid)
-        # audit inputs (Issue #4 固定 3/3): where the object sits in the tip-site frame,
+        # audit inputs (fixed 2026-09-19): where the object sits in the tip-site frame,
         # and how many equality constraints are active. Both are read from the model,
         # not from the grasp hold list.
         tip = self.sim.tip_pose()
@@ -160,7 +160,7 @@ def run_trial(
     loaded scene and returns a per-tick callback, e.g. a video recorder; the trial
     itself does not know about rendering. `objects` (optional) puts more registered
     objects in the scene than the trial's own; they start at their registered home and
-    their final displacement from it is recorded in `diagnostics` (Issue #21 sweep).
+    their final displacement from it is recorded in `diagnostics` (the 2026-09-20 sweep).
     The 0b manifest itself runs with the trial object alone."""
     reg = registry or load_registry()
     scene_objects = tuple(objects) if objects else (spec.object,)

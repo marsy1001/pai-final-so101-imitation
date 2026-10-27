@@ -31,15 +31,16 @@ WORLD_DOWN = np.array([0.0, 0.0, -1.0])
 # re-solved by tests/test_kinematics_top_down.py). Outside it a target is refused, not clipped.
 # The bounds say nothing about physical reachability beyond them: an exploratory scan
 # with these seeds found growing residuals farther out and higher up, and that is all.
-# 2026-09-19 (Issue #4): x lower bound 0.15 -> 0.13 because the grasp TCP sits half a
+# 2026-09-19: x lower bound 0.15 -> 0.13 because the grasp TCP sits half a
 # cube (20 mm) toward the base from the cube centre and the nearest fixture cube is at
 # x = 0.16; z upper bound 0.08 -> 0.07 (the transfer height) so that every grid point
-# of the box still solves after the widening. Grid re-checked (docs/evidence/0a).
+# of the box still solves after the widening. Grid re-checked on 2026-09-19 (earlier
+# project; that record was not carried over).
 WORKSPACE_MIN = np.array([0.13, -0.09, 0.02])
 WORKSPACE_MAX = np.array([0.23, 0.09, 0.07])
 # Rounding tolerance of the boundary test, like the 1e-6 rad of joints_within_limits: a
 # cube that settled on the table at y = -0.09 reads -0.09000000002, and the tray centres
-# are on the boundary y = +-0.09 (Issue #21, 2026-09-20). One micrometre absorbs that,
+# are on the boundary y = +-0.09 (2026-09-20). One micrometre absorbs that,
 # it does not widen the area (the 0a grid and every fixture are unchanged).
 WORKSPACE_TOL_M = 1e-6
 
@@ -49,7 +50,7 @@ WORKSPACE_TOL_M = 1e-6
 # (measured 2026-09-19: pan +30 deg -> tip yaw -27 deg; tests/test_kinematics_top_down.py).
 # wrist_roll is replaced by WRIST_ROLL_PER_YAW * (grasp yaw - target azimuth): in a
 # top-down pose the roll axis is vertical and a positive roll turns the jaw-opening
-# direction toward +y by the same angle (measured 2026-09-20, Issue #21: roll +30 deg
+# direction toward +y by the same angle (measured 2026-09-20: roll +30 deg
 # -> jaw yaw +30 deg), while the pan has already turned the hand by -azimuth.
 # The soft IK is a local method: one seed can settle in a wrong basin while another
 # reaches the target exactly. The first candidate passing every check is returned;
@@ -60,7 +61,7 @@ IK_SEEDS_DEG = (
     np.array([0.0, -30.0, 60.0, 60.0, 0.0]),
     np.array([0.0, 0.0, 0.0, 90.0, 0.0]),
     np.array([0.0, 30.0, 30.0, 30.0, 0.0]),
-    # added 2026-09-19 (Issue #4): the three above all settle in a wrong basin at the
+    # added 2026-09-19: the three above all settle in a wrong basin at the
     # work-area edge (0.205, -0.09, 0.02); this mid-height seed solves it exactly
     np.array([0.0, -10.0, 30.0, 70.0, 0.0]),
 )
@@ -93,8 +94,8 @@ def top_down_target(position, yaw_deg: float = 0.0) -> np.ndarray:
 
     The freedom about the approach axis is fixed by `yaw_deg`: the site's local +Z (the
     jaw-opening direction, from the fixed jaw toward the moving jaw) is set to the
-    horizontal direction (cos yaw, sin yaw, 0) in the base frame. Until Issue #21
-    (2026-09-20) local +Z pointed radially outward from the base, so a cube picked at
+    horizontal direction (cos yaw, sin yaw, 0) in the base frame. Until 2026-09-20
+    local +Z pointed radially outward from the base, so a cube picked at
     yaw 0 was set down rotated by the destination's azimuth (about 22 deg at the trays)
     and lost most of the placing margin; now pick uses the object's registered yaw and
     place the destination's, so the cube's edges end up parallel to the tray walls.

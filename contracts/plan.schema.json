@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/marsy1001/pai-final-so101-imitation/contracts/plan.schema.json",
   "title": "Plan contract between the understanding layer and the execution layer",
-  "description": "demo-plan 「契約 JSON」. Registered ids come from contracts/registry.json (tests keep them in sync). Only status=ok carries executable steps; every other status carries no steps. The ok branch enumerates the allowed (target, destination, steps) combinations so the cross-field rule lives in the schema itself.",
+  "description": "The contract JSON (契約 JSON). Registered ids come from contracts/registry.json (tests keep them in sync). Only status=ok carries executable steps; every other status carries no steps. The ok branch enumerates the allowed (target, destination, steps) combinations so the cross-field rule lives in the schema itself.",
   "type": "object",
   "additionalProperties": false,
   "required": [

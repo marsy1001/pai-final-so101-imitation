@@ -1,6 +1,6 @@
-"""Run IDs of the understanding layer: a result that arrives late is dropped (Issue #23).
+"""Run IDs of the understanding layer: a result that arrives late is dropped.
 
-demo-plan risk R1: 「遅延応答は run ID で失効」. Every understanding call gets a run ID
+Risk R1: a late answer expires by run ID. Every understanding call gets a run ID
 from `RunGate.start`; the result carries the same ID and goes through `RunGate.settle`
 before anything can approve it. Only the gate's current run, settled within its deadline,
 keeps its plan. A result is stale, and becomes an error plan (never executable, so
@@ -14,7 +14,7 @@ keeps its plan. A result is stale, and becomes an error plan (never executable, 
 After settling, `claim(run_id, plan)` is the last check before
 `approve_from_review(plan, run_id)`: the run ID the approval records is the gate's run ID,
 and a run cancelled or replaced while the plan waited on screen can no longer be approved.
-There is no retry here (demo-plan: リトライ最適化は作らない).
+There is no retry here (project rule: no retry optimisation).
 """
 
 from __future__ import annotations

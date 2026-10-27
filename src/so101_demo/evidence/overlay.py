@@ -3,8 +3,8 @@
 Each registered object and destination gets a text label anchored to its projected
 3D position (objects follow their body while carried, trays sit still). The label is
 white text on a translucent dark box with a bar in the entity's colour, so the
-correspondence colour <-> name does not rely on colour alone (demo-plan
-「見栄えの最低ライン」). Text is Latin: the GPU machine has no CJK font and no sudo
+correspondence colour <-> name does not rely on colour alone (the
+appearance rules). Text is Latin: the GPU machine has no CJK font and no sudo
 (2026-09-19); see docs/appearance.md.
 
 `project` maps a world point to pixel coordinates from the two `mjvGLCamera`s of the
@@ -26,7 +26,7 @@ from ..plan import Registry
 from ..sim.model import So101Sim
 
 FONT_PATH = Path("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf")
-FONT_PX = 48  # fixed in Issue #10; glyph height on a 1080p capture must be >= 32 px
+FONT_PX = 48  # fixed 2026-09-19; glyph height on a 1080p capture must be >= 32 px
 MIN_GLYPH_PX = 32
 LABEL_TEXT = {
     "red_cube": "Red cube",
@@ -173,7 +173,7 @@ def margin_px(box: LabelBox, width: int, height: int) -> int:
 
 def glyph_height_px(img: np.ndarray, box: LabelBox, white: int = 230) -> int:
     """Rows inside `box` that contain text pixels (near-white on the dark label box).
-    This is the on-screen measurement demo-plan asks for, taken from the exported
+    This is the on-screen measurement, taken from the exported
     capture, not from the font metric."""
     crop = img[box.top : box.bottom + 1, box.left : box.right + 1]
     ink = (crop >= white).all(axis=2)

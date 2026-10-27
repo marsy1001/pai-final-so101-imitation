@@ -26,7 +26,7 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
-from .gl_env import gl_renderer_name, prefer_gpu_on_wsl2
+from .gl_env import gl_renderer_name, gpu_name, prefer_gpu_on_wsl2
 
 prefer_gpu_on_wsl2()  # before MuJoCo creates a GL context (Issue #10)
 
@@ -44,12 +44,11 @@ from ..plan import G1Manifest, G1Trial, Registry, load_g1_manifest, load_registr
 from ..plan.manifest import MIN_CENTRE_DISTANCE_M, check_manifest  # noqa: E402
 from ..plan.paths import G1_MANIFEST_PATH  # noqa: E402
 from ..sim.scene import CONFIG_IDS  # noqa: E402
-from .appearance import FPS, HEIGHT, WIDTH, X264_PRESET  # noqa: E402
 from .overlay import LabelOverlay  # noqa: E402
-from .record import VideoRecorder  # noqa: E402
-from .stage1_0b import _gpu_name  # noqa: E402
+from .record import VENUE_FPS, VENUE_HEIGHT, VENUE_WIDTH, VideoRecorder  # noqa: E402
 
 OUT_DIR = Path("docs/evidence/g1")
+X264_PRESET = "veryfast"  # libx264 fallback only; NVENC is used when ffmpeg has it
 GL_INFO: dict[str, str] = {}  # GL_RENDERER and encoder, read while the first renderer is alive
 
 
@@ -166,7 +165,7 @@ def run_manifest(
 
     runner = PlanRunner(manifest.config_id, observer=observer if video else None, styled=video)
     reg = runner.registry
-    renderer = mujoco.Renderer(runner.sim.model, HEIGHT, WIDTH) if video else None
+    renderer = mujoco.Renderer(runner.sim.model, VENUE_HEIGHT, VENUE_WIDTH) if video else None
     if video:
         GL_INFO.setdefault("name", gl_renderer_name())  # read while the context is alive
     machine = _machine()
@@ -178,10 +177,10 @@ def run_manifest(
                 recorder = VideoRecorder(
                     runner.sim,
                     out / f"{t.trial}-{t.fixture}-{manifest.config_id}.mp4",
-                    width=WIDTH,
-                    height=HEIGHT,
-                    fps=FPS,
-                    decorate=LabelOverlay(reg, WIDTH, HEIGHT),
+                    width=VENUE_WIDTH,
+                    height=VENUE_HEIGHT,
+                    fps=VENUE_FPS,
+                    decorate=LabelOverlay(reg, VENUE_WIDTH, VENUE_HEIGHT),
                     brighten_headlight=False,
                     preset=X264_PRESET,
                     renderer=renderer,
@@ -200,7 +199,7 @@ def run_manifest(
 
 
 def _machine() -> str:
-    gpu = _gpu_name()
+    gpu = gpu_name()
     return f"{platform.node()}、{platform.machine()}、{gpu or 'NVIDIA GPU なし'}"
 
 
@@ -266,7 +265,7 @@ def render(
         position = "**参考実行**（受け入れ実行ではない。ADR 0006）。描画を使わない headless 実行。G1 の判定材料は母艦分の受け入れ実行（`--label 受け入れ --video`）"
     else:
         position = f"**受け入れ実行**（母艦: {machine}。ADR 0006）。" + (
-            f"各試行を固定カメラから {WIDTH}×{HEIGHT}・{FPS} fps・ラベル付きで録画し「動画」列に記す（Issue #10 の venue recorder、`MUJOCO_GL=egl`、GL `{GL_INFO.get('name', '?')}`、encoder `{GL_INFO.get('encoder', '?')}`）"
+            f"各試行を固定カメラから {VENUE_WIDTH}×{VENUE_HEIGHT}・{VENUE_FPS} fps・ラベル付きで録画し「動画」列に記す（Issue #10 の venue recorder、`MUJOCO_GL=egl`、GL `{GL_INFO.get('name', '?')}`、encoder `{GL_INFO.get('encoder', '?')}`）"
             if video
             else "動画なし"
         )
@@ -390,7 +389,7 @@ def main(argv: list[str] | None = None) -> int:
         "config_id": manifest.config_id,
         "manifest": str(args.manifest),
         "manifest_commit": commit,
-        "machine": {"node": platform.node(), "gpu": _gpu_name()},
+        "machine": {"node": platform.node(), "gpu": gpu_name()},
         "video": args.video,
         "successes": sum(r.success for r in records),
         "trials": [r.as_dict() for r in records],

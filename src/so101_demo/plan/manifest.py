@@ -90,8 +90,7 @@ def in_work_area_xy(xy) -> bool:
 
 
 def start_violations(reg: Registry, object_id: str, xy, others_xy: dict[str, Any]) -> list[str]:
-    """Geometric rules a start position of `object_id` must satisfy (Issue #19; the same
-    function measures the layouts in evidence.g1_layout):
+    """Geometric rules a start position of `object_id` must satisfy (Issue #19):
       area  the centre is inside the work area
       dist  centre-to-centre distance to every other object >= MIN_CENTRE_DISTANCE_M
       tray  the cube footprint does not overlap a tray's outer footprint

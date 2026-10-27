@@ -8,7 +8,7 @@
 
 | 経路 | 関数 | 用途 | 本番での扱い |
 |---|---|---|---|
-| 開発用固定 fixture | `approve_for_development(plan, fixture_id, approve_fixed_fixture=True)` | `contracts/fixtures/4a/`（G1 では `contracts/fixtures/g1/`）を CLI から流す。CLI `so101_demo.evidence.stage1_4a` は `--approve-fixed-fixture` を付けないと何も実行せず終了コード 2 | 使わない。承認画面ができた後は開発・評価専用。ログに `approval_source = dev-fixed-fixture` が残るので本番記録と混ざらない |
+| 開発用固定 fixture | `approve_for_development(plan, fixture_id, approve_fixed_fixture=True)` | `contracts/fixtures/4a/` の固定 plan（G1 の manifest は `contracts/fixtures/g1/`）を CLI から流す。CLI `so101_demo.evidence.stage1_g1` は `--approve-fixed-fixture` を付けないと何も実行せず終了コード 2 | 使わない。承認画面ができた後は開発・評価専用。ログに `approval_source = dev-fixed-fixture` が残るので本番記録と混ざらない |
 | 承認画面 | `approve_from_review(plan, run_id)` | 第 2 段 3b の承認画面が、表示・再検証したプランを人の操作で承認する | 本番の唯一の経路（3b で実装） |
 
 承認マーク無しの入力（JSON 文字列・dict・検証済み `Plan`）や不正な JSON は `rejected` として記録され、RobotBackend には関節・グリッパー指令が 1 つも送られない（`commands_sent = 0`）。
@@ -64,13 +64,7 @@ G1 の固定 10 試行（Issue #19。2026-09-21 に ADR 0008 の配置で作り�
 承認画面そのもの（第 2 段 3b）、リトライ、通信・API 連携、CameraBackend 等の抽象基盤。G1 の固定 10 試行 manifest は `contracts/fixtures/g1/manifest.json`（`docs/g1-manifest.md`、Issue #19）、合格数字は #13 で扱う。
 
 ## 使い方
-```
-uv run python -m so101_demo.evidence.stage1_4a --approve-fixed-fixture --label 参考
-MUJOCO_GL=egl uv run python -m so101_demo.evidence.stage1_4a --approve-fixed-fixture --label 受け入れ --video
-```
-出力は `docs/evidence/4a/runs.md`（人向け）と `runs.json`（全記録: 遷移・判定・リセット判定・指令数・trace）。
-
-G1 の固定 10 試行:
+G1 の固定 10 試行（4a の固定 fixture を 1 本ずつ流す旧 CLI は 2026-10-27 に削除した）:
 ```
 uv run python -m so101_demo.evidence.stage1_g1 --approve-fixed-fixture --label 参考
 MUJOCO_GL=egl uv run python -m so101_demo.evidence.stage1_g1 --approve-fixed-fixture --label 受け入れ --video

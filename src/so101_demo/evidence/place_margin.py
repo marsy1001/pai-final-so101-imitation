@@ -44,7 +44,7 @@ from ..plan import DestinationSpec, ObjectSpec, Registry, TrialSpec, load_regist
 from ..plan.manifest import start_violations
 from ..plan.paths import FIXTURES_4A_DIR
 from ..plan.schema import validate_plan
-from .stage1_0b import _gpu_name
+from .gl_env import gpu_name
 
 MARGIN_MIN_M = 0.005  # landing margin every fixed trial must keep (Issue #21, 2026-09-20)
 GRID_M = 0.010
@@ -267,7 +267,7 @@ def render(before: dict | None, after: dict, reg: Registry, today: str) -> str:
     lines = [
         "# 置き余裕（着地余裕）の記録: 修正前と修正後（Issue #21）",
         "",
-        f"- 記録日: {today}。生成: `uv run python -m so101_demo.evidence.place_margin`（再現可能。修正前の半分は `--baseline --commit <hash>` で先に作った `{BEFORE_JSON}` から読む）。機材: {platform.node()}、{_gpu_name() or 'NVIDIA GPU なし'}、headless、構成 `{CONFIG_ID}`",
+        f"- 記録日: {today}。生成: `uv run python -m so101_demo.evidence.place_margin`（再現可能。修正前の半分は `--baseline --commit <hash>` で先に作った `{BEFORE_JSON}` から読む）。機材: {platform.node()}、{gpu_name() or 'NVIDIA GPU なし'}、headless、構成 `{CONFIG_ID}`",
     ]
     if before is not None:
         ok_b, n_b, min_b = _summary(before["fixed"])
@@ -397,7 +397,7 @@ def main(argv: list[str] | None = None) -> int:
         "commit": commit,
         "config_id": CONFIG_ID,
         "margin_min_mm": MARGIN_MIN_M * 1000,
-        "machine": {"node": platform.node(), "gpu": _gpu_name()},
+        "machine": {"node": platform.node(), "gpu": gpu_name()},
         **results,
     }
     args.out.mkdir(parents=True, exist_ok=True)

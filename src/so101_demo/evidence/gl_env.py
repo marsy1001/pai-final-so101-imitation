@@ -11,6 +11,8 @@ Imports nothing from MuJoCo on purpose.
 from __future__ import annotations
 
 import os
+import shutil
+import subprocess
 
 WSL2_DXG_DEVICE = "/dev/dxg"
 
@@ -35,3 +37,20 @@ def gl_renderer_name() -> str:
         return s.decode() if isinstance(s, bytes) else str(s)
     except Exception as e:  # noqa: BLE001 - evidence only
         return f"unknown ({type(e).__name__})"
+
+
+def gpu_name() -> str | None:
+    """Name of the first NVIDIA GPU as nvidia-smi reports it; None without one."""
+    if shutil.which("nvidia-smi") is None:
+        return None
+    try:
+        out = subprocess.run(
+            ["nvidia-smi", "--query-gpu=name", "--format=csv,noheader"],
+            capture_output=True,
+            text=True,
+            timeout=10,
+            check=True,
+        ).stdout.strip()
+    except (subprocess.SubprocessError, OSError):
+        return None
+    return out.splitlines()[0] if out else None

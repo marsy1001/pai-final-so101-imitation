@@ -8,7 +8,7 @@ transition is logged with the sim time and the wall clock.
 
 Approval: the runner executes an `ApprovedPlan` only. Two functions create one:
 `approve_for_development` (dev fixed fixtures, needs an explicit flag; the CLI
-`evidence.stage1_4a` exposes it as `--approve-fixed-fixture`) and `approve_from_review`
+`evidence.stage1_g1` exposes it as `--approve-fixed-fixture`) and `approve_from_review`
 (the stage-2 approval screen, 3b). A raw dict, a JSON string or a `Plan` submitted
 directly is rejected without a single robot command. There is no third path.
 

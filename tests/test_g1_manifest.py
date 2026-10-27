@@ -1,5 +1,5 @@
-"""G1 preparation (Issue #19): the fixed 10-trial manifest, its rules, the layout
-measurement behind ADR 0008, and the evidence runner's staging and record fields. The
+"""G1 preparation (Issue #19): the fixed 10-trial manifest, its rules, and the
+evidence runner's staging and record fields. The
 manifest rules are the XPS acceptance criteria (a)-(e) of the Issue; `check_manifest` is
 the single implementation and is exercised both on the real file and on deliberately
 broken copies. Since ADR 0008 (2026-09-21) both objects have a start position per trial,
@@ -12,7 +12,7 @@ from types import SimpleNamespace
 import numpy as np
 import pytest
 
-from so101_demo.evidence import g1_layout, stage1_g1
+from so101_demo.evidence import stage1_g1
 from so101_demo.execution import criteria as C
 from so101_demo.execution.runner import PlanRunner, RunnerState
 from so101_demo.kinematics.top_down import WORKSPACE_MAX, WORKSPACE_MIN
@@ -285,42 +285,6 @@ def test_g1_trial_helpers():
     assert isinstance(t, G1Trial) and t.plan().target == "red_cube"
     xyz = M.start_xyz(t, "red_cube", REG)
     assert xyz.tolist() == [0.16, 0.04, REG.object_rest_z("red_cube")]
-
-
-# --- the layout measurement behind ADR 0008 ------------------------------------------
-def test_with_trays_moves_only_the_destinations_and_changes_what_can_stand():
-    old = g1_layout.with_trays(REG, 0.19, 0.085)  # the layout until 2026-09-20
-    assert old.destinations["box_a"].center_xy_m == (0.19, 0.085)
-    assert old.destinations["box_b"].center_xy_m == (0.19, -0.085)
-    assert old.objects == REG.objects and old.table_z_m == REG.table_z_m
-    assert REG.destinations["box_a"].center_xy_m == (0.22, 0.09), "the registry is untouched"
-    # T02 starts the red cube at (0.16, 0.06): free now, on the old box_a footprint before
-    assert (0.16, 0.06) in set(g1_layout.standable(REG, "red_cube"))
-    assert (0.16, 0.06) not in set(g1_layout.standable(old, "red_cube"))
-
-
-def test_layout_measurement_prefers_the_registered_layout():
-    rows = {r["layout"]: r for r in g1_layout.measure(REG, M)}
-    assert rows["tray22"]["registered"] and not rows["tray19"]["registered"]
-    # the same points serve both cubes (same size and yaw), and more room farther out
-    for r in rows.values():
-        assert r["standable_red"] == r["standable_blue"]
-    assert rows["tray19"]["standable_red"] < rows["tray22"]["standable_red"]
-    assert rows["tray22"]["standable_red"] < rows["tray23"]["standable_red"]
-    assert rows["tray19"]["pairs"] < rows["tray22"]["pairs"] < rows["tray23"]["pairs"]
-    # exactly one row is the registry's own layout, or the report loses its marker
-    assert sum(r["registered"] for r in rows.values()) == 1
-    # the registered layout admits all ten ADR 0008 trials; the old one does not
-    assert rows["tray22"]["manifest_trials_allowed"] == TRIAL_COUNT
-    assert rows["tray19"]["manifest_trials_refused"], "the old layout blocks some trials"
-
-
-def test_layout_measurement_refuses_a_registry_it_cannot_mirror():
-    third = dataclasses.replace(
-        REG, destinations={**REG.destinations, "box_c": REG.destinations["box_a"]}
-    )
-    with pytest.raises(ValueError, match="box_a/box_b"):
-        g1_layout.with_trays(third, 0.22, 0.09)
 
 
 def test_rules_check_the_tray_footprint_and_the_tcp_reach():  # (d)

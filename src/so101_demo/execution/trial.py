@@ -50,7 +50,7 @@ class TrialResult:
     home_q_deg: np.ndarray
     initial_penetrations: list
     diagnostics: dict = field(default_factory=dict)
-    video_path: str | None = None  # set by evidence.stage1_0b when it records
+    video_path: str | None = None  # set by the caller when it records the trial
     video_bytes: int | None = None
 
 

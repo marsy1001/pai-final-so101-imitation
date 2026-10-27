@@ -41,7 +41,7 @@ uv run python -m so101_demo.ui --port 8765 --delay 1.0
 
 ## 証拠
 - 固定 JSON での 4 経路（XPS、参考）: `uv run python -m so101_demo.ui.evidence_3b` → `docs/evidence/3b/operations.md`
-- 実際の抽出結果（#25 の Uc 改訂 2）での 4 経路と 1920×1080 のキャプチャ（母艦）: `uv run python -m so101_demo.ui.evidence_3b_gpu` → `docs/evidence/3b/operations-gpu.md`、`docs/evidence/3b/captures/`。キャプチャは Windows 側の Edge を headless・GPU 無効で使う
+- 実際の抽出結果での 4 経路と 1920×1080 のキャプチャを撮る GPU 機用スクリプトは 2026-10-27 に削除した（Windows 側 Edge に依存する旧プロジェクトの証拠。提出用の画面キャプチャは動画の Issue で撮り直す）
 
 ## 出典
 - `docs/demo-plan.md` 第 2 段の表「3b 承認画面」、「見栄えの最低ライン」の状態表示、「通信方針」

@@ -1,7 +1,7 @@
 # G1 固定 10 試行の manifest: 設計、開始位置の決め方、凍結の手順
 
 - 作成: 2026-09-20（Issue #19）。**2026-09-21 に ADR 0008 の配置で作り直した**（トレイ (0.22, ±0.09)、両物体の開始位置を試行ごとに固定）。対象ゲート: G1（#13、2026-10-09）
-- 正本: `contracts/fixtures/g1/manifest.json`。判定値: `src/so101_demo/execution/criteria.py`（0b / 4a から変更なし）。実行: `src/so101_demo/evidence/stage1_g1.py`。配置の余地の計測: `src/so101_demo/evidence/g1_layout.py`
+- 正本: `contracts/fixtures/g1/manifest.json`。判定値: `src/so101_demo/execution/criteria.py`（0b / 4a から変更なし）。実行: `src/so101_demo/evidence/stage1_g1.py`。配置の余地の計測モジュールは 2026-10-27 に削除した（結果は下の「結論」に残す）
 
 ## 結論
 - 固定 10 試行の manifest は **ADR 0008 の 10 パターンそのもの**である。4 組合せ（red_cube / blue_cube × box_a / box_b）を各 2〜3 回、対象は毎回切替、**赤・青の両方**の開始 xy を試行ごとに固定する。どちらの物体も home に留まらない

@@ -1,7 +1,7 @@
 """Fixed joint postures for the placo / MuJoCo agreement check (Issue #3, 0a).
 
-Shared by tests/test_kinematics_fk_agreement.py and evidence/stage1_0a.py so both
-report the same set: zero, five seeded random postures inside 80 % of the joint
+Used by tests/test_kinematics_fk_agreement.py (the 0a evidence generator that shared
+it was removed 2026-10-27); the set: zero, five seeded random postures inside 80 % of the joint
 ranges, and each joint at each of its two limits (the other joints at zero).
 """
 

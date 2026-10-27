@@ -23,6 +23,8 @@ import numpy as np
 from ..sim.model import So101Sim
 
 WIDTH, HEIGHT, FPS = 640, 480, 25
+# venue recording (Issue #10): 1080p, frames on every 2nd control tick (CONTROL_DT_S = 0.02 s)
+VENUE_WIDTH, VENUE_HEIGHT, VENUE_FPS = 1920, 1080, 25
 # free camera on the work area (Issue #10, 2026-09-19): straight in front of the base,
 # low and close, so both cubes, both trays and the jaws stay visible in every phase of
 # all four fixtures (segmentation search over azimuth 110-230, elevation -20..-55,

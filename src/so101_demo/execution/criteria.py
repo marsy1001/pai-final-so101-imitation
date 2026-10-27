@@ -2,7 +2,7 @@
 
 Fixed before evaluation; never relaxed to fit a trial. A correction (wrong setup)
 is recorded on the Issue with the old value and date, and earlier trials keep the
-old verdict. Consumed by execution.judge and reported by evidence.stage1_0b.
+old verdict. Consumed by execution.judge and reported by evidence.stage1_g1.
 """
 
 # pick: object pose and gripper judged independently; the hold list is never used

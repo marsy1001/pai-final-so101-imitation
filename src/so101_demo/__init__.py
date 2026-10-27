@@ -15,7 +15,7 @@ sim/real replacement boundaries (RobotBackend, position source) get their own.
                    Stage 1 0b adds scene, grasp (simplified-grasp rules) and render.
     evidence/      Generators for docs/evidence/<step>/ (the reviewed artifacts live
                    there). They write only when run as a CLI:
-                   `uv run python -m so101_demo.evidence.stage1_0a`.
+                   `uv run python -m so101_demo.evidence.uc_eval`.
 
     plan/          Loader/validator for the repository-level contracts/plan.schema.json
                    and contracts/registry.json (never copied into the package).

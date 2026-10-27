@@ -735,28 +735,3 @@ def test_version_grows_with_every_change():
     s.wait_idle(5)
     seen.append(s.view()["version"])
     assert seen == sorted(seen) and len(set(seen)) == len(seen)
-
-
-def test_uc_results_hand_the_screen_every_acceptance_row():
-    from so101_demo.ui.evidence_3b_gpu import uc_results
-
-    uc = uc_results()
-    assert sorted(uc) == [f"uc-{n:02d}" for n in range(1, 16)]
-    # the rows the GPU evidence drives: right, swapped, needs_review, unsupported,
-    # false accept, and a Cosmos failure
-    assert (uc["uc-02"]["plan"].target, uc["uc-02"]["plan"].destination) == ("red_cube", "box_a")
-    assert uc["uc-04"]["plan"].destination != uc["uc-04"]["gold"]["destination"]
-    assert uc["uc-01"]["plan"].status == "needs_review"
-    assert uc["uc-13"]["plan"].status == "unsupported"
-    assert uc["uc-15"]["plan"].executable and uc["uc-15"]["scope"] != "in_scope"
-    assert uc["uc-07"]["plan"].status == "error"
-
-
-def test_committed_gpu_operations_report_is_rendered_from_its_json():
-    from so101_demo.ui.evidence_3b_gpu import OUT_DIR, report
-
-    path = OUT_DIR / "operations-gpu.json"
-    if not path.exists():
-        pytest.skip("GPU evidence not generated")
-    result = json.loads(path.read_text(encoding="utf-8"))
-    assert (OUT_DIR / "operations-gpu.md").read_text(encoding="utf-8") == report(result)

@@ -1,0 +1,33 @@
+{
+  "$comment": "Registered ids, fixture geometry and fixed positions (Issue #4, user decision 2026-09-19). Single source for the plan schema enums, the MuJoCo scene and the id list sent to the understanding layer. Base frame: x forward, y left, z up, metres. Table = z 0 plane. home_xyz_m = where an object rests at the start of a run and after every reset (Issue #9, 2026-09-19: moved off the y = 0 line by 20 mm each so that the moving jaw, which opens radially, does not touch the other cube; measured 7.2 mm displacement of blue_cube at y = 0). trials_0b keeps its own start_xy_m. 2026-09-20 (ADR 0008, Issue #20): destinations moved from (0.19, +-0.085) to (0.22, +-0.09), the far corners of the work area, so that the G1 start positions can vary per trial; home, work area, criteria and contact settings unchanged.",
+  "table_z_m": 0.0,
+  "objects": {
+    "red_cube": {
+      "shape": "cube", "size_m": 0.04, "mass_kg": 0.02,
+      "color": "red", "rgba": [0.85, 0.10, 0.10, 1.0], "label": "R",
+      "home_xyz_m": [0.16, 0.02, 0.02], "yaw_deg": 0.0
+    },
+    "blue_cube": {
+      "shape": "cube", "size_m": 0.04, "mass_kg": 0.02,
+      "color": "blue", "rgba": [0.10, 0.25, 0.85, 1.0], "label": "B",
+      "home_xyz_m": [0.22, -0.02, 0.02], "yaw_deg": 0.0
+    }
+  },
+  "destinations": {
+    "box_a": {
+      "shape": "tray", "inner_m": 0.06, "wall_thickness_m": 0.005, "wall_height_m": 0.01,
+      "center_xy_m": [0.22, 0.09], "color": "gray", "rgba": [0.55, 0.55, 0.55, 1.0], "label": "A"
+    },
+    "box_b": {
+      "shape": "tray", "inner_m": 0.06, "wall_thickness_m": 0.005, "wall_height_m": 0.01,
+      "center_xy_m": [0.22, -0.09], "color": "yellow", "rgba": [0.95, 0.85, 0.10, 1.0], "label": "B"
+    }
+  },
+  "trials_0b": [
+    {"trial": "T1", "object": "red_cube",  "start_xy_m": [0.16,  0.00], "destination": "box_a"},
+    {"trial": "T2", "object": "blue_cube", "start_xy_m": [0.22,  0.00], "destination": "box_b"},
+    {"trial": "T3", "object": "red_cube",  "start_xy_m": [0.19,  0.02], "destination": "box_b"},
+    {"trial": "T4", "object": "blue_cube", "start_xy_m": [0.19, -0.02], "destination": "box_a"},
+    {"trial": "T5", "object": "red_cube",  "start_xy_m": [0.19,  0.00], "destination": "box_a"}
+  ]
+}

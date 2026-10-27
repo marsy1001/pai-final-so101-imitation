@@ -1,0 +1,16 @@
+{
+  "$comment": "G1 fixed 10-trial manifest (Issue #19; rebuilt 2026-09-21 for the tray layout of ADR 0008). Frozen before the G1 evaluation: its commit hash is recorded on Issue #13 and it is never rewritten afterwards; a change is a new manifest with its reason on #13. Each trial submits the named 4a fixture (contracts/fixtures/4a/<fixture>.json) through PlanRunner.submit after both registered objects were staged at start_xy_m (metres, base frame; z = rest height). The ten start patterns are the table of ADR 0008: the user picked them from a rendered layout on 2026-09-20 and the agent checks them against the geometric rules (plan/manifest.check_manifest) and runs them headless (docs/g1-manifest.md). Both objects move per trial; neither has to be at its registered home.",
+  "config_id": "sim-v1-simple",
+  "trials": [
+    {"trial": "T01", "fixture": "F1-red_cube-box_a",  "target": "red_cube",  "destination": "box_a", "start_xy_m": {"red_cube": [0.16, -0.08], "blue_cube": [0.22,  0.02]}},
+    {"trial": "T02", "fixture": "F2-blue_cube-box_b", "target": "blue_cube", "destination": "box_b", "start_xy_m": {"red_cube": [0.16,  0.06], "blue_cube": [0.16, -0.04]}},
+    {"trial": "T03", "fixture": "F3-red_cube-box_b",  "target": "red_cube",  "destination": "box_b", "start_xy_m": {"red_cube": [0.20,  0.02], "blue_cube": [0.16,  0.08]}},
+    {"trial": "T04", "fixture": "F4-blue_cube-box_a", "target": "blue_cube", "destination": "box_a", "start_xy_m": {"red_cube": [0.16, -0.02], "blue_cube": [0.23,  0.03]}},
+    {"trial": "T05", "fixture": "F1-red_cube-box_a",  "target": "red_cube",  "destination": "box_a", "start_xy_m": {"red_cube": [0.16,  0.04], "blue_cube": [0.22, -0.03]}},
+    {"trial": "T06", "fixture": "F2-blue_cube-box_b", "target": "blue_cube", "destination": "box_b", "start_xy_m": {"red_cube": [0.22,  0.03], "blue_cube": [0.16, -0.08]}},
+    {"trial": "T07", "fixture": "F3-red_cube-box_b",  "target": "red_cube",  "destination": "box_b", "start_xy_m": {"red_cube": [0.16, -0.01], "blue_cube": [0.16,  0.08]}},
+    {"trial": "T08", "fixture": "F4-blue_cube-box_a", "target": "blue_cube", "destination": "box_a", "start_xy_m": {"red_cube": [0.16, -0.06], "blue_cube": [0.20,  0.00]}},
+    {"trial": "T09", "fixture": "F1-red_cube-box_a",  "target": "red_cube",  "destination": "box_a", "start_xy_m": {"red_cube": [0.18, -0.03], "blue_cube": [0.16,  0.06]}},
+    {"trial": "T10", "fixture": "F2-blue_cube-box_b", "target": "blue_cube", "destination": "box_b", "start_xy_m": {"red_cube": [0.16,  0.08], "blue_cube": [0.21, -0.02]}}
+  ]
+}

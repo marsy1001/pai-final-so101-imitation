@@ -1,0 +1,752 @@
+{
+  "date": "2026-09-29",
+  "revision": 2,
+  "commit": "72fe3366eaacb57d4851bb594ac6376273f642a4",
+  "config_commit": "72fe3366eaacb57d4851bb594ac6376273f642a4",
+  "config_sha256": "2bbbe753c3c1e45b0d04a226535b57cbab772aa42adc6312d1a5895c3be2316d",
+  "manifest_version": 1,
+  "manifest_sha256": "9f7e1d2b0eccfbf8fab42ac27df3253c51bb006ddd4f9ba546d14bb1d5a176b1",
+  "cosmos_server_model": "nvidia/Cosmos-Reason2-2B",
+  "warmup": {
+    "video": "s1-01",
+    "sentence": "The hand picks up the red cube and places it into the left white tray, leaving the blue cube and right white tray unchanged.",
+    "failure": null,
+    "finish_reason": "stop",
+    "reasoning": "\nAlright, let's break this down. The video starts with a red cube and a blue cube on a dark wooden table. There are two white trays at the far edges-left and right. A hand enters from the top, wearing a bracelet, and reaches towards the red cube. The hand lifts the red cube and places it into the left white tray. Then, the hand moves away, leaving the blue cube and the trays in place. The video ends with the red cube in the left tray and the blue cube still on the table.\n\nSo, the main actions here are the hand picking up the red cube and moving it to the left white tray. The blue cube stays put. The trays are stationary throughout. The hand doesn't interact with the blue cube or the right tray. The key objects moved are the red cube and the left white tray. Everything else is static. Got it.\n",
+    "elapsed_s": 15.6,
+    "prompt_tokens": 12187,
+    "completion_tokens": 210
+  },
+  "rows": [
+    {
+      "video": "uc-01",
+      "run": 1,
+      "cosmos": {
+        "sentence": "Moves the red cube to the white tray on the left and the blue cube to the white tray on the right.",
+        "failure": null,
+        "finish_reason": "stop",
+        "reasoning": "\nAlright, let's break this down. The video starts with a red cube on the left and a blue cube on the right of a wooden table. There are two white trays at the far edge, one on the left and one on the right. The person's hand enters from the top right, picks up the red cube, and moves it to the white tray on the left. Then they repeat the same action with the blue cube, placing it on the right white tray. So the key actions are moving both cubes to their respective trays.\n",
+        "elapsed_s": 14.56,
+        "prompt_tokens": 12187,
+        "completion_tokens": 137
+      },
+      "astra": {
+        "api_status": "completed",
+        "failure": null,
+        "raw_arguments": "{\"status\":\"needs_review\",\"target\":null,\"destination\":null,\"steps\":[],\"note\":\"赤い立方体を左のトレーへ、青い立方体を右のトレーへ移す記述のため、どちらを行うか確認が必要です。\"}",
+        "contract_valid": true,
+        "elapsed_s": 5.29,
+        "model": "gpt-6-astra",
+        "response_id": "resp_0debd43260f6700b016abad5d4a04c8197a97cf7799ed3bce7",
+        "usage": {
+          "input_tokens": 613,
+          "input_tokens_details": {
+            "cache_write_tokens": 0,
+            "cached_tokens": 0
+          },
+          "output_tokens": 145,
+          "output_tokens_details": {
+            "reasoning_tokens": 69
+          },
+          "total_tokens": 758
+        }
+      },
+      "failed_stage": null,
+      "plan": {
+        "status": "needs_review",
+        "target": null,
+        "destination": null,
+        "steps": [],
+        "note": "赤い立方体を左のトレーへ、青い立方体を右のトレーへ移す記述のため、どちらを行うか確認が必要です。"
+      },
+      "executable": false,
+      "total_s": 19.86
+    },
+    {
+      "video": "uc-02",
+      "run": 1,
+      "cosmos": {
+        "sentence": "Moves the red cube from the right side of the table to the left white tray.",
+        "failure": null,
+        "finish_reason": "stop",
+        "reasoning": "\nAlright, let's break this down. The video shows a table with two cubes and two white trays. The red cube is on the right, and the blue one is on the left. There are two white trays at the far edge, one on the left and one on the right.\n\nThe person's hand appears from the right side, wearing a silver ring. They pick up the red cube from the right side. Then, they move the red cube to the left white tray. After placing it there, the hand withdraws. The blue cube stays where it is, and the trays remain untouched. So the main action is moving the red cube from the right to the left tray.\n",
+        "elapsed_s": 14.97,
+        "prompt_tokens": 12187,
+        "completion_tokens": 160
+      },
+      "astra": {
+        "api_status": "completed",
+        "failure": null,
+        "raw_arguments": "{\"status\":\"ok\",\"target\":\"red_cube\",\"destination\":\"box_a\",\"steps\":[{\"action\":\"pick\",\"object\":\"red_cube\"},{\"action\":\"place\",\"destination\":\"box_a\"}],\"note\":\"赤い立方体をテーブルの右側から左の白いトレーに移すと理解しました。\"}",
+        "contract_valid": true,
+        "elapsed_s": 4.41,
+        "model": "gpt-6-astra",
+        "response_id": "resp_0f67a66b98b58feb016abad5e8c0c88195a55aec063dcaac59",
+        "usage": {
+          "input_tokens": 607,
+          "input_tokens_details": {
+            "cache_write_tokens": 0,
+            "cached_tokens": 0
+          },
+          "output_tokens": 95,
+          "output_tokens_details": {
+            "reasoning_tokens": 15
+          },
+          "total_tokens": 702
+        }
+      },
+      "failed_stage": null,
+      "plan": {
+        "status": "ok",
+        "target": "red_cube",
+        "destination": "box_a",
+        "steps": [
+          {
+            "action": "pick",
+            "object": "red_cube"
+          },
+          {
+            "action": "place",
+            "destination": "box_a"
+          }
+        ],
+        "note": "赤い立方体をテーブルの右側から左の白いトレーに移すと理解しました。"
+      },
+      "executable": true,
+      "total_s": 19.38
+    },
+    {
+      "video": "uc-03",
+      "run": 1,
+      "cosmos": {
+        "sentence": "Moves the red cube to the white tray on the left and then the blue cube to the white tray on the right.",
+        "failure": null,
+        "finish_reason": "stop",
+        "reasoning": "\nAlright, let's break this down. The video shows a table with four cubes and two white trays. The red cube is in the foreground, and the blue and white cubes are in the background. The person's hand enters from the bottom, picks up the red cube, places it on the white tray on the left, then puts it back. Then the hand reaches for the blue cube, lifts it, and puts it on the white tray on the right. Wait, but the blue cube was already in the background. Did the person move it? Let me check again.\n\nThe initial state has the red cube in the foreground, blue in the middle-background, and white trays on the far edge. The hand moves the red cube to the left white tray. Then the hand reaches for the blue cube, which is in the middle-background. So the blue cube was moved from its original position to the right white tray. So the actions are: red cube moved to left white tray, then blue cube moved to right white tray. The white trays are on the far edge, left and right. So the hand moves each cube to their respective trays. The answer should list the order: red cube to left tray, then blue cube to right tray.\n",
+        "elapsed_s": 16.12,
+        "prompt_tokens": 12187,
+        "completion_tokens": 280
+      },
+      "astra": {
+        "api_status": "completed",
+        "failure": null,
+        "raw_arguments": "{\"status\":\"needs_review\",\"target\":null,\"destination\":null,\"steps\":[],\"note\":\"赤い立方体を左のトレーへ、青い立方体を右へ移す指定ですが、1件ずつの確認が必要です。\"}",
+        "contract_valid": true,
+        "elapsed_s": 4.85,
+        "model": "gpt-6-astra",
+        "response_id": "resp_06919d04f019671e016abad5fcd20881948606912873b59a70",
+        "usage": {
+          "input_tokens": 614,
+          "input_tokens_details": {
+            "cache_write_tokens": 0,
+            "cached_tokens": 0
+          },
+          "output_tokens": 132,
+          "output_tokens_details": {
+            "reasoning_tokens": 62
+          },
+          "total_tokens": 746
+        }
+      },
+      "failed_stage": null,
+      "plan": {
+        "status": "needs_review",
+        "target": null,
+        "destination": null,
+        "steps": [],
+        "note": "赤い立方体を左のトレーへ、青い立方体を右へ移す指定ですが、1件ずつの確認が必要です。"
+      },
+      "executable": false,
+      "total_s": 20.97
+    },
+    {
+      "video": "uc-04",
+      "run": 1,
+      "cosmos": {
+        "sentence": "The person's hand picks up the red cube, moves it to the white tray on the left, and places it inside.",
+        "failure": null,
+        "finish_reason": "stop",
+        "reasoning": "\nAlright, let's break this down. The video shows a table with two cubes-red on the left and blue on the right, plus two white trays at the far edges. The hand comes in from the top right, grabs the red cube, lifts it, moves it to the white tray on the left, and places it there. The blue cube stays put. The video is a static POV shot focused on the table and hand movements. The hand is Caucasian, so details about skin tone or features aren't relevant here. The key actions are grabbing, lifting, moving, and placing the red cube. No other objects are moved. The trays are stationary, so they're just background. The answer needs to summarize this in one sentence as per the requirements.\n",
+        "elapsed_s": 15.22,
+        "prompt_tokens": 12187,
+        "completion_tokens": 182
+      },
+      "astra": {
+        "api_status": "completed",
+        "failure": null,
+        "raw_arguments": "{\"status\":\"ok\",\"target\":\"red_cube\",\"destination\":\"box_a\",\"steps\":[{\"action\":\"pick\",\"object\":\"red_cube\"},{\"action\":\"place\",\"destination\":\"box_a\"}],\"note\":\"赤い立方体を持ち上げ、画像左側の白いトレイに入れる動作です。\"}",
+        "contract_valid": true,
+        "elapsed_s": 3.39,
+        "model": "gpt-6-astra",
+        "response_id": "resp_07269107cc565b28016abad61097308193a66abb45cb5cf620",
+        "usage": {
+          "input_tokens": 614,
+          "input_tokens_details": {
+            "cache_write_tokens": 0,
+            "cached_tokens": 0
+          },
+          "output_tokens": 80,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 694
+        }
+      },
+      "failed_stage": null,
+      "plan": {
+        "status": "ok",
+        "target": "red_cube",
+        "destination": "box_a",
+        "steps": [
+          {
+            "action": "pick",
+            "object": "red_cube"
+          },
+          {
+            "action": "place",
+            "destination": "box_a"
+          }
+        ],
+        "note": "赤い立方体を持ち上げ、画像左側の白いトレイに入れる動作です。"
+      },
+      "executable": true,
+      "total_s": 18.61
+    },
+    {
+      "video": "uc-05",
+      "run": 1,
+      "cosmos": {
+        "sentence": "Moves the red cube from the right side of the table to the white tray on the right edge.",
+        "failure": null,
+        "finish_reason": "stop",
+        "reasoning": "\nAlright, let's break this down. The video shows a table with two cubes and two white trays. The red cube is on the right, and the blue is on the left. There are white trays at the far edges, left and right. The person's hand enters from the right, picks up the red cube, moves it to the white tray on the right, and places it there. The blue cube stays where it is, and the trays remain untouched. The hand's actions are clear: moving the red cube to the right tray. No other movements are shown. Got it.\n",
+        "elapsed_s": 14.74,
+        "prompt_tokens": 12187,
+        "completion_tokens": 144
+      },
+      "astra": {
+        "api_status": "completed",
+        "failure": null,
+        "raw_arguments": "{\"status\":\"ok\",\"target\":\"red_cube\",\"destination\":\"box_b\",\"steps\":[{\"action\":\"pick\",\"object\":\"red_cube\"},{\"action\":\"place\",\"destination\":\"box_b\"}],\"note\":\"赤い立方体をテーブルの右側から右端の白いトレーへ移す動作と理解しました。\"}",
+        "contract_valid": true,
+        "elapsed_s": 3.86,
+        "model": "gpt-6-astra",
+        "response_id": "resp_0039d13ebb0b23ae016abad622704c8194ac64c2184de47cdc",
+        "usage": {
+          "input_tokens": 610,
+          "input_tokens_details": {
+            "cache_write_tokens": 0,
+            "cached_tokens": 0
+          },
+          "output_tokens": 101,
+          "output_tokens_details": {
+            "reasoning_tokens": 18
+          },
+          "total_tokens": 711
+        }
+      },
+      "failed_stage": null,
+      "plan": {
+        "status": "ok",
+        "target": "red_cube",
+        "destination": "box_b",
+        "steps": [
+          {
+            "action": "pick",
+            "object": "red_cube"
+          },
+          {
+            "action": "place",
+            "destination": "box_b"
+          }
+        ],
+        "note": "赤い立方体をテーブルの右側から右端の白いトレーへ移す動作と理解しました。"
+      },
+      "executable": true,
+      "total_s": 18.6
+    },
+    {
+      "video": "uc-06",
+      "run": 1,
+      "cosmos": {
+        "sentence": "The person's hand picks up the red cube from the foreground, moves it to the right white tray, and places it inside.",
+        "failure": null,
+        "finish_reason": "stop",
+        "reasoning": "\nAlright, let's break this down. The video shows a table with three cubes and two white trays. The red cube is in the foreground, the blue cube in the middle, and the trays at the far edges. The hand enters from the right, picks up the red cube, moves it to the right tray, and releases it there. The hand exits after that. The question is asking for a one-sentence summary of the hand's actions.\n\nSo, the key points are: the hand moves the red cube from the foreground to the right tray. The answer needs to be concise, fitting in one sentence. Make sure to mention the color, the cube, the initial position, the destination, and the action. Avoid unnecessary details. Check if there's anything else, like the blue cube or trays, but they're not involved here. Got it.\n",
+        "elapsed_s": 15.51,
+        "prompt_tokens": 12187,
+        "completion_tokens": 204
+      },
+      "astra": {
+        "api_status": "completed",
+        "failure": null,
+        "raw_arguments": "{\"status\":\"ok\",\"target\":\"red_cube\",\"destination\":\"box_b\",\"steps\":[{\"action\":\"pick\",\"object\":\"red_cube\"},{\"action\":\"place\",\"destination\":\"box_b\"}],\"note\":\"赤い立方体を持ち上げ、画面右側の白いトレーに入れたと理解しました。\"}",
+        "contract_valid": true,
+        "elapsed_s": 4.08,
+        "model": "gpt-6-astra",
+        "response_id": "resp_0ee04331067626aa016abad635b2f48193b2ba58dfdd82b8e8",
+        "usage": {
+          "input_tokens": 615,
+          "input_tokens_details": {
+            "cache_write_tokens": 0,
+            "cached_tokens": 0
+          },
+          "output_tokens": 81,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 696
+        }
+      },
+      "failed_stage": null,
+      "plan": {
+        "status": "ok",
+        "target": "red_cube",
+        "destination": "box_b",
+        "steps": [
+          {
+            "action": "pick",
+            "object": "red_cube"
+          },
+          {
+            "action": "place",
+            "destination": "box_b"
+          }
+        ],
+        "note": "赤い立方体を持ち上げ、画面右側の白いトレーに入れたと理解しました。"
+      },
+      "executable": true,
+      "total_s": 19.59
+    },
+    {
+      "video": "uc-07",
+      "run": 1,
+      "cosmos": {
+        "sentence": null,
+        "failure": "finish_reason='length' (not 'stop')",
+        "finish_reason": "length",
+        "reasoning": null,
+        "elapsed_s": 24.8,
+        "prompt_tokens": 12187,
+        "completion_tokens": 1024
+      },
+      "astra": null,
+      "failed_stage": "cosmos",
+      "plan": {
+        "status": "error",
+        "target": null,
+        "destination": null,
+        "steps": [],
+        "note": "理解層の応答を使えませんでした（動画の一文を取れなかった）"
+      },
+      "executable": false,
+      "total_s": 24.8
+    },
+    {
+      "video": "uc-08",
+      "run": 1,
+      "cosmos": {
+        "sentence": "Moves the blue cube from the left side to the white tray on the left, then exits the frame while leaving the red cube untouched on the right.",
+        "failure": null,
+        "finish_reason": "stop",
+        "reasoning": "\nAlright, let's break this down. The video starts with a wooden table that has a red cube on the right, a blue cube on the left, and two white trays at the far edge-one on the left and one on the right. The camera is fixed, so everything is stationary at first. Then, a hand enters from the right side of the frame and moves towards the blue cube. The hand picks up the blue cube and places it onto the white tray on the left. After that, the hand reaches for the red cube but doesn't interact with it; instead, it moves away. The red cube remains untouched on the right side of the table. The hand exits the frame, leaving the blue cube now on the white tray and the red cube still on the table. The video ends with these positions unchanged except for the blue cube being relocated.\n",
+        "elapsed_s": 15.18,
+        "prompt_tokens": 12187,
+        "completion_tokens": 208
+      },
+      "astra": {
+        "api_status": "completed",
+        "failure": null,
+        "raw_arguments": "{\"status\":\"ok\",\"target\":\"blue_cube\",\"destination\":\"box_a\",\"steps\":[{\"action\":\"pick\",\"object\":\"blue_cube\"},{\"action\":\"place\",\"destination\":\"box_a\"}],\"note\":\"青い立方体を画面左側の白いトレーに入れる動作と理解しました。\"}",
+        "contract_valid": true,
+        "elapsed_s": 3.21,
+        "model": "gpt-6-astra",
+        "response_id": "resp_00bd4ebab038a277016abad66101488197b92fbd70d3292840",
+        "usage": {
+          "input_tokens": 620,
+          "input_tokens_details": {
+            "cache_write_tokens": 0,
+            "cached_tokens": 0
+          },
+          "output_tokens": 94,
+          "output_tokens_details": {
+            "reasoning_tokens": 15
+          },
+          "total_tokens": 714
+        }
+      },
+      "failed_stage": null,
+      "plan": {
+        "status": "ok",
+        "target": "blue_cube",
+        "destination": "box_a",
+        "steps": [
+          {
+            "action": "pick",
+            "object": "blue_cube"
+          },
+          {
+            "action": "place",
+            "destination": "box_a"
+          }
+        ],
+        "note": "青い立方体を画面左側の白いトレーに入れる動作と理解しました。"
+      },
+      "executable": true,
+      "total_s": 18.39
+    },
+    {
+      "video": "uc-09",
+      "run": 1,
+      "cosmos": {
+        "sentence": "The person's hand picks up the blue cube from the center of the table and places it onto the white tray on the left edge of the table.",
+        "failure": null,
+        "finish_reason": "stop",
+        "reasoning": "\nAlright, let's break this down. The video shows a table with three cubes and two white trays. The red cube is in the center, the blue one is near the top, and the white trays are on the left and right edges. The person's hand comes in from the right, picks up the blue cube, and places it onto the white tray on the left. The red cube stays where it is, and the white tray on the right remains untouched. The hand exits the frame after placing the blue cube. So the main action is moving the blue cube from the center to the left white tray.\n",
+        "elapsed_s": 26.62,
+        "prompt_tokens": 12187,
+        "completion_tokens": 158
+      },
+      "astra": {
+        "api_status": "completed",
+        "failure": null,
+        "raw_arguments": "{\"status\":\"ok\",\"target\":\"blue_cube\",\"destination\":\"box_a\",\"steps\":[{\"action\":\"pick\",\"object\":\"blue_cube\"},{\"action\":\"place\",\"destination\":\"box_a\"}],\"note\":\"青い立方体を持ち上げ、左側の白いトレーに置く動作と理解しました。\"}",
+        "contract_valid": true,
+        "elapsed_s": 3.87,
+        "model": "gpt-6-astra",
+        "response_id": "resp_0e4116973a803113016abad67f31508197b04b954b48177110",
+        "usage": {
+          "input_tokens": 619,
+          "input_tokens_details": {
+            "cache_write_tokens": 0,
+            "cached_tokens": 0
+          },
+          "output_tokens": 80,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 699
+        }
+      },
+      "failed_stage": null,
+      "plan": {
+        "status": "ok",
+        "target": "blue_cube",
+        "destination": "box_a",
+        "steps": [
+          {
+            "action": "pick",
+            "object": "blue_cube"
+          },
+          {
+            "action": "place",
+            "destination": "box_a"
+          }
+        ],
+        "note": "青い立方体を持ち上げ、左側の白いトレーに置く動作と理解しました。"
+      },
+      "executable": true,
+      "total_s": 30.48
+    },
+    {
+      "video": "uc-10",
+      "run": 1,
+      "cosmos": {
+        "sentence": "Moves the blue cube from the right side of the table to the right white tray",
+        "failure": null,
+        "finish_reason": "stop",
+        "reasoning": "\nAlright, let's break this down. The video shows a table with a red cube on the left, a blue cube on the right, and two white trays at the far edges-left and right. The person's hand enters from the bottom right, picks up the blue cube, and moves it to the right tray. The red cube stays put, and the trays remain in their original positions. The hand exits the frame after placing the cube, so the main action is moving the blue cube into the right tray. Got it.\n",
+        "elapsed_s": 28.74,
+        "prompt_tokens": 12187,
+        "completion_tokens": 127
+      },
+      "astra": {
+        "api_status": "completed",
+        "failure": null,
+        "raw_arguments": "{\"status\":\"ok\",\"target\":\"blue_cube\",\"destination\":\"box_b\",\"steps\":[{\"action\":\"pick\",\"object\":\"blue_cube\"},{\"action\":\"place\",\"destination\":\"box_b\"}],\"note\":\"青い立方体をテーブルの右側から右の白いトレーに移す動作と理解しました。\"}",
+        "contract_valid": true,
+        "elapsed_s": 2.86,
+        "model": "gpt-6-astra",
+        "response_id": "resp_070519098d076891016abad69ea4f8819598693c170901920e",
+        "usage": {
+          "input_tokens": 606,
+          "input_tokens_details": {
+            "cache_write_tokens": 0,
+            "cached_tokens": 0
+          },
+          "output_tokens": 80,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 686
+        }
+      },
+      "failed_stage": null,
+      "plan": {
+        "status": "ok",
+        "target": "blue_cube",
+        "destination": "box_b",
+        "steps": [
+          {
+            "action": "pick",
+            "object": "blue_cube"
+          },
+          {
+            "action": "place",
+            "destination": "box_b"
+          }
+        ],
+        "note": "青い立方体をテーブルの右側から右の白いトレーに移す動作と理解しました。"
+      },
+      "executable": true,
+      "total_s": 31.61
+    },
+    {
+      "video": "uc-11",
+      "run": 1,
+      "cosmos": {
+        "sentence": "Moves the blue cube from the left side of the table to the white tray on the right.",
+        "failure": null,
+        "finish_reason": "stop",
+        "reasoning": "\nAlright, let's break this down. The video shows a table with two cubes and two white trays. The red cube is on the right, the blue on the left. The trays are at the far edge, one on the left and one on the right. The hand comes in from the bottom right, picks up the blue cube, moves it to the white tray on the right, and places it there. The red cube stays put, and the trays don't move. So the key actions are moving the blue cube to the right white tray. Got it.\n",
+        "elapsed_s": 29.0,
+        "prompt_tokens": 12187,
+        "completion_tokens": 138
+      },
+      "astra": {
+        "api_status": "completed",
+        "failure": null,
+        "raw_arguments": "{\"status\":\"ok\",\"target\":\"blue_cube\",\"destination\":\"box_b\",\"steps\":[{\"action\":\"pick\",\"object\":\"blue_cube\"},{\"action\":\"place\",\"destination\":\"box_b\"}],\"note\":\"青い立方体をテーブルの左側から右側の白いトレーに移す動作と理解しました。\"}",
+        "contract_valid": true,
+        "elapsed_s": 4.19,
+        "model": "gpt-6-astra",
+        "response_id": "resp_0f7eaaf6739d874d016abad6be198881908c631b99b7892816",
+        "usage": {
+          "input_tokens": 609,
+          "input_tokens_details": {
+            "cache_write_tokens": 0,
+            "cached_tokens": 0
+          },
+          "output_tokens": 103,
+          "output_tokens_details": {
+            "reasoning_tokens": 20
+          },
+          "total_tokens": 712
+        }
+      },
+      "failed_stage": null,
+      "plan": {
+        "status": "ok",
+        "target": "blue_cube",
+        "destination": "box_b",
+        "steps": [
+          {
+            "action": "pick",
+            "object": "blue_cube"
+          },
+          {
+            "action": "place",
+            "destination": "box_b"
+          }
+        ],
+        "note": "青い立方体をテーブルの左側から右側の白いトレーに移す動作と理解しました。"
+      },
+      "executable": true,
+      "total_s": 33.2
+    },
+    {
+      "video": "uc-12",
+      "run": 1,
+      "cosmos": {
+        "sentence": "The person's hand enters from the right, grasps the blue cube, lifts it, and places it into the white tray on the right side of the table.",
+        "failure": null,
+        "finish_reason": "stop",
+        "reasoning": "\nAlright, let's break this down. The video shows a table with three cubes and two white trays. The red cube is in the foreground, the blue cube is centered, and the white trays are at the far edges. The person's hand enters from the right, wearing a silver ring. The hand moves towards the blue cube, grasps it, lifts it, and places it into the white tray on the right. The hand then exits the frame.\n\nSo the key actions are: hand enters from the right, moves to the blue cube, lifts it, places it into the white tray on the right. The order is grasping, lifting, placing. The white trays are on the left and right, but the hand puts the blue cube into the right one. The red cube stays in place, the blue cube is moved. Got it.\n",
+        "elapsed_s": 15.39,
+        "prompt_tokens": 12187,
+        "completion_tokens": 209
+      },
+      "astra": {
+        "api_status": "completed",
+        "failure": null,
+        "raw_arguments": "{\"status\":\"ok\",\"target\":\"blue_cube\",\"destination\":\"box_b\",\"steps\":[{\"action\":\"pick\",\"object\":\"blue_cube\"},{\"action\":\"place\",\"destination\":\"box_b\"}],\"note\":\"青い立方体を持ち上げ、右側の白いトレーに入れる動作と理解しました。\"}",
+        "contract_valid": true,
+        "elapsed_s": 2.89,
+        "model": "gpt-6-astra",
+        "response_id": "resp_0ad1e390ceea2224016abad6d1659081958a153d6e03122fbc",
+        "usage": {
+          "input_tokens": 622,
+          "input_tokens_details": {
+            "cache_write_tokens": 0,
+            "cached_tokens": 0
+          },
+          "output_tokens": 80,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 702
+        }
+      },
+      "failed_stage": null,
+      "plan": {
+        "status": "ok",
+        "target": "blue_cube",
+        "destination": "box_b",
+        "steps": [
+          {
+            "action": "pick",
+            "object": "blue_cube"
+          },
+          {
+            "action": "place",
+            "destination": "box_b"
+          }
+        ],
+        "note": "青い立方体を持ち上げ、右側の白いトレーに入れる動作と理解しました。"
+      },
+      "executable": true,
+      "total_s": 18.28
+    },
+    {
+      "video": "uc-13",
+      "run": 1,
+      "cosmos": {
+        "sentence": "The person's hand enters from the bottom right, picks up the pen, moves it to the white tray on the right, and places it there.",
+        "failure": null,
+        "finish_reason": "stop",
+        "reasoning": "\nAlright, let's break this down. The video shows a table with several objects: red and blue cubes on the left and right, white trays at the far edge, and a pen in the center. The camera is fixed, showing an overhead view.\n\nThe person's hand comes in from the bottom right. They pick up the pen, move it to the white tray on the right, and place it there. The cubes and trays stay in their original positions. The hand's actions are minimal, just moving the pen. The question is asking for a single sentence describing what the hand does, including which object it moves, where it puts it, and the order.\n\nSo the main action here is moving the pen from the center to the right tray. The cubes and trays don't move, so the answer should focus on that. The hand enters from the bottom right, picks up the pen, moves it to the white tray on the right, and releases it there. That's the key part. Need to make sure not to mention anything else since the request is for one sentence. Got it.\n",
+        "elapsed_s": 16.16,
+        "prompt_tokens": 12187,
+        "completion_tokens": 256
+      },
+      "astra": {
+        "api_status": "completed",
+        "failure": null,
+        "raw_arguments": "{\"status\":\"unsupported\",\"target\":null,\"destination\":null,\"steps\":[],\"note\":\"ペンを右側の白いトレーに置いていますが、ペンは登録対象外のため実行できません。\"}",
+        "contract_valid": true,
+        "elapsed_s": 3.53,
+        "model": "gpt-6-astra",
+        "response_id": "resp_071f255ac1380b1a016abad6e44c64819685a76a12dd91d19d",
+        "usage": {
+          "input_tokens": 619,
+          "input_tokens_details": {
+            "cache_write_tokens": 0,
+            "cached_tokens": 0
+          },
+          "output_tokens": 61,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 680
+        }
+      },
+      "failed_stage": null,
+      "plan": {
+        "status": "unsupported",
+        "target": null,
+        "destination": null,
+        "steps": [],
+        "note": "ペンを右側の白いトレーに置いていますが、ペンは登録対象外のため実行できません。"
+      },
+      "executable": false,
+      "total_s": 19.69
+    },
+    {
+      "video": "uc-14",
+      "run": 1,
+      "cosmos": {
+        "sentence": "The person's hand moves the red cube from the left side of the table to the blue cube on the right, stacking it on top of the blue cube.",
+        "failure": null,
+        "finish_reason": "stop",
+        "reasoning": "\nAlright, let's break this down. The video shows a table with two cubes and two white trays. The red cube is on the left, the blue on the right. The hand comes in from the top right, grabs the red cube, and moves it to the blue cube. Wait, the blue cube is on the right, so moving the red cube to the right side. Then the hand puts the red cube on top of the blue cube. But the blue cube is already on the right. Wait, the blue cube is on the right, so stacking the red cube on top of the blue cube would place the red cube on the right side. The white trays are at the far edge, left and right. But the hand only interacts with the cubes. So the action is moving the red cube from the left to the right, placing it on the blue cube. The hand puts the red cube on top of the blue cube. That's the main action here.\n",
+        "elapsed_s": 15.72,
+        "prompt_tokens": 12187,
+        "completion_tokens": 233
+      },
+      "astra": {
+        "api_status": "completed",
+        "failure": null,
+        "raw_arguments": "{\"status\":\"unsupported\",\"target\":null,\"destination\":null,\"steps\":[],\"note\":\"赤い立方体を青い立方体の上に積む動作は、対応していません。\"}",
+        "contract_valid": true,
+        "elapsed_s": 3.71,
+        "model": "gpt-6-astra",
+        "response_id": "resp_0039276ef02894b3016abad6f732f48196a22cb4342c0dd92d",
+        "usage": {
+          "input_tokens": 621,
+          "input_tokens_details": {
+            "cache_write_tokens": 0,
+            "cached_tokens": 0
+          },
+          "output_tokens": 57,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 678
+        }
+      },
+      "failed_stage": null,
+      "plan": {
+        "status": "unsupported",
+        "target": null,
+        "destination": null,
+        "steps": [],
+        "note": "赤い立方体を青い立方体の上に積む動作は、対応していません。"
+      },
+      "executable": false,
+      "total_s": 19.43
+    },
+    {
+      "video": "uc-15",
+      "run": 1,
+      "cosmos": {
+        "sentence": "Moves the blue cube to the white tray on the left side of the table",
+        "failure": null,
+        "finish_reason": "stop",
+        "reasoning": "\nAlright, let's break this down. The video shows a table with two cubes and two white trays. The red cube is on the left, the blue on the right. The hand comes in from the bottom right, wears rings, and interacts with the blue cube. The hand pushes the blue cube towards the center, moves it left to the white tray on the left, then lifts it off. The red cube stays put. The white trays are static. So the action is the hand moving the blue cube to the left tray.\n",
+        "elapsed_s": 14.45,
+        "prompt_tokens": 12187,
+        "completion_tokens": 127
+      },
+      "astra": {
+        "api_status": "completed",
+        "failure": null,
+        "raw_arguments": "{\"status\":\"ok\",\"target\":\"blue_cube\",\"destination\":\"box_a\",\"steps\":[{\"action\":\"pick\",\"object\":\"blue_cube\"},{\"action\":\"place\",\"destination\":\"box_a\"}],\"note\":\"青い立方体を左側の白いトレーに入れる動作と理解しました。\"}",
+        "contract_valid": true,
+        "elapsed_s": 6.25,
+        "model": "gpt-6-astra",
+        "response_id": "resp_067d81196422a8a2016abad709088c8194a3f6e6d1d9d536da",
+        "usage": {
+          "input_tokens": 605,
+          "input_tokens_details": {
+            "cache_write_tokens": 0,
+            "cached_tokens": 0
+          },
+          "output_tokens": 109,
+          "output_tokens_details": {
+            "reasoning_tokens": 32
+          },
+          "total_tokens": 714
+        }
+      },
+      "failed_stage": null,
+      "plan": {
+        "status": "ok",
+        "target": "blue_cube",
+        "destination": "box_a",
+        "steps": [
+          {
+            "action": "pick",
+            "object": "blue_cube"
+          },
+          {
+            "action": "place",
+            "destination": "box_a"
+          }
+        ],
+        "note": "青い立方体を左側の白いトレーに入れる動作と理解しました。"
+      },
+      "executable": true,
+      "total_s": 20.7
+    }
+  ]
+}

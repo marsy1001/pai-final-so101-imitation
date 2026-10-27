@@ -1,0 +1,34 @@
+{
+  "permissions": {
+    "deny": [
+      "Bash(gh repo delete:*)",
+      "Bash(gh repo archive:*)",
+      "Read(./.env)",
+      "Read(./.env.local)",
+      "Read(./**/.env)",
+      "Read(./**/.env.local)",
+      "Edit(./.env)",
+      "Edit(./.env.local)",
+      "Bash(cat .env)",
+      "Bash(cat ./.env)",
+      "Bash(cat */.env)",
+      "Bash(dotenv *)"
+    ],
+    "allow": [
+      "Bash(gh:*)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "scripts/session-start.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

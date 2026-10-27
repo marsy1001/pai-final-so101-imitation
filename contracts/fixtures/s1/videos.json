@@ -1,0 +1,60 @@
+{
+  "$comment": "S1 diagnosis videos (Issue #22). Staff-recorded evaluation clips, kept in the repository; the same-day deletion rule applies to visitor recordings only (demo-plan Ua). Left / right are as seen in the video frame (camera view), not the person's own left / right: box_a = the tray on the left of the frame, box_b = the one on the right. Gold is written by the lead from 1 fps contact sheets; the human check of Cosmos' sentence against these facts is the GPU part of Issue #22. A re-take or an edit gets a new version with the reason and the old hash; entries are never replaced silently.",
+  "version": 1,
+  "recorded": "2026-09-28",
+  "conditions": {
+    "camera": "phone on a fixed stand across the table from the person, tilted down; only the table, hands and forearms in frame, no face",
+    "scene": "dark wooden table, plain wall; red cube and blue cube about 4 cm; two identical white trays at the far edge of the table",
+    "left_right": "as seen in the frame: box_a = left tray, box_b = right tray",
+    "source_format": "mp4 H.264, coded 720x1280 with a 90 degree rotation tag (displayed 1280x720), 24 fps, 11.25-11.5 s of video, AAC audio",
+    "preprocessing": "ffmpeg 6.1.1: rotation applied, last 10.0 s of the video stream kept (only the idle lead-in is cut; every action lies inside), audio and metadata dropped: ffmpeg -ss <video_duration - 10> -i <source> -t 10 -an -map_metadata -1 -vf scale=1280:720,format=yuv420p -r 24 -c:v libx264 -preset slow -crf 20 -bitexact -movflags +faststart <path>",
+    "format": {"codec": "h264", "width": 1280, "height": 720, "fps": 24, "frames": 240, "duration_s": 10.0}
+  },
+  "videos": [
+    {
+      "id": "s1-01",
+      "path": "docs/evidence/s1/videos/s1-01-red-to-box_a.mp4",
+      "sha256": "edaee784b5ef8f0df6e59d20a08d09f376692f92208c5f6519b043df68db93d1",
+      "source": {"file": "1_redbox_OK.mp4", "sha256": "a06db2c684f7474b814409d5e9063ebb438acaef37a23097e20a631ee52d4eec", "trim_start_s": 1.5},
+      "scope": "in_scope",
+      "out_of_scope_kind": null,
+      "gold": {
+        "status": "ok",
+        "target": "red_cube",
+        "destination": "box_a",
+        "steps": [{"action": "pick", "object": "red_cube"}, {"action": "place", "destination": "box_a"}],
+        "facts": "Red cube front left, blue cube front centre, both trays empty. A right hand grasps the red cube, lifts it and puts it into the left tray; the hand leaves. The blue cube is not touched. Completed: the red cube rests in the left tray at the end."
+      }
+    },
+    {
+      "id": "s1-02",
+      "path": "docs/evidence/s1/videos/s1-02-blue-to-box_b.mp4",
+      "sha256": "65807d10a9817cf429bbdddf8f399ba4f6ece44351aeedd7d852fd0e1763c0c2",
+      "source": {"file": "2_bluebox_OK.mp4", "sha256": "821ed1111c5d859e54d736594ecd5150019d4624b41331ea7a060f5958a5e103", "trim_start_s": 1.375},
+      "scope": "in_scope",
+      "out_of_scope_kind": null,
+      "gold": {
+        "status": "ok",
+        "target": "blue_cube",
+        "destination": "box_b",
+        "steps": [{"action": "pick", "object": "blue_cube"}, {"action": "place", "destination": "box_b"}],
+        "facts": "Separate take from s1-01 with other start positions: blue cube front left, red cube at the right edge of the frame (partly cut off), both trays empty. A right hand grasps the blue cube, carries it across and puts it into the right tray; the hand leaves. The red cube is not touched. Completed: the blue cube rests in the right tray at the end."
+      }
+    },
+    {
+      "id": "s1-03",
+      "path": "docs/evidence/s1/videos/s1-03-lift-and-return.mp4",
+      "sha256": "89332c728602b811bca4c3c909ad34f1e00ee2f0cb095e42fdd3ddc644c03832",
+      "source": {"file": "3_NG.mp4", "sha256": "f538a8a2413903a4602a1d961d7298e832231c23a45d2ef4fb71f5c4b61980ee", "trim_start_s": 1.25},
+      "scope": "out_of_scope",
+      "out_of_scope_kind": "unregistered_action",
+      "gold": {
+        "status": "unsupported",
+        "target": null,
+        "destination": null,
+        "steps": [],
+        "facts": "Red cube centre left, blue cube front right, both trays empty. A hand lifts the red cube and puts it back at about the same place; then the hand touches the blue cube and shifts it slightly. Nothing is put into either tray; both trays are empty at the end. Unregistered action (lift and return), so no executable plan; needs_review is also acceptable as long as no executable plan is returned (demo-plan G2)."
+      }
+    }
+  ]
+}

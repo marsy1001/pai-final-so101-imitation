@@ -1,0 +1,251 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/marsy1001/pai-final-so101-imitation/contracts/plan.schema.json",
+  "title": "Plan contract between the understanding layer and the execution layer",
+  "description": "demo-plan 「契約 JSON」. Registered ids come from contracts/registry.json (tests keep them in sync). Only status=ok carries executable steps; every other status carries no steps. The ok branch enumerates the allowed (target, destination, steps) combinations so the cross-field rule lives in the schema itself.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "status",
+    "target",
+    "destination",
+    "steps",
+    "note"
+  ],
+  "properties": {
+    "status": {
+      "enum": [
+        "ok",
+        "unsupported",
+        "needs_review",
+        "error"
+      ]
+    },
+    "target": {
+      "enum": [
+        "red_cube",
+        "blue_cube",
+        null
+      ]
+    },
+    "destination": {
+      "enum": [
+        "box_a",
+        "box_b",
+        null
+      ]
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "action",
+              "object"
+            ],
+            "properties": {
+              "action": {
+                "const": "pick"
+              },
+              "object": {
+                "enum": [
+                  "red_cube",
+                  "blue_cube"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "action",
+              "destination"
+            ],
+            "properties": {
+              "action": {
+                "const": "place"
+              },
+              "destination": {
+                "enum": [
+                  "box_a",
+                  "box_b"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "note": {
+      "type": "string",
+      "maxLength": 200
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "ok"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "target": {
+            "type": "string"
+          },
+          "destination": {
+            "type": "string"
+          },
+          "steps": {
+            "minItems": 2,
+            "maxItems": 2,
+            "prefixItems": [
+              {
+                "properties": {
+                  "action": {
+                    "const": "pick"
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "action": {
+                    "const": "place"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "$comment": "Cross-field rule: an ok plan names one registered (target, destination) pair and its steps repeat exactly that pair. Enumerated so any Draft 2020-12 validator enforces it without code.",
+        "oneOf": [
+          {
+            "properties": {
+              "target": {
+                "const": "red_cube"
+              },
+              "destination": {
+                "const": "box_a"
+              },
+              "steps": {
+                "prefixItems": [
+                  {
+                    "properties": {
+                      "object": {
+                        "const": "red_cube"
+                      }
+                    }
+                  },
+                  {
+                    "properties": {
+                      "destination": {
+                        "const": "box_a"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "properties": {
+              "target": {
+                "const": "red_cube"
+              },
+              "destination": {
+                "const": "box_b"
+              },
+              "steps": {
+                "prefixItems": [
+                  {
+                    "properties": {
+                      "object": {
+                        "const": "red_cube"
+                      }
+                    }
+                  },
+                  {
+                    "properties": {
+                      "destination": {
+                        "const": "box_b"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "properties": {
+              "target": {
+                "const": "blue_cube"
+              },
+              "destination": {
+                "const": "box_a"
+              },
+              "steps": {
+                "prefixItems": [
+                  {
+                    "properties": {
+                      "object": {
+                        "const": "blue_cube"
+                      }
+                    }
+                  },
+                  {
+                    "properties": {
+                      "destination": {
+                        "const": "box_a"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "properties": {
+              "target": {
+                "const": "blue_cube"
+              },
+              "destination": {
+                "const": "box_b"
+              },
+              "steps": {
+                "prefixItems": [
+                  {
+                    "properties": {
+                      "object": {
+                        "const": "blue_cube"
+                      }
+                    }
+                  },
+                  {
+                    "properties": {
+                      "destination": {
+                        "const": "box_b"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "else": {
+        "properties": {
+          "steps": {
+            "maxItems": 0
+          }
+        }
+      }
+    }
+  ]
+}

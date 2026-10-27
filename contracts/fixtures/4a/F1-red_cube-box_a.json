@@ -1,0 +1,7 @@
+{
+  "status": "ok",
+  "target": "red_cube",
+  "destination": "box_a",
+  "steps": [{"action": "pick", "object": "red_cube"}, {"action": "place", "destination": "box_a"}],
+  "note": "開発用固定 JSON F1（4a）: 赤いキューブを A の箱へ"
+}

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>承認画面</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <style>
+    main { padding: 32px 48px; display: grid; gap: 28px; }
+    .row { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; }
+    #reading { font-size: 36px; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+    .pick { display: flex; flex-direction: column; gap: 12px; }
+    .pick button { display: flex; align-items: center; gap: 0.4em; text-align: left; }
+    .pick button[aria-pressed="true"] { border-color: var(--accent); border-width: 6px; }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="row"><span id="phase" class="phase">待機</span><span id="waiting" class="muted"></span></div>
+    <p id="reading" class="muted"></p>
+    <div id="proposal" class="row" hidden>
+      <span id="target" class="chip"></span><span>を</span><span id="destination" class="chip"></span><span>へ</span>
+    </div>
+    <p id="message"></p>
+    <p id="last" class="muted"></p>
+    <div class="row">
+      <button id="read" class="primary">読み取り開始</button>
+      <button id="approve" class="primary">これで動かす</button>
+      <button id="correct">訂正する</button>
+      <button id="reject">対応外にする</button>
+      <button id="manual">手動で選ぶ</button>
+      <button id="prerecorded">事前録画</button>
+      <button id="idle">待機へ戻る</button>
+    </div>
+    <section id="picker" hidden>
+      <div class="grid">
+        <div class="pick" id="pick-target"></div>
+        <div class="pick" id="pick-destination"></div>
+      </div>
+      <div class="row" style="margin-top: 20px">
+        <button id="confirm" class="primary" disabled>この組み合わせで動かす</button>
+      </div>
+    </section>
+    <p id="error" class="muted"></p>
+  </main>
+  <script src="/static/app.js"></script>
+  <script>approvalScreen();</script>
+</body>
+</html>

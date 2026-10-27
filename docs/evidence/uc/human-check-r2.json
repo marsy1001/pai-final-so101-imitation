@@ -1,0 +1,148 @@
+{
+  "$comment": "Check of each Cosmos sentence in eval-r2.json against the gold facts of contracts/fixtures/uc/videos.json and the 1 fps frame sheets docs/evidence/uc/frames/. Written by hand, never by Astra. Same rules as human-check.json. uc-07 has no sentence (Cosmos finish_reason length), so there is nothing to check.",
+  "checked": "2026-09-29",
+  "checked_by": "Claude Code (frames + gold), confirmed by the user on 2026-09-29",
+  "user_confirmed": true,
+  "videos": {
+    "uc-01": {
+      "sentences": [
+        "Moves the red cube to the white tray on the left and the blue cube to the white tray on the right."
+      ],
+      "facts_match": false,
+      "verdict": "不一致（存在しない操作を追加）",
+      "detail": "赤を左トレーへは正しい。青を右トレーへは映像に無い（gold: 青は触れていない）",
+      "astra_faithful": true,
+      "astra_note": "2 つの操作を 1 つに絞れないとして needs_review。文に忠実"
+    },
+    "uc-02": {
+      "sentences": [
+        "Moves the red cube from the right side of the table to the left white tray."
+      ],
+      "facts_match": true,
+      "verdict": "一致",
+      "detail": "赤を右側から左トレーへ。gold どおり",
+      "astra_faithful": true,
+      "astra_note": "ok / red_cube / box_a。文に忠実"
+    },
+    "uc-03": {
+      "sentences": [
+        "Moves the red cube to the white tray on the left and then the blue cube to the white tray on the right."
+      ],
+      "facts_match": false,
+      "verdict": "不一致（存在しない操作を追加）",
+      "detail": "赤を左トレーへは正しい。青を右トレーへは映像に無い（gold: 青は奥の縁で触れていない）",
+      "astra_faithful": true,
+      "astra_note": "needs_review。文に忠実"
+    },
+    "uc-04": {
+      "sentences": [
+        "The person's hand picks up the red cube, moves it to the white tray on the left, and places it inside."
+      ],
+      "facts_match": false,
+      "verdict": "不一致（左右の取り違え）",
+      "detail": "赤の置き先は右トレー（gold）なのに「左のトレー」とした",
+      "astra_faithful": true,
+      "astra_note": "ok / red_cube / box_a。文に忠実（文の誤りがそのままプランに入った）"
+    },
+    "uc-05": {
+      "sentences": [
+        "Moves the red cube from the right side of the table to the white tray on the right edge."
+      ],
+      "facts_match": true,
+      "verdict": "一致",
+      "detail": "赤を右側から右トレーへ。gold どおり",
+      "astra_faithful": true,
+      "astra_note": "ok / red_cube / box_b。文に忠実"
+    },
+    "uc-06": {
+      "sentences": [
+        "The person's hand picks up the red cube from the foreground, moves it to the right white tray, and places it inside."
+      ],
+      "facts_match": true,
+      "verdict": "一致",
+      "detail": "赤を手前中央から右トレーへ。gold どおり",
+      "astra_faithful": true,
+      "astra_note": "ok / red_cube / box_b。文に忠実"
+    },
+    "uc-08": {
+      "sentences": [
+        "Moves the blue cube from the left side to the white tray on the left, then exits the frame while leaving the red cube untouched on the right."
+      ],
+      "facts_match": true,
+      "verdict": "一致",
+      "detail": "青を左側から左トレーへ、赤は右で不動。「exits the frame」は手が出ていくことで正しい",
+      "astra_faithful": true,
+      "astra_note": "ok / blue_cube / box_a。文に忠実"
+    },
+    "uc-09": {
+      "sentences": [
+        "The person's hand picks up the blue cube from the center of the table and places it onto the white tray on the left edge of the table."
+      ],
+      "facts_match": true,
+      "verdict": "一致（位置の細部に小さな誤り）",
+      "detail": "青を左トレーへ。出発点は奥の縁（トレーの間）で「テーブル中央」は大まか",
+      "astra_faithful": true,
+      "astra_note": "ok / blue_cube / box_a。文に忠実"
+    },
+    "uc-10": {
+      "sentences": [
+        "Moves the blue cube from the right side of the table to the right white tray"
+      ],
+      "facts_match": true,
+      "verdict": "一致",
+      "detail": "青を右側から右トレーへ。gold どおり",
+      "astra_faithful": true,
+      "astra_note": "ok / blue_cube / box_b。文に忠実"
+    },
+    "uc-11": {
+      "sentences": [
+        "Moves the blue cube from the left side of the table to the white tray on the right."
+      ],
+      "facts_match": true,
+      "verdict": "一致",
+      "detail": "青を左側から右トレーへ。gold どおり",
+      "astra_faithful": true,
+      "astra_note": "ok / blue_cube / box_b。文に忠実"
+    },
+    "uc-12": {
+      "sentences": [
+        "The person's hand enters from the right, grasps the blue cube, lifts it, and places it into the white tray on the right side of the table."
+      ],
+      "facts_match": true,
+      "verdict": "一致",
+      "detail": "手が右から入り、青を持ち上げて右トレーへ。gold どおり",
+      "astra_faithful": true,
+      "astra_note": "ok / blue_cube / box_b。文に忠実"
+    },
+    "uc-13": {
+      "sentences": [
+        "The person's hand enters from the bottom right, picks up the pen, moves it to the white tray on the right, and places it there."
+      ],
+      "facts_match": true,
+      "verdict": "一致",
+      "detail": "ペンを右トレーへ。gold どおり",
+      "astra_faithful": true,
+      "astra_note": "ペンは未登録として unsupported。文に忠実"
+    },
+    "uc-14": {
+      "sentences": [
+        "The person's hand moves the red cube from the left side of the table to the blue cube on the right, stacking it on top of the blue cube."
+      ],
+      "facts_match": true,
+      "verdict": "一致",
+      "detail": "赤を青の上に積んだ。gold どおり",
+      "astra_faithful": true,
+      "astra_note": "積み重ねを対応外として unsupported。文に忠実"
+    },
+    "uc-15": {
+      "sentences": [
+        "Moves the blue cube to the white tray on the left side of the table"
+      ],
+      "facts_match": false,
+      "verdict": "不一致（見えない置き先をトレーで埋めた）",
+      "detail": "青は手に隠れて右端から画面外へ運ばれ、両トレーは空のまま（gold）。文は「左のトレーへ」とした",
+      "astra_faithful": true,
+      "astra_note": "ok / blue_cube / box_a。文に忠実（文の誤りで誤受理になった）"
+    }
+  }
+}

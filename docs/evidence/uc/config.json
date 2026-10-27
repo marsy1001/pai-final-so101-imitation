@@ -1,0 +1,344 @@
+{
+  "fixed": "2026-09-28",
+  "revision": 1,
+  "tuning": {
+    "development_set": [
+      "s1-01",
+      "s1-02",
+      "s1-03"
+    ],
+    "rule": "The Cosmos instruction and the preprocessing were chosen on the development set only (S1, docs/evidence/s1/diagnosis.md 「プロンプトの比較」); the acceptance videos uc-* are run only with this fixed configuration."
+  },
+  "cosmos": {
+    "model": "nvidia/Cosmos-Reason2-2B",
+    "model_revision": "9ce19a195e423419c349abfc86fd07178b230561",
+    "server": {
+      "vllm": "0.12.0",
+      "torch": "2.9.0",
+      "transformers": "4.57.1",
+      "serve_sh_sha256": "0b18b5e4d777410ed1e641bcc8c194d549f6884ad2967080d237c32684752cf5",
+      "uv_lock_sha256": "28f810a2844d423ed49956dcbbc0af8f9b5fb3e2eece46eae5624e46e5f7872c"
+    },
+    "prompt": "Describe in one sentence what the person's hand does in this video: which object it moves, where it puts that object, and in what order. Name objects by colour and shape, and name places by where they are in the image (left or right). If you cannot tell what was moved or where it went, say that you cannot tell. Do not give timestamps or coordinates.",
+    "reasoning_suffix": "\n\nAnswer the question using the following format:\n\n<think>\nYour reasoning.\n</think>\n\nWrite your final answer immediately after the </think> tag.",
+    "max_tokens": 1024,
+    "timeout_s": 30.0,
+    "temperature": 0.6,
+    "top_p": 0.95,
+    "top_k": 20,
+    "seed": 1234,
+    "request_template": {
+      "model": "nvidia/Cosmos-Reason2-2B",
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "video_url",
+              "video_url": {
+                "url": "file:///VIDEO.mp4"
+              }
+            },
+            {
+              "type": "text",
+              "text": "Describe in one sentence what the person's hand does in this video: which object it moves, where it puts that object, and in what order. Name objects by colour and shape, and name places by where they are in the image (left or right). If you cannot tell what was moved or where it went, say that you cannot tell. Do not give timestamps or coordinates.\n\nAnswer the question using the following format:\n\n<think>\nYour reasoning.\n</think>\n\nWrite your final answer immediately after the </think> tag."
+            }
+          ]
+        }
+      ],
+      "max_tokens": 1024,
+      "temperature": 0.6,
+      "top_p": 0.95,
+      "top_k": 20,
+      "seed": 1234,
+      "mm_processor_kwargs": {
+        "fps": 4.0,
+        "do_sample_frames": true
+      }
+    }
+  },
+  "preprocessing": {
+    "version": "S1 adopted version: the cut mp4 (1280x720, 24 fps, 240 frames) goes to the server as a file:// URL unchanged; the model's video processor samples and resizes it (serving/cosmos/probe_video.py)",
+    "sample_fps": 4.0,
+    "pixel_budget": {
+      "min": 4096,
+      "total_max": 25165824
+    },
+    "frames": {
+      "s1-01": {
+        "source_frames": 240,
+        "sampled_frames": 40,
+        "frame_hw": [
+          576,
+          1056
+        ],
+        "video_tokens": 11880
+      },
+      "s1-02": {
+        "source_frames": 240,
+        "sampled_frames": 40,
+        "frame_hw": [
+          576,
+          1056
+        ],
+        "video_tokens": 11880
+      },
+      "s1-03": {
+        "source_frames": 240,
+        "sampled_frames": 40,
+        "frame_hw": [
+          576,
+          1056
+        ],
+        "video_tokens": 11880
+      },
+      "uc-01": {
+        "source_frames": 240,
+        "sampled_frames": 40,
+        "frame_hw": [
+          576,
+          1056
+        ],
+        "video_tokens": 11880
+      },
+      "uc-02": {
+        "source_frames": 240,
+        "sampled_frames": 40,
+        "frame_hw": [
+          576,
+          1056
+        ],
+        "video_tokens": 11880
+      },
+      "uc-03": {
+        "source_frames": 240,
+        "sampled_frames": 40,
+        "frame_hw": [
+          576,
+          1056
+        ],
+        "video_tokens": 11880
+      },
+      "uc-04": {
+        "source_frames": 240,
+        "sampled_frames": 40,
+        "frame_hw": [
+          576,
+          1056
+        ],
+        "video_tokens": 11880
+      },
+      "uc-05": {
+        "source_frames": 240,
+        "sampled_frames": 40,
+        "frame_hw": [
+          576,
+          1056
+        ],
+        "video_tokens": 11880
+      },
+      "uc-06": {
+        "source_frames": 240,
+        "sampled_frames": 40,
+        "frame_hw": [
+          576,
+          1056
+        ],
+        "video_tokens": 11880
+      },
+      "uc-07": {
+        "source_frames": 240,
+        "sampled_frames": 40,
+        "frame_hw": [
+          576,
+          1056
+        ],
+        "video_tokens": 11880
+      },
+      "uc-08": {
+        "source_frames": 240,
+        "sampled_frames": 40,
+        "frame_hw": [
+          576,
+          1056
+        ],
+        "video_tokens": 11880
+      },
+      "uc-09": {
+        "source_frames": 240,
+        "sampled_frames": 40,
+        "frame_hw": [
+          576,
+          1056
+        ],
+        "video_tokens": 11880
+      },
+      "uc-10": {
+        "source_frames": 240,
+        "sampled_frames": 40,
+        "frame_hw": [
+          576,
+          1056
+        ],
+        "video_tokens": 11880
+      },
+      "uc-11": {
+        "source_frames": 240,
+        "sampled_frames": 40,
+        "frame_hw": [
+          576,
+          1056
+        ],
+        "video_tokens": 11880
+      },
+      "uc-12": {
+        "source_frames": 240,
+        "sampled_frames": 40,
+        "frame_hw": [
+          576,
+          1056
+        ],
+        "video_tokens": 11880
+      },
+      "uc-13": {
+        "source_frames": 240,
+        "sampled_frames": 40,
+        "frame_hw": [
+          576,
+          1056
+        ],
+        "video_tokens": 11880
+      },
+      "uc-14": {
+        "source_frames": 240,
+        "sampled_frames": 40,
+        "frame_hw": [
+          576,
+          1056
+        ],
+        "video_tokens": 11880
+      },
+      "uc-15": {
+        "source_frames": 240,
+        "sampled_frames": 40,
+        "frame_hw": [
+          576,
+          1056
+        ],
+        "video_tokens": 11880
+      }
+    }
+  },
+  "astra": {
+    "model_reported_in_s1": "gpt-6-astra",
+    "timeout_s": 30.0,
+    "instructions": "You turn ONE sentence that describes a short video into a candidate plan for a robot demo.\nAnswer only by calling submit_plan exactly once.\n\nYou do not see the video. The sentence is all you know. Never add an object, a place or an\naction the sentence does not state, and never pick a registered id just because it is the\nclosest one.\n\nRegistered objects:\n- red_cube: the red cube\n- blue_cube: the blue cube\nRegistered destinations:\n- box_a: the container / tray / box on the LEFT side of the image\n- box_b: the container / tray / box on the RIGHT side of the image\nThe only supported task: a registered object is picked up and put into a registered\ndestination.\n\n- status ok: the sentence says a registered object was put into a registered destination.\n  Set target and destination, and steps = [pick target, place destination].\n- status unsupported: the sentence describes something outside the supported task: an\n  object that is not registered, or an action other than putting a registered object into a\n  destination (for example lifting it and putting it back, pushing it, stacking).\n  target = null, destination = null, steps = [].\n- status needs_review: the task looks supported but the object or the destination is\n  missing, ambiguous or uncertain in the sentence. Set target / destination only when the\n  sentence states them clearly, otherwise null. steps = [].\n- status error: only when the sentence is empty or unreadable. target / destination null,\n  steps = [].\n- note: one short Japanese sentence (at most 80 characters) for the visitor, saying what\n  was understood or why it cannot be run.\n",
+    "tool": {
+      "type": "function",
+      "name": "submit_plan",
+      "description": "Submit the candidate plan read from the sentence. Receiving it does not run anything: the plan is validated and a person approves it first.",
+      "strict": true,
+      "parameters": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "status",
+          "target",
+          "destination",
+          "steps",
+          "note"
+        ],
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "unsupported",
+              "needs_review",
+              "error"
+            ]
+          },
+          "target": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "red_cube",
+              "blue_cube",
+              null
+            ]
+          },
+          "destination": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "box_a",
+              "box_b",
+              null
+            ]
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "action",
+                    "object"
+                  ],
+                  "properties": {
+                    "action": {
+                      "type": "string",
+                      "enum": [
+                        "pick"
+                      ]
+                    },
+                    "object": {
+                      "type": "string",
+                      "enum": [
+                        "red_cube",
+                        "blue_cube"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "action",
+                    "destination"
+                  ],
+                  "properties": {
+                    "action": {
+                      "type": "string",
+                      "enum": [
+                        "place"
+                      ]
+                    },
+                    "destination": {
+                      "type": "string",
+                      "enum": [
+                        "box_a",
+                        "box_b"
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "note": {
+            "type": "string",
+            "description": "One short Japanese sentence."
+          }
+        }
+      }
+    }
+  }
+}

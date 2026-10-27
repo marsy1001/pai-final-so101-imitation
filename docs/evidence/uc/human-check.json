@@ -1,0 +1,158 @@
+{
+  "$comment": "Check of each Cosmos sentence in eval.json against the gold facts of contracts/fixtures/uc/videos.json and the 1 fps frame sheets docs/evidence/uc/frames/. Written by hand, never by Astra. `sentences` lists the exact sentence each check was made on; a sentence not listed is unchecked. facts_match: the target, the destination, the order and completion agree with the video (minor position details noted but not counted). astra_faithful: the plan says what the sentence says (a wrong sentence can still be followed faithfully).",
+  "checked": "2026-09-28",
+  "checked_by": "Claude Code (frames + gold), confirmed by the user on 2026-09-29",
+  "user_confirmed": true,
+  "videos": {
+    "uc-01": {
+      "sentences": [
+        "Moves the red cube from the left side of the table to the left white tray, then swaps it to the right white tray, and finally places the blue cube on the right white tray."
+      ],
+      "facts_match": false,
+      "verdict": "不一致（存在しない操作を追加）",
+      "detail": "赤を左トレーへ入れたのは正しいが、右トレーへの入れ替えと青の投入は映像に無い（gold: 青は触れていない）",
+      "astra_faithful": true,
+      "astra_note": "複数の操作がある文なので needs_review。文に忠実"
+    },
+    "uc-02": {
+      "sentences": [
+        "Moves the red cube to the white tray in the top right corner, then places the blue cube on top of the red cube within the tray."
+      ],
+      "facts_match": false,
+      "verdict": "不一致（置き先と追加の操作）",
+      "detail": "赤の置き先は左トレー（画面上端で大半が切れている）なのに「右上のトレー」、青を重ねる操作は映像に無い",
+      "astra_faithful": true,
+      "astra_note": "重ねる操作を対応外として unsupported。文に忠実"
+    },
+    "uc-03": {
+      "sentences": [
+        "Moves the red cube to the white cube on the left and places it atop the white cube."
+      ],
+      "facts_match": false,
+      "verdict": "不一致（トレーを立方体と誤認）",
+      "detail": "左トレーを「white cube」と呼び、その「上に置いた」とした。実際は左トレーの中",
+      "astra_faithful": true,
+      "astra_note": "白い立方体の上に積む文なので unsupported。文に忠実"
+    },
+    "uc-04": {
+      "sentences": [
+        "Moves the red cube from the left to the right white tray, leaving the blue cube and white trays unchanged."
+      ],
+      "facts_match": true,
+      "verdict": "一致",
+      "detail": "赤を左から右トレーへ、青と他は不変。gold どおり",
+      "astra_faithful": true,
+      "astra_note": "ok / red_cube / box_b。文に忠実"
+    },
+    "uc-05": {
+      "sentences": [
+        "Moves the red cube from the right side of the table to the white cube on the right."
+      ],
+      "facts_match": false,
+      "verdict": "不一致（トレーを立方体と誤認）",
+      "detail": "赤を右へ運んだのは正しいが、右トレーを「white cube」と呼んだ",
+      "astra_faithful": true,
+      "astra_note": "登録された容器ではないとして unsupported。文に忠実"
+    },
+    "uc-06": {
+      "sentences": [
+        "Moves the red cube from the center of the table to the white tray on the right."
+      ],
+      "facts_match": true,
+      "verdict": "一致",
+      "detail": "赤は中央手前（P3）から右トレーへ。gold どおり",
+      "astra_faithful": true,
+      "astra_note": "ok / red_cube / box_b。文に忠実"
+    },
+    "uc-07": {
+      "sentences": [
+        "Moves the blue cube from the right side to the left white box, placing it atop the white box."
+      ],
+      "facts_match": false,
+      "verdict": "不一致（中へ入れたのを上に置いたとした）",
+      "detail": "青を左の白い箱の「上に置いた」とした。実際は左トレーの中",
+      "astra_faithful": true,
+      "astra_note": "箱の上に置く動作として unsupported。文に忠実"
+    },
+    "uc-08": {
+      "sentences": [
+        "Moves the blue cube from the left to the top-left white box, then picks up the red cube from the right and places it on the same white box."
+      ],
+      "facts_match": false,
+      "verdict": "不一致（存在しない操作を追加）",
+      "detail": "青を左上の箱へ運んだのは正しいが、赤を同じ箱に置く操作は映像に無い（gold: 赤は触れていない）",
+      "astra_faithful": true,
+      "astra_note": "赤を箱の上に置く操作を含むとして unsupported。文に忠実"
+    },
+    "uc-09": {
+      "sentences": [
+        "Moves the blue cube from the center of the table to the top left white tray, leaving the red cube stationary on the table."
+      ],
+      "facts_match": true,
+      "verdict": "一致（位置の細部に小さな誤り）",
+      "detail": "青を左上のトレーへ、赤は不動。青の出発点は奥の縁（トレーの間）で「テーブル中央」は大まか",
+      "astra_faithful": true,
+      "astra_note": "ok / blue_cube / box_a。文に忠実"
+    },
+    "uc-10": {
+      "sentences": [
+        "Moves the blue cube from the right side into the white tray in the middle-right area of the table."
+      ],
+      "facts_match": true,
+      "verdict": "一致",
+      "detail": "青を右から右寄りのトレーへ。gold どおり",
+      "astra_faithful": true,
+      "astra_note": "ok / blue_cube / box_b。文に忠実"
+    },
+    "uc-11": {
+      "sentences": [
+        "The hand picks up the blue cube from the left, moves it to the white tray on the right, and places it inside. The red cube remains stationary on the table throughout the video."
+      ],
+      "facts_match": true,
+      "verdict": "一致",
+      "detail": "青を左から持ち上げ右トレーの中へ、赤は不動。gold どおり",
+      "astra_faithful": true,
+      "astra_note": "ok / blue_cube / box_b。文に忠実"
+    },
+    "uc-12": {
+      "sentences": [
+        "Moves the blue cube from the center of the table to the right white tray."
+      ],
+      "facts_match": true,
+      "verdict": "一致（位置の細部に小さな誤り）",
+      "detail": "青を右トレーへ。出発点は奥の縁（トレーの間）で「テーブル中央」は大まか",
+      "astra_faithful": true,
+      "astra_note": "ok / blue_cube / box_b。文に忠実"
+    },
+    "uc-13": {
+      "sentences": [
+        "The hand enters the frame from the bottom right, picks up the pen from the center of the table, and places it into the white box on the right."
+      ],
+      "facts_match": true,
+      "verdict": "一致",
+      "detail": "ペンを中央から右の白い箱へ。gold どおり",
+      "astra_faithful": true,
+      "astra_note": "ペンは未登録として unsupported。文に忠実"
+    },
+    "uc-14": {
+      "sentences": [
+        "Moves the red cube from the left to the right, swapping it with the blue cube. The red cube is placed on top of the blue cube."
+      ],
+      "facts_match": true,
+      "verdict": "一致（動作の細部に小さな誤り）",
+      "detail": "赤を青の上に重ねたのは正しい。「入れ替え（swapping）」は映像に無い",
+      "astra_faithful": true,
+      "astra_note": "入れ替え・積み重ねを対応外として unsupported。文に忠実"
+    },
+    "uc-15": {
+      "sentences": [
+        "Moves the blue cube to the white box on the right and the red cube to the white box on the left, leaving both cubes inside their respective boxes."
+      ],
+      "facts_match": false,
+      "verdict": "不一致（存在しない置き先を作った）",
+      "detail": "青は手に隠れて画面外へ運ばれ、赤は不動、両トレーは空のまま。文は青を右の箱、赤を左の箱へ入れたとした",
+      "astra_faithful": true,
+      "astra_note": "2 つの物体を 1 つに絞れないとして needs_review。文に忠実（結果が実行不可なのは偶然）"
+    }
+  }
+}

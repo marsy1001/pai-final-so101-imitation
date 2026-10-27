@@ -1,0 +1,47 @@
+{
+  "$comment": "Check of each Cosmos sentence in diagnosis.json against the gold facts of contracts/fixtures/s1/videos.json and the video frames (1 fps contact sheets). Written by hand, never by Astra. Each check lists the exact sentences it was made on (`sentences`); diagnosis.md treats a video as unchecked when its current sentences differ (a rerun). In this run the three runs per video returned the same sentence, so one check covers all three.",
+  "checked": "2026-09-28",
+  "checked_by": "Claude Code (frames + gold), confirmed by the user",
+  "user_confirmed": true,
+  "videos": {
+    "s1-01": {
+      "target": "○ red cube",
+      "destination": "○ left white tray (box_a)",
+      "order": "○ pick → lift → put in",
+      "completion": "○ ends inside the left tray",
+      "ambiguity_dropped": "none (the video is unambiguous)",
+      "added_facts": "minor: 'from the center of the table'. The red cube starts front left (gold). 'blue cube stationary on the right' is true relative to the red cube (gold: front centre). The target and destination do not depend on it",
+      "verdict": "一致（位置の細部に小さな誤り）",
+      "note": "",
+      "sentences": [
+        "The hand picks up the red cube from the center of the table, lifts it, and places it into the left white tray, leaving the blue cube stationary on the right."
+      ]
+    },
+    "s1-02": {
+      "target": "○ blue cube",
+      "destination": "○ right white tray (box_b)",
+      "order": "○ touch → lift → move into the tray",
+      "completion": "○ ends in the right tray",
+      "ambiguity_dropped": "none",
+      "added_facts": "none. 'The red cube remains stationary on the table' is true",
+      "verdict": "一致",
+      "note": "",
+      "sentences": [
+        "The person's hand touches the blue cube, lifts it, and moves it to the right white tray. The red cube remains stationary on the table."
+      ]
+    },
+    "s1-03": {
+      "target": "○ red cube first, then the blue cube",
+      "destination": "○ both stay on the table; 'does not interact with the white trays' is true",
+      "order": "○ red then blue",
+      "completion": "○ nothing ends up in a tray",
+      "ambiguity_dropped": "none",
+      "added_facts": "minor: 'spins it' (the red cube comes back slightly turned, so a rotation is visible but 'spins' overstates it); 'returns [the blue cube] to its original position' where the gold says it is shifted slightly; 'the center' for a cube that is centre left",
+      "verdict": "一致（動作の細部に小さな誤り）",
+      "note": "no tray placement is invented, unlike the first prompt (「プロンプトの比較」). Astra returned unsupported with no executable plan in 3/3",
+      "sentences": [
+        "Moves the red cube, spins it, and places it back in the center. Moves the blue cube, touches it briefly, and returns it to its original position on the right. The hand does not interact with the white trays."
+      ]
+    }
+  }
+}

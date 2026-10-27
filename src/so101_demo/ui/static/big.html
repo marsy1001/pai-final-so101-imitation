@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>シミュレーション</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <style>
+    body { background: #fafaf7; overflow: hidden; }
+    .top { display: flex; justify-content: space-between; align-items: center; padding: 20px 36px; }
+    .sim { font-size: 44px; font-weight: 700; }
+    .stage { display: flex; justify-content: center; }
+    #frame { width: 1280px; height: 720px; object-fit: contain; background: #e7e7e2; }
+    .bottom { display: flex; gap: 24px; justify-content: center; align-items: center; padding: 16px; min-height: 120px; }
+  </style>
+</head>
+<body>
+  <div class="top"><span class="sim">シミュレーション</span><span id="phase" class="phase">待機</span></div>
+  <div class="stage"><img id="frame" alt=""></div>
+  <div class="bottom">
+    <div id="proposal" hidden>
+      <span id="target" class="chip"></span> を <span id="destination" class="chip"></span> へ
+    </div>
+    <span id="message"></span>
+  </div>
+  <script src="/static/app.js"></script>
+  <script>bigScreen();</script>
+</body>
+</html>

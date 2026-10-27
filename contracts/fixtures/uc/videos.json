@@ -1,0 +1,586 @@
+{
+  "$comment": "Uc acceptance videos (Issue #24). Staff-recorded evaluation clips, kept in the repository; the same-day deletion rule applies to visitor recordings only (demo-plan Ua). Left / right are as seen in the video frame: box_a = the tray on the left of the frame, box_b = the one on the right. Gold is written by the lead from 1 fps frames of the cut videos (docs/evidence/uc/frames/). `uv run python -m so101_demo.evidence.uc_eval --check-manifest` checks hashes, count, breakdown, gold, format and the revision log; `--cut <dir with 01.mp4..15.mp4>` rebuilds every video from its source entry.",
+  "version": 1,
+  "recorded": "2026-09-28",
+  "set": "acceptance",
+  "use": "Acceptance set for Uc and G2 only. These videos (uc-*) are never used to tune the Cosmos instruction, the Astra instructions or the preprocessing: tuning uses the development set below; the uc-* videos are run only as a fixed configuration's evaluation (Uc: one revision allowed, then every video is re-evaluated and the earlier results are kept).",
+  "development_set": {
+    "manifest": "contracts/fixtures/s1/videos.json",
+    "ids": [
+      "s1-01",
+      "s1-02",
+      "s1-03"
+    ],
+    "note": "S1 diagnosis videos, used for prompt and preprocessing work; not part of any acceptance count"
+  },
+  "revision_rule": "A re-take or an added video never replaces an entry silently. Replacing a video: bump that entry's `version`, update `path`/`sha256`/`source`, and append to `revisions` {id, version, date, reason, old_sha256, new_sha256}. Adding a video: a new id and a `revisions` entry with old_sha256 null; bump the manifest `version`. Results already produced on an old version stay in their evidence files and are reported with it: a failed video is never dropped from a denominator by re-taking it, and a report names the manifest version it counts.",
+  "revisions": [],
+  "conditions": {
+    "camera": "phone on a fixed stand across the table from the person, tilted down; only the table, hands and forearms in frame, no face",
+    "scene": "dark wooden table; red cube and blue cube about 4 cm; two identical white trays at the far edge of the table; a black pen in uc-13 only",
+    "left_right": "as seen in the frame: box_a = left tray, box_b = right tray",
+    "camera_view": "recorded per video in conditions.camera_view: uc-04..uc-06 wide (wall and chair in frame), the others narrow",
+    "layouts": {
+      "P1": "red cube front left, blue cube front right",
+      "P2": "blue cube left, red cube front right",
+      "P3": "red cube centre front, blue cube at the far edge between the trays"
+    },
+    "frames_checked": "the 1 fps sheets in docs/evidence/uc/frames/ (frames at 0.5, 1.5, ... 9.5 s of each cut video) show no hand in the first and the last frame of every video, so each action starts and ends inside its 10 s (checked 2026-09-28)",
+    "action_s": "per video, [first frame with the hand in view, first frame with the hand gone], seconds in the source video, read from 2 fps sheets",
+    "source_format": "mp4 H.264, coded 720x1280 with a 90 degree rotation tag (displayed 1280x720), 24 fps, 9.54-12.96 s of video (10.40-14.12 s container with AAC audio), recorded 2026-09-28",
+    "preprocessing": "ffmpeg 6.1.1: rotation applied, 240 frames kept from frame round(trim_start_s * 24); uc-05 has only 229 frames of video, so its first frame is repeated 11 times (0.458 s of still table before the idle lead-in, pad_start_frames 11) instead of dropping the clip; audio and metadata dropped: ffmpeg -i <source> -an -sn -dn -map_metadata -1 -vf [tpad=start=<pad>:start_mode=clone,]trim=start_frame=<n>:end_frame=<n+240>,setpts=PTS-STARTPTS,scale=1280:720,format=yuv420p -r 24 -c:v libx264 -preset slow -crf 20 -bitexact -movflags +faststart <path>",
+    "format": {
+      "codec": "h264",
+      "width": 1280,
+      "height": 720,
+      "fps": 24,
+      "frames": 240,
+      "duration_s": 10.0
+    }
+  },
+  "videos": [
+    {
+      "id": "uc-01",
+      "path": "docs/evidence/uc/videos/uc-01-red-to-box_a-p1.mp4",
+      "sha256": "32a35bab17ed1ad86919ec83aee7bbee7abcd4d5234aefd25c5e8c1233cca50b",
+      "version": 1,
+      "source": {
+        "file": "01.mp4",
+        "sha256": "f1fd23b12fdbf5d051d79089ed89b36ff78cff98a310ea003196ea233b865453",
+        "trim_start_s": 2.5,
+        "pad_start_frames": 0
+      },
+      "conditions": {
+        "layout": "P1",
+        "camera_view": "narrow: table and trays, only a strip of the wall at the top left",
+        "action_s": [
+          4.3,
+          11.0
+        ]
+      },
+      "scope": "in_scope",
+      "out_of_scope_kind": null,
+      "gold": {
+        "status": "ok",
+        "target": "red_cube",
+        "destination": "box_a",
+        "steps": [
+          {
+            "action": "pick",
+            "object": "red_cube"
+          },
+          {
+            "action": "place",
+            "destination": "box_a"
+          }
+        ],
+        "facts": "Red cube front left, blue cube front right; both trays empty at the far edge of the table. A hand reaches in from the right, grasps the red cube, lifts it and puts it into the left tray; the hand leaves. The blue cube is not touched. Completed: the red cube rests in the left tray at the end."
+      }
+    },
+    {
+      "id": "uc-02",
+      "path": "docs/evidence/uc/videos/uc-02-red-to-box_a-p2.mp4",
+      "sha256": "55250522722a1fa78fb46a0d56a61291cdcbba01fd702cd0151a4345120fdaee",
+      "version": 1,
+      "source": {
+        "file": "02.mp4",
+        "sha256": "6b5cd84b4d9889dfcd3f09e3e8190b4c937316ce55dbd9c5aa6f08492b364bb9",
+        "trim_start_s": 1.5,
+        "pad_start_frames": 0
+      },
+      "conditions": {
+        "layout": "P2",
+        "camera_view": "narrow: table and trays, only a strip of the wall at the top left",
+        "action_s": [
+          3.3,
+          9.5
+        ]
+      },
+      "scope": "in_scope",
+      "out_of_scope_kind": null,
+      "gold": {
+        "status": "ok",
+        "target": "red_cube",
+        "destination": "box_a",
+        "steps": [
+          {
+            "action": "pick",
+            "object": "red_cube"
+          },
+          {
+            "action": "place",
+            "destination": "box_a"
+          }
+        ],
+        "facts": "Blue cube left, red cube front right; both trays empty at the far edge of the table. A hand reaches in from the right, grasps the red cube, lifts it and puts it into the left tray; the hand leaves. The blue cube is not touched. Completed: the red cube rests in the left tray at the end. The left tray is at the top edge and mostly cut off, so at the end the red cube shows only as a small red patch there."
+      }
+    },
+    {
+      "id": "uc-03",
+      "path": "docs/evidence/uc/videos/uc-03-red-to-box_a-p3.mp4",
+      "sha256": "b7b408c42361e7cbe7869d51af2d1a55c667e711eb4b3038e5253f46c10bd46a",
+      "version": 1,
+      "source": {
+        "file": "03.mp4",
+        "sha256": "0c3368aa343158cfc86fe21c2fb4bcda325338ba40678a1b3facbbe6d05c8955",
+        "trim_start_s": 1.25,
+        "pad_start_frames": 0
+      },
+      "conditions": {
+        "layout": "P3",
+        "camera_view": "narrow: table and trays, only a strip of the wall at the top left",
+        "action_s": [
+          3.4,
+          9.5
+        ]
+      },
+      "scope": "in_scope",
+      "out_of_scope_kind": null,
+      "gold": {
+        "status": "ok",
+        "target": "red_cube",
+        "destination": "box_a",
+        "steps": [
+          {
+            "action": "pick",
+            "object": "red_cube"
+          },
+          {
+            "action": "place",
+            "destination": "box_a"
+          }
+        ],
+        "facts": "Red cube centre front, blue cube at the far edge between the trays; both trays empty at the far edge of the table. A hand reaches in from the right, grasps the red cube, lifts it and puts it into the left tray; the hand leaves. The blue cube is not touched. Completed: the red cube rests in the left tray at the end. The left tray is at the top edge and mostly cut off, so at the end the red cube shows only as a small red patch there."
+      }
+    },
+    {
+      "id": "uc-04",
+      "path": "docs/evidence/uc/videos/uc-04-red-to-box_b-p1.mp4",
+      "sha256": "f7c76243f4a15311e8861c8bc991bd49f0fe21346c58272fff73c8e6863871c0",
+      "version": 1,
+      "source": {
+        "file": "04.mp4",
+        "sha256": "d1ce25f98e4b54684b4f534bab9457dbc27f93ce5e14c5e37e8cb420f779518f",
+        "trim_start_s": 1.5,
+        "pad_start_frames": 0
+      },
+      "conditions": {
+        "layout": "P1",
+        "camera_view": "wide: the camera tilted up a little, the back wall and a chair on the right are in frame",
+        "action_s": [
+          2.8,
+          9.0
+        ]
+      },
+      "scope": "in_scope",
+      "out_of_scope_kind": null,
+      "gold": {
+        "status": "ok",
+        "target": "red_cube",
+        "destination": "box_b",
+        "steps": [
+          {
+            "action": "pick",
+            "object": "red_cube"
+          },
+          {
+            "action": "place",
+            "destination": "box_b"
+          }
+        ],
+        "facts": "Red cube front left, blue cube front right; both trays empty at the far edge of the table. A hand reaches in from the right, grasps the red cube, lifts it and puts it into the right tray; the hand leaves. The blue cube is not touched. Completed: the red cube rests in the right tray at the end."
+      }
+    },
+    {
+      "id": "uc-05",
+      "path": "docs/evidence/uc/videos/uc-05-red-to-box_b-p2.mp4",
+      "sha256": "a260cb3cbbdb5eb77851ee2bca97124870e17da6ae0a97837b5d73b6a83b089f",
+      "version": 1,
+      "source": {
+        "file": "05.mp4",
+        "sha256": "912db5054b38b726840a2258b78202cd6f3d94efccf986c1d233ec6452cf3ecc",
+        "trim_start_s": 0.0,
+        "pad_start_frames": 11
+      },
+      "conditions": {
+        "layout": "P2",
+        "camera_view": "wide: the camera tilted up a little, the back wall and a chair on the right are in frame",
+        "action_s": [
+          3.4,
+          7.6
+        ]
+      },
+      "scope": "in_scope",
+      "out_of_scope_kind": null,
+      "gold": {
+        "status": "ok",
+        "target": "red_cube",
+        "destination": "box_b",
+        "steps": [
+          {
+            "action": "pick",
+            "object": "red_cube"
+          },
+          {
+            "action": "place",
+            "destination": "box_b"
+          }
+        ],
+        "facts": "Blue cube left, red cube front right; both trays empty at the far edge of the table. A hand reaches in from the right, grasps the red cube, lifts it and puts it into the right tray; the hand leaves. The blue cube is not touched. Completed: the red cube rests in the right tray at the end."
+      }
+    },
+    {
+      "id": "uc-06",
+      "path": "docs/evidence/uc/videos/uc-06-red-to-box_b-p3.mp4",
+      "sha256": "3fe17429c05cfbb8c897b689d4f4615a006f836a14263e821e2a0306bcb53492",
+      "version": 1,
+      "source": {
+        "file": "06.mp4",
+        "sha256": "c49aece0918961d62967aac9b73fd5ae3c1e6815b4f2811e55c06f7dc355c464",
+        "trim_start_s": 1.0,
+        "pad_start_frames": 0
+      },
+      "conditions": {
+        "layout": "P3",
+        "camera_view": "wide: the camera tilted up a little, the back wall and a chair on the right are in frame",
+        "action_s": [
+          3.3,
+          8.5
+        ]
+      },
+      "scope": "in_scope",
+      "out_of_scope_kind": null,
+      "gold": {
+        "status": "ok",
+        "target": "red_cube",
+        "destination": "box_b",
+        "steps": [
+          {
+            "action": "pick",
+            "object": "red_cube"
+          },
+          {
+            "action": "place",
+            "destination": "box_b"
+          }
+        ],
+        "facts": "Red cube centre front, blue cube at the far edge between the trays; both trays empty at the far edge of the table. A hand reaches in from the right, grasps the red cube, lifts it and puts it into the right tray; the hand leaves. The blue cube is not touched. Completed: the red cube rests in the right tray at the end."
+      }
+    },
+    {
+      "id": "uc-07",
+      "path": "docs/evidence/uc/videos/uc-07-blue-to-box_a-p1.mp4",
+      "sha256": "456d582d140dab1279e42c48374c68f6a03aec930ab73a51b3ab824d39533b23",
+      "version": 1,
+      "source": {
+        "file": "07.mp4",
+        "sha256": "a72cef9ce1f7322a32d570c0283fcafc4e9c910fab0dbedbb09be1b3dd11d736",
+        "trim_start_s": 1.5,
+        "pad_start_frames": 0
+      },
+      "conditions": {
+        "layout": "P1",
+        "camera_view": "narrow: table and trays, only a strip of the wall at the top left",
+        "action_s": [
+          3.4,
+          7.8
+        ]
+      },
+      "scope": "in_scope",
+      "out_of_scope_kind": null,
+      "gold": {
+        "status": "ok",
+        "target": "blue_cube",
+        "destination": "box_a",
+        "steps": [
+          {
+            "action": "pick",
+            "object": "blue_cube"
+          },
+          {
+            "action": "place",
+            "destination": "box_a"
+          }
+        ],
+        "facts": "Red cube front left, blue cube front right; both trays empty at the far edge of the table. A hand reaches in from the right, grasps the blue cube, lifts it and puts it into the left tray; the hand leaves. The red cube is not touched. Completed: the blue cube rests in the left tray at the end."
+      }
+    },
+    {
+      "id": "uc-08",
+      "path": "docs/evidence/uc/videos/uc-08-blue-to-box_a-p2.mp4",
+      "sha256": "e9cb0f70c4e0af726648b930777c8f345c2b447ce28c1510fffaeaa1da5ace37",
+      "version": 1,
+      "source": {
+        "file": "08.mp4",
+        "sha256": "c20a7ab50e414b85492b9eda8cb1ec1eee2e31d991212cb0bd2b8a532a295a83",
+        "trim_start_s": 0.0,
+        "pad_start_frames": 0
+      },
+      "conditions": {
+        "layout": "P2",
+        "camera_view": "narrow: table and trays, only a strip of the wall at the top left",
+        "action_s": [
+          3.3,
+          7.3
+        ]
+      },
+      "scope": "in_scope",
+      "out_of_scope_kind": null,
+      "gold": {
+        "status": "ok",
+        "target": "blue_cube",
+        "destination": "box_a",
+        "steps": [
+          {
+            "action": "pick",
+            "object": "blue_cube"
+          },
+          {
+            "action": "place",
+            "destination": "box_a"
+          }
+        ],
+        "facts": "Blue cube left, red cube front right; both trays empty at the far edge of the table. A hand reaches in from the right, grasps the blue cube, lifts it and puts it into the left tray; the hand leaves. The red cube is not touched. Completed: the blue cube rests in the left tray at the end. The left tray is at the top edge and mostly cut off, so at the end the blue cube shows only as a small blue patch there."
+      }
+    },
+    {
+      "id": "uc-09",
+      "path": "docs/evidence/uc/videos/uc-09-blue-to-box_a-p3.mp4",
+      "sha256": "53d20eced546ae975097e2b88dab7bb7018b5e430b90f2a776b28290ad3c831d",
+      "version": 1,
+      "source": {
+        "file": "09.mp4",
+        "sha256": "3c87f9d6de647f03cb03c1824342de70ef49b996299ca9f89e1c45f6c02dcd44",
+        "trim_start_s": 0.75,
+        "pad_start_frames": 0
+      },
+      "conditions": {
+        "layout": "P3",
+        "camera_view": "narrow: table and trays, only a strip of the wall at the top left",
+        "action_s": [
+          3.4,
+          7.8
+        ]
+      },
+      "scope": "in_scope",
+      "out_of_scope_kind": null,
+      "gold": {
+        "status": "ok",
+        "target": "blue_cube",
+        "destination": "box_a",
+        "steps": [
+          {
+            "action": "pick",
+            "object": "blue_cube"
+          },
+          {
+            "action": "place",
+            "destination": "box_a"
+          }
+        ],
+        "facts": "Red cube centre front, blue cube at the far edge between the trays; both trays empty at the far edge of the table. A hand reaches in from the right, grasps the blue cube, lifts it and puts it into the left tray; the hand leaves. The red cube is not touched. Completed: the blue cube rests in the left tray at the end."
+      }
+    },
+    {
+      "id": "uc-10",
+      "path": "docs/evidence/uc/videos/uc-10-blue-to-box_b-p1.mp4",
+      "sha256": "4beb95af4649b0978f6f4dd82271ad24232e38b5b93a1bc74f097c975d6a387a",
+      "version": 1,
+      "source": {
+        "file": "10.mp4",
+        "sha256": "2a14b55c930351c26eef17f9b1304221da4142e4a998e62c02d38bf1a469637a",
+        "trim_start_s": 0.5,
+        "pad_start_frames": 0
+      },
+      "conditions": {
+        "layout": "P1",
+        "camera_view": "narrow: table and trays, only a strip of the wall at the top left",
+        "action_s": [
+          3.4,
+          6.3
+        ]
+      },
+      "scope": "in_scope",
+      "out_of_scope_kind": null,
+      "gold": {
+        "status": "ok",
+        "target": "blue_cube",
+        "destination": "box_b",
+        "steps": [
+          {
+            "action": "pick",
+            "object": "blue_cube"
+          },
+          {
+            "action": "place",
+            "destination": "box_b"
+          }
+        ],
+        "facts": "Red cube front left, blue cube front right; both trays empty at the far edge of the table. A hand reaches in from the right, grasps the blue cube, lifts it and puts it into the right tray; the hand leaves. The red cube is not touched. Completed: the blue cube rests in the right tray at the end."
+      }
+    },
+    {
+      "id": "uc-11",
+      "path": "docs/evidence/uc/videos/uc-11-blue-to-box_b-p2.mp4",
+      "sha256": "5f7c4a16be39b1bbad867b1cbb6284af59ba16b9420402b0a048813703fedeb0",
+      "version": 1,
+      "source": {
+        "file": "11.mp4",
+        "sha256": "e36044f28676d24c0d42d6d8152544b7885f4e57c2f957e065e513e9bf1bae15",
+        "trim_start_s": 1.0,
+        "pad_start_frames": 0
+      },
+      "conditions": {
+        "layout": "P2",
+        "camera_view": "narrow: table and trays, only a strip of the wall at the top left",
+        "action_s": [
+          3.3,
+          7.0
+        ]
+      },
+      "scope": "in_scope",
+      "out_of_scope_kind": null,
+      "gold": {
+        "status": "ok",
+        "target": "blue_cube",
+        "destination": "box_b",
+        "steps": [
+          {
+            "action": "pick",
+            "object": "blue_cube"
+          },
+          {
+            "action": "place",
+            "destination": "box_b"
+          }
+        ],
+        "facts": "Blue cube left, red cube front right; both trays empty at the far edge of the table. A hand reaches in from the right, grasps the blue cube, lifts it and puts it into the right tray; the hand leaves. The red cube is not touched. Completed: the blue cube rests in the right tray at the end."
+      }
+    },
+    {
+      "id": "uc-12",
+      "path": "docs/evidence/uc/videos/uc-12-blue-to-box_b-p3.mp4",
+      "sha256": "5390ff88ac71522b5fe723a6c3567b198f181876bc9367d88c00a8ab3b872c5a",
+      "version": 1,
+      "source": {
+        "file": "12.mp4",
+        "sha256": "69d24eb563116f925c5539794b3d8098e08a95945546fdb7e38829f7ffac43ea",
+        "trim_start_s": 1.0,
+        "pad_start_frames": 0
+      },
+      "conditions": {
+        "layout": "P3",
+        "camera_view": "narrow: table and trays, only a strip of the wall at the top left",
+        "action_s": [
+          3.3,
+          6.8
+        ]
+      },
+      "scope": "in_scope",
+      "out_of_scope_kind": null,
+      "gold": {
+        "status": "ok",
+        "target": "blue_cube",
+        "destination": "box_b",
+        "steps": [
+          {
+            "action": "pick",
+            "object": "blue_cube"
+          },
+          {
+            "action": "place",
+            "destination": "box_b"
+          }
+        ],
+        "facts": "Red cube centre front, blue cube at the far edge between the trays; both trays empty at the far edge of the table. A hand reaches in from the right, grasps the blue cube, lifts it and puts it into the right tray; the hand leaves. The red cube is not touched. Completed: the blue cube rests in the right tray at the end."
+      }
+    },
+    {
+      "id": "uc-13",
+      "path": "docs/evidence/uc/videos/uc-13-pen-to-box_b.mp4",
+      "sha256": "436dc8e8c951d5c7f69c22fb0b0cbd6d8c2f2c7a02d2d519d2138e705c5687d1",
+      "version": 1,
+      "source": {
+        "file": "13.mp4",
+        "sha256": "a2bda85654d0cf7716250ac6cf02ca4a7a9fe0386f22f86d801b37e878f9f88c",
+        "trim_start_s": 1.0,
+        "pad_start_frames": 0
+      },
+      "conditions": {
+        "layout": null,
+        "camera_view": "narrow: table and trays, only a strip of the wall at the top left",
+        "action_s": [
+          3.0,
+          7.0
+        ]
+      },
+      "scope": "out_of_scope",
+      "out_of_scope_kind": "unregistered_object",
+      "gold": {
+        "status": "unsupported",
+        "target": null,
+        "destination": null,
+        "steps": [],
+        "facts": "Red cube front left, a black pen lying in the middle of the table, blue cube front right; both trays empty at the far edge of the table. A hand reaches in from the right, picks up the pen and lays it into the right tray; the hand leaves. Neither cube is touched. Completed: the pen rests in the right tray at the end. The pen is not a registered object, so no executable plan; needs_review is also acceptable as long as no executable plan is returned (demo-plan G2)."
+      }
+    },
+    {
+      "id": "uc-14",
+      "path": "docs/evidence/uc/videos/uc-14-red-onto-blue.mp4",
+      "sha256": "3a8ac7e33b5ba45ed76bb1baba690ebddbc04e744cf1fccec48ef0426f71f063",
+      "version": 1,
+      "source": {
+        "file": "14.mp4",
+        "sha256": "5f8d9db7cd4bbe50d5b3145a43088c9fe9d29122d8df8ebc550bd090656d8e3b",
+        "trim_start_s": 1.0,
+        "pad_start_frames": 0
+      },
+      "conditions": {
+        "layout": null,
+        "camera_view": "narrow: table and trays, only a strip of the wall at the top left",
+        "action_s": [
+          3.0,
+          7.0
+        ]
+      },
+      "scope": "out_of_scope",
+      "out_of_scope_kind": "unregistered_action",
+      "gold": {
+        "status": "unsupported",
+        "target": null,
+        "destination": null,
+        "steps": [],
+        "facts": "Red cube front left, blue cube front right; both trays empty at the far edge of the table. A hand reaches in from the right, picks up the red cube and sets it down against and on top of the blue cube, so the two cubes end up stacked and overlapping at the front right; the hand leaves. Nothing is put into a tray; both trays stay empty. Stacking one cube on the other is not a registered action, so no executable plan; needs_review is also acceptable as long as no executable plan is returned (demo-plan G2)."
+      }
+    },
+    {
+      "id": "uc-15",
+      "path": "docs/evidence/uc/videos/uc-15-blue-covered-out-of-frame.mp4",
+      "sha256": "d6c7b6cc1243fd243e5e010c81d967df036232e8327139742d8b967b923e8c50",
+      "version": 1,
+      "source": {
+        "file": "15.mp4",
+        "sha256": "28a4263112390f06cc62683a68f3111bce0ebe0dbdcfb735621902461ecc8ff8",
+        "trim_start_s": 1.25,
+        "pad_start_frames": 0
+      },
+      "conditions": {
+        "layout": null,
+        "camera_view": "narrow: table and trays, only a strip of the wall at the top left",
+        "action_s": [
+          3.0,
+          9.8
+        ]
+      },
+      "scope": "out_of_scope",
+      "out_of_scope_kind": "undecidable",
+      "gold": {
+        "status": "needs_review",
+        "target": null,
+        "destination": null,
+        "steps": [],
+        "facts": "Red cube front left, blue cube front right; both trays empty at the far edge of the table. A hand comes down flat over the blue cube so the cube is hidden under the palm, slides it towards the back right and carries it out of the frame at the right edge; the hand leaves. The red cube is not touched and both trays stay empty. Where the blue cube went cannot be seen, so the destination cannot be decided: no executable plan (needs_review; unsupported is also acceptable, demo-plan G2)."
+      }
+    }
+  ]
+}

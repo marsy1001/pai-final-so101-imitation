@@ -1,0 +1,68 @@
+:root {
+  --bg: #f4f4f1;
+  --fg: #1b1b1b;
+  --muted: #5c5c5c;
+  --panel: #ffffff;
+  --line: #d7d7d2;
+  --ok: #1f7a3a;
+  --warn: #9a3412;
+  --accent: #1d4ed8;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Noto Sans JP", "Yu Gothic UI", "Meiryo", sans-serif;
+  font-size: 32px;
+  line-height: 1.4;
+}
+.phase {
+  display: inline-block;
+  padding: 0.2em 0.8em;
+  border-radius: 0.4em;
+  background: #e5e7eb;
+  font-weight: 700;
+  font-size: 44px;
+}
+.phase[data-key="reading"] { background: #dbeafe; }
+.phase[data-key="result"] { background: #fef3c7; }
+.phase[data-key="failed"] { background: #fee2e2; color: var(--warn); }
+.phase[data-key="manual"] { background: #ede9fe; }
+.phase[data-key="running"] { background: #dcfce7; color: var(--ok); }
+.phase[data-key="prerecorded"] { background: #e0e7ff; }
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.15em 0.6em;
+  border: 3px solid var(--line);
+  border-radius: 0.4em;
+  background: var(--panel);
+  font-weight: 700;
+}
+.swatch {
+  display: inline-block; /* also inside a plain button (the manual picker) */
+  flex: none;
+  vertical-align: -0.15em;
+  width: 1.1em;
+  height: 1.1em;
+  border-radius: 0.2em;
+  border: 2px solid rgba(0, 0, 0, 0.35);
+}
+button {
+  font: inherit;
+  font-weight: 700;
+  min-height: 96px;
+  min-width: 240px;
+  padding: 0.3em 1em;
+  border-radius: 0.4em;
+  border: 3px solid var(--line);
+  background: var(--panel);
+  color: var(--fg);
+  cursor: pointer;
+}
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+button:disabled { opacity: 0.35; cursor: default; }
+.muted { color: var(--muted); }
+[hidden] { display: none !important; }

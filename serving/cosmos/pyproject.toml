@@ -1,0 +1,13 @@
+[project]
+name = "cosmos-serving"
+version = "0.1.0"
+description = "vLLM server for Cosmos Reason 2 2B (ADR 0009). Separate lock; not a workspace member."
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "vllm==0.12.0",
+    # the version of the measured setup (docs/handover/cosmos-measurements.md §1)
+    "transformers==4.57.1",
+]
+
+[tool.uv]
+package = false

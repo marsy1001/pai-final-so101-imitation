@@ -1,0 +1,160 @@
+{
+ "$comment": "Prompt comparison on 2026-09-28 (Issue #22 GPU part), run by tmp/prompt_ab.py on commit 7c3b93a with the same server and request as diagnosis.json except the prompt text and the seed. Both prompts get the same reasoning suffix.",
+ "date": "2026-09-28",
+ "commit": "7c3b93a",
+ "seeds": [
+  1234,
+  1,
+  2
+ ],
+ "prompts": {
+  "current": "Describe in one sentence what the person's hand does in this video: which object it moves, where it puts that object, and in what order. Name objects by colour and shape, and name a container by where it is in the image (left or right). Say whether the object ends up inside a container. If nothing is put into a container, say so. If you cannot tell what was moved or where it went, say that you cannot tell. Do not give timestamps or coordinates.",
+  "no-container": "Describe in one sentence what the person's hand does in this video: which object it moves, where it puts that object, and in what order. Name objects by colour and shape, and name places by where they are in the image (left or right). If you cannot tell what was moved or where it went, say that you cannot tell. Do not give timestamps or coordinates."
+ },
+ "rows": [
+  {
+   "prompt": "current",
+   "video": "s1-01",
+   "seed": 1234,
+   "finish": "stop",
+   "sentence": "The person's hand picks up the red cube and places it inside the left white tray, leaving the blue cube and right white tray unchanged.",
+   "failure": null
+  },
+  {
+   "prompt": "current",
+   "video": "s1-01",
+   "seed": 1,
+   "finish": "stop",
+   "sentence": "The hand picks up the red cube and places it into the left white tray, while the blue cube remains stationary on the table.",
+   "failure": null
+  },
+  {
+   "prompt": "current",
+   "video": "s1-01",
+   "seed": 2,
+   "finish": "stop",
+   "sentence": "Moves the red cube to the left white tray and places it there. The blue cube remains untouched and stays on the right side of the table.",
+   "failure": null
+  },
+  {
+   "prompt": "current",
+   "video": "s1-02",
+   "seed": 1234,
+   "finish": "stop",
+   "sentence": "The hand picks up the blue cube from the center of the table and places it into the right-side white tray, which becomes the container for the cube.",
+   "failure": null
+  },
+  {
+   "prompt": "current",
+   "video": "s1-02",
+   "seed": 1,
+   "finish": "stop",
+   "sentence": "Moves the blue cube to the white rectangular container on the right side of the table.",
+   "failure": null
+  },
+  {
+   "prompt": "current",
+   "video": "s1-02",
+   "seed": 2,
+   "finish": "stop",
+   "sentence": "Moves the blue cube from the center to the right white tray, placing it inside.",
+   "failure": null
+  },
+  {
+   "prompt": "current",
+   "video": "s1-03",
+   "seed": 1234,
+   "finish": "stop",
+   "sentence": "Moves the red cube to the top-right tray and the blue cube to the bottom-right tray.",
+   "failure": null
+  },
+  {
+   "prompt": "current",
+   "video": "s1-03",
+   "seed": 1,
+   "finish": "stop",
+   "sentence": "The person's hand touches the red cube, lifts it, and places it back on the table. Then, the hand touches the blue cube, lifts it, and places it back on the table. Neither object is moved into a container.",
+   "failure": null
+  },
+  {
+   "prompt": "current",
+   "video": "s1-03",
+   "seed": 2,
+   "finish": "stop",
+   "sentence": "The hand picks up the red cube and places it back down, then moves to the blue cube, lifts it, and places it back on the table. Neither object is placed into a container; the white trays remain untouched.",
+   "failure": null
+  },
+  {
+   "prompt": "no-container",
+   "video": "s1-01",
+   "seed": 1234,
+   "finish": "stop",
+   "sentence": "The hand picks up the red cube from the left side of the table, moves it to the left white tray, and places it inside before withdrawing. The blue cube remains stationary on the right side of the table.",
+   "failure": null
+  },
+  {
+   "prompt": "no-container",
+   "video": "s1-01",
+   "seed": 1,
+   "finish": "stop",
+   "sentence": "The hand picks up the red cube from the left tray and places it into the left tray, leaving the blue cube unchanged.",
+   "failure": null
+  },
+  {
+   "prompt": "no-container",
+   "video": "s1-01",
+   "seed": 2,
+   "finish": "stop",
+   "sentence": "Moves the red cube into the left white tray while leaving the blue cube on the table untouched.",
+   "failure": null
+  },
+  {
+   "prompt": "no-container",
+   "video": "s1-02",
+   "seed": 1234,
+   "finish": "stop",
+   "sentence": "Moves the blue cube from the center of the table to the right white tray. Keeps the red cube stationary on the bottom right. Places the blue cube into the right white tray.",
+   "failure": null
+  },
+  {
+   "prompt": "no-container",
+   "video": "s1-02",
+   "seed": 1,
+   "finish": "stop",
+   "sentence": "Moves the blue cube from the table into the right white tray.",
+   "failure": null
+  },
+  {
+   "prompt": "no-container",
+   "video": "s1-02",
+   "seed": 2,
+   "finish": "stop",
+   "sentence": "The hand picks up the blue cube and places it into the right white tray, leaving the red cube and left white tray untouched.",
+   "failure": null
+  },
+  {
+   "prompt": "no-container",
+   "video": "s1-03",
+   "seed": 1234,
+   "finish": "stop",
+   "sentence": "Moves the red cube, lifts it, spins it, and places it back in the center. Then moves the blue cube, touches it briefly, and returns it to its original position.",
+   "failure": null
+  },
+  {
+   "prompt": "no-container",
+   "video": "s1-03",
+   "seed": 1,
+   "finish": "stop",
+   "sentence": "The hand lifts the red cube, places it back down, then lifts the blue cube and sets it on the table. The white trays remain stationary.",
+   "failure": null
+  },
+  {
+   "prompt": "no-container",
+   "video": "s1-03",
+   "seed": 2,
+   "finish": "stop",
+   "sentence": "Moves the red cube from the center to the left, then moves the blue cube from the right to the center, and places both cubes back on the table.",
+   "failure": null
+  }
+ ]
+}

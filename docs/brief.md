@@ -1,6 +1,6 @@
 # Brief
 
-関連: `tmp/最終課題（10_19 改訂版）.pdf`（課題文。git 管理外）、[[report]]（提出レポート原稿）、[[video-script]]（動画の台本）
+関連: `tmp/最終課題（10_19 改訂版）.pdf`（課題文。git 管理外）、[[report]]（提出レポート原稿）
 
 ## 目的
 松尾研「Physical AI 応用編 1 知能ロボティクス講座（2026 Summer）」の最終課題「AI×ロボティクスによる創造的タスクの実現」に、**人の短い作業動画を AI が読み取り、MuJoCo 上の SO-101 が同じ pick / place を再現する**作品を提出する。提出 3 点（動画・コード・レポート）が 2026-11-02 10:00 までに揃い、リポジトリが public で公開できる状態になれば終わり。
@@ -29,7 +29,7 @@
 ## 成果物
 - `README.md` リポジトリの入口（public で読まれる前提。概要、構成、動かし方、AI の使い方）
 - `docs/report.md` レポート原稿。課題の概要・目的・仕組み・工夫点・結果（精度と失敗の型）・反省と考察。これを PDF にして `説明資料_PAI最終課題_<アカウント>.pdf` として提出する（変換手順は Issue で決める。PDF 自体はアカウント名を含むので git 管理外 `tmp/`）
-- `docs/video-script.md` 動画の構成台本（場面、字幕、尺、倍速の有無）
+- 動画の台本は独立した文書にしない（2026-10-27 決定、`docs/adr/0001-no-separate-video-script.md`）。場面構成・字幕・尺・倍速の有無は `docs/report.md` の「提出動画の構成」節に書く
 - 動画 MP4 は `tmp/`（git 管理外）で作り YouTube に上げる。sim の描画や画面キャプチャの短い素材は `docs/evidence/` に置いてよい（1 本 10 MB 程度まで）
 - `src/`、`tests/`、`contracts/`、`serving/`: 実装本体。課題と関係のない旧証拠スクリプトは削る
 - `docs/adr/` 新しい決定があれば 1 件 1 ファイル（旧 ADR は持ち込まない）
@@ -44,7 +44,7 @@
 
 ## 進め方
 - 種別: code
-- 補助の既定モード: review（レポート・台本は `verify`）
+- 補助の既定モード: review（レポートは `verify`）
 - Issue の置き場: github
 - リポジトリ: marsy1001/pai-final-so101-imitation（milestone と Project は使わない）
 

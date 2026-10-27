@@ -25,7 +25,7 @@ src/so101_demo/
   evidence/       評価・動画生成スクリプト（uc_eval: 理解層の評価、stage1_g1: 固定試行と動画）
 contracts/        契約 JSON スキーマ、登録物体、サンプル（ok / unsupported / needs_review / error）、評価用 manifest
 serving/cosmos/   Cosmos Reason 2 2B を vLLM で起動する別 uv プロジェクト
-docs/             brief（目的・要件）、レポート原稿、動画台本、コードの説明、評価記録（docs/evidence/）
+docs/             brief（目的・要件）、レポート原稿、コードの説明、評価記録（docs/evidence/）、ADR
 tests/            pytest（GPU・vLLM・表示が要るものは `gpu` マークで既定スキップ）
 ```
 
@@ -49,7 +49,7 @@ MUJOCO_GL=egl uv run python -m so101_demo.evidence.stage1_g1 --approve-fixed-fix
 固定 revision: MuJoCo 3.13.0、SO-ARM100 `Simulation/SO101` eecbe3e、LeRobot `RobotKinematics` 5aa7455（`src/so101_demo/vendor/`）、Cosmos Reason 2 2B on vLLM 0.12.0。第三者コードのライセンスは `THIRD_PARTY_NOTICES.md`。
 
 ## 提出物
-- 動画（1〜3 分、YouTube）: 台本は `docs/video-script.md`
+- 動画（1〜3 分、YouTube）: 場面構成は `docs/report.md` の「提出動画の構成」節
 - レポート: `docs/report.md`（PDF にして提出。`scripts/report-pdf.sh <omnicampus のアカウント名>` で `tmp/` に A4 の PDF を作る）
 - コード: このリポジトリ
 

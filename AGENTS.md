@@ -228,7 +228,6 @@ comment.
   deadline. Amended with dates.
 - `docs/report.md` the report (source of the submitted PDF). Template:
   `docs/templates/report.md`. Conclusion first.
-- `docs/video-script.md` the video's scene list, captions and timing.
 - `docs/evidence/` small reviewed artifacts (evaluation records, short sim
   clips up to about 10 MB each). Videos that show people, the submitted MP4
   and the PDF with the account name stay under git-ignored `tmp/`.
